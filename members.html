@@ -1,16 +1,3 @@
-<?php 
-
-session_start();
-require "connect.php";
-
-if($_SESSION['admin_id']){
-        $admin_id = $_SESSION['admin_id'];
-    }
-    
-    $sql = "select * from admin where admin_id =".$admin_id."";
-    $qwe = mysqli_query($conn, $sql);
-
-?>
 
 
 <!DOCTYPE html>
@@ -55,13 +42,6 @@ if($_SESSION['admin_id']){
         <!-- Brand -->
         <a class="navbar-brand waves-effect" href="#" style="position: relative;left:50px;">
            Welcome Admin:
-          <strong class="green-text">
-          
-                <?php 
-                $rty = mysqli_fetch_array($qwe);
-                echo "<strong>".$rty['firstname']."</strong>";
-                ?> </li>
-                </strong>
         </a>
 
         <!-- Collapse -->
@@ -289,29 +269,11 @@ if($_SESSION['admin_id']){
     <div class="modal-content" style="width: 887px; height: 450px; left:-60px; top:70px;">
       <div class="modal-header" style="background-color:#DF3A01;">
      
-        <h3 class="modal-title"  style="color:white;">ADD NEW MEMBER</h3>
+        <h3 class="modal-title"  style="color:white;">ADD NEW asdfsadf</h3>
            <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body" >
-      <div class="item">
-        <form action="member_process.php" method="post">
-  <h3><center>
-  ID
-  USERNAME
-  PHONE
-  EMAIL
-  SEX
-  BIRTHDATE
-  ADDRESS
-  TYPE
-  PROGRAM
-  PROGRAM ID
-  ANNUAL MEMBERSHIP
-  START DATE
-  </center></h3>
-         </form>
-        
-      </div>
+        asdfasfasdf
     </div>
     </div>
 
