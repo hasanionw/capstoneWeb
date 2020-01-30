@@ -484,9 +484,12 @@ a{color:inherit;text-decoration:none}
     document.getElementById("logoutBtn").addEventListener("click", function(){
       var x = confirm("Are you sure?")
       if(x === true){
-        firebase.auth().signOut();
-        alert("Logout successful!")
-        window.location.href = "index.html"
+        firebase.auth().signOut().then(function(){
+          alert("Logout successful!")
+          window.location.href = "index.html"
+        }).catch(function(){
+          alert("Failed to log out!")
+        })
       }
     });
 
