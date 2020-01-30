@@ -1,18 +1,17 @@
-
-
-
- // Your web app's Firebase configuration
-  var firebaseConfig = {
-    apiKey: "AIzaSyD5S2Q5xQe13lPAn5dnBI1vttjEITcNgjs",
-    authDomain: "form-7e4c4.firebaseapp.com",
-    databaseURL: "https://form-7e4c4.firebaseio.com",
-    projectId: "form-7e4c4",
-    storageBucket: "form-7e4c4.appspot.com",
-    messagingSenderId: "953185893370",
-    appId: "1:953185893370:web:6d4c62bdef3d47a2a28243"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
+1// Your web app's Firebase configuration
+var firebaseConfig = {
+  apiKey: "AIzaSyCDA3-weE3UgposdsV5iyUiEj4bPQJ6wjo",
+  authDomain: "capstoneweb-538d1.firebaseapp.com",
+  databaseURL: "https://capstoneweb-538d1.firebaseio.com",
+  projectId: "capstoneweb-538d1",
+  storageBucket: "capstoneweb-538d1.appspot.com",
+  messagingSenderId: "353568425583",
+  appId: "1:353568425583:web:f0c5d41d6ebe0e7a606f9a",
+  measurementId: "G-QQBE7BPYW3"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
 
 const auth = firebase.auth();
 
