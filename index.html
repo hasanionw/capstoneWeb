@@ -5,7 +5,7 @@
 
 	<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-auth.js"></script>
-	<script src="FIREBASE/form.js"></script>
+	<script src="FIREBASE/init.js"></script>
 
 	<style>
 		body{
@@ -219,6 +219,16 @@ a{color:inherit;text-decoration:none}
 	</div>
 </div>
 
+<script>
+	
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+	window.location.href = "dashboard.html"
+  }
+});
+
+</script>
 
 
 </body>
