@@ -1,0 +1,474 @@
+<?php 
+
+session_start();
+require "connect.php";
+
+if($_SESSION['admin_id']){
+        $admin_id = $_SESSION['admin_id'];
+    }
+    
+    $sql = "select * from admin where admin_id =".$admin_id."";
+    $qwe = mysqli_query($conn, $sql);
+
+?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>TRAINERS</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="css/mdb.min.css" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="css/style.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="trainer_style.css" >
+
+
+
+<style>
+  
+
+</style>
+</head>
+
+<body class="grey lighten-3" >
+
+  <!--Main Navigation-->
+  <header>
+
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar" >
+      <div class="container-fluid" >
+
+        <!-- Brand -->
+        <a class="navbar-brand waves-effect"  style="position: relative;left:50px;">
+           Welcome Admin:
+          <strong class="green-text">
+          
+                <?php 
+                $rty = mysqli_fetch_array($qwe);
+                echo "<strong>".$rty['firstname']."</strong>";
+                ?> 
+                </strong>
+        </a>
+
+        <!-- Collapse -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" >
+          <span class="navbar-toggler-icon" ></span>
+        </button>
+
+        <!-- Links -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+          <!-- Left -->
+          <ul class="navbar-nav mr-auto">
+            
+          </ul>
+
+          <!-- Right -->
+          <ul class="navbar-nav nav-flex-icons">
+           
+            <li class="nav-item">
+              <div class="logout">
+               <a href="http://localhost/CAPSTONEPROJECT/">     <button type="button"style="background-color:#DF3A01; color: white" class="btn" >LOGOUT</button></a>
+              </div>
+            </li>
+          </ul>
+
+        </div>
+
+      </div>
+    </nav>
+   
+
+    <!-- Sidebar -->
+     <div class="sidebar-fixed position-fixed" style="background-color:#DF3A01;" >
+      <br>
+     
+        <center><img src="logo.png" class="img-fluid" alt="" style="width: 200px; height: 180px;"></center>
+
+        <br>
+
+      <div class="list-group list-group-flush" >
+        <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-chart-pie mr-3"></i>Dashboard
+        </a>
+        <a href="members.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-user mr-3"></i>Members</a>
+        <a href="#" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01; color:white;">
+          <i class="fas fa-table mr-3"></i>Trainers</a>
+        
+        <a href="inventory.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-map mr-3"></i>Inventory</a>
+        <a href="promos.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-money-bill-alt mr-3"></i>Promos</a>
+        <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
+      </div>
+
+    </div>
+    <!-- Sidebar -->
+
+  </header>
+  <!--Main Navigation-->
+
+  <!--Main layout-->
+  <main class="pt-5 mx-lg-5" >
+    <div class="container-fluid mt-5">
+
+      <!-- Heading -->
+      <div class="card mb-4 wow fadeIn"style="height: 100px;">
+
+        <!--Card content-->
+        <div class="card-body d-sm-flex justify-content-between">
+
+         
+      
+           
+            <button data-toggle="modal" data-target="#add" type="button" style="background-color:#DF3A01; color: white;height: 45px;" class="btn">ADD TRAINER</button>
+
+          <select  style="left:-40px; background-color:#DF3A01; width: 150px; height: 45px; color:white; ">
+            <option value="">SORT BY:</option>
+            <option value="active">active</option>
+            <option value="inactive">inactive</option>
+         </select>
+
+
+          
+          <form class="d-flex justify-content-center">
+            <!-- Default input -->
+            <input type="search"  placeholder="Type your query" aria-label="Search" class="form-control" style="height: 45px;" >
+            <button class="btn " style="background-color:#DF3A01; color: white; height:45px; top:-5px;" type="submit">
+              <i class="fas fa-search"  ></i>
+            </button>
+
+          </form>
+            
+              
+
+        </div>
+
+      </div>
+      <!-- Heading -->
+
+
+      <!--Grid row-->
+      <div class="row wow fadeIn">
+
+        <!--Grid column-->
+        <div class="col-md-9 mb-4" >
+
+          <!--Card-->
+          <div class="card" style="width:867px;">
+            <br>
+             
+              <table  style="width: 90%; position: relative; left:45px;" >
+<tr>
+
+  <th><center>ID</center></th>
+  <th><center>FIRSTNAME</center></th>
+  <th><center>LASTNAME</center></th>
+  <th><center>STATUS</center></th>
+  <th><center>POSITION</center></th>
+  <th><center>VIEW</center></th>
+
+  
+  
+</tr>
+ <?php
+/* search room number code */
+
+   
+    $sql = "SELECT * FROM trainer";
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+    
+        if($resultCheck > 0){
+      while($row = mysqli_fetch_assoc($result)){
+      
+      echo "<tr><td>".$row['trainer_id']."<td>".$row['fname']."<td>".$row['lname']."<td>";
+
+?>
+   
+
+<span  onclick="status(<?php echo $row['trainer_id']; ?>,<?php echo $row['status']; ?>)">
+<?php echo "<a href=#?trainer_id=".$row['trainer_id'].">".$row['status']."</a><td>";?> </span>
+
+<span style="font-size: 17px; " data-toggle="modal" data-target="#updatePosition">
+<?php echo "<a href=#?trainer_id=".$row['trainer_id'].">".$row['position']."</a><td>";?></span> 
+
+
+<span onclick="showall(<?php echo $row['trainer_id']; ?>,<?php echo $row['fname']; ?>,<?php echo $row['lname']; ?>,<?php echo $row['phone']; ?>,<?php echo $row['email']; ?>,<?php echo $row['sex']; ?>,<?php echo $row['birthdate']; ?>,<?php echo $row['address']; ?>,<?php echo $row['status']; ?>,<?php echo $row['position']; ?>)"> <?php echo "<a href=#?trainer_id=".$row['trainer_id'].">VIEW</a>";?> </span>
+
+<?php }} ?>
+ 
+ 
+</table>
+
+            <br>
+          </div>
+          <!--/.Card-->
+
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+       
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+      
+<!-- Register Modal -->
+<div id="display" class="modal fade" role="dialog" >
+  <div class="modal-dialog">
+
+<!-- Modal content-->
+    <div class="modal-content" style="width:900px; left:-60px; top:190px;">
+      <div class="modal-header"style="background-color:#DF3A01;">
+     
+        <h3 class="modal-title" style="text-align: center;color:white;">Trainer Information</h3>
+           <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" >
+
+       <table width = "100%" >
+          <?php
+                $trainer_id = $_GET['trainer_id'];
+                $sql = "SELECT * FROM trainer WHERE trainer_id = $trainer_id";
+                $result1 = mysqli_query($conn, $sql);
+                $result2 = mysqli_fetch_assoc($result1);  
+          ?>
+
+           <tr>
+                <th><center>ID</center></th>
+                <th><center>FIRSTNAME</center></th>
+                <th><center>LASTNAME</center></th>
+                <th><center>CONTACT</center></th>
+                <th><center>EMAIL</center></th>
+                <th><center>BIRTHDATE</center></th>
+                <th><center>ADDRESS</center></th>
+                <th><center>STATUS</center></th>
+                <th><center>POSITION</center></th>              
+          </tr>
+          <td><?php echo $result2['trainer_id']; ?></td>
+          <td><?php echo $result2['fname']; ?></td>
+          <td><?php echo $result2['lname']; ?></td>
+          <td><?php echo $result2['phone']; ?></td>
+          <td><?php echo $result2['email']; ?></td>
+          <td><?php echo $result2['birthdate']; ?></td>
+          <td><?php echo $result2['address']; ?></td>
+          <td><?php echo $result2['status']; ?></td>
+          <td><?php echo $result2['position']; ?></td>
+           
+         </table>
+
+      </div>
+    
+    </div>
+
+  </div>
+</div>
+
+<!-- Register Modal -->
+<div id="updateStatus" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+<!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header"style="background-color:#DF3A01;">
+     
+        <h3 class="modal-title"style="color:white;">Trainer Update</h3>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" >
+
+     
+         <form action="update_status.php" method="post">        
+         <center><label>Update Status</label></center>
+         <select id="status" name="status"  required="" style="left:130px;">
+            <option value="">status</option>
+            <option value="active">active</option>
+            <option value="inactive">inactive</option>
+         </select>
+         <br>   
+       
+         <button type="submit"  class="btn" style="color: white;background-color:#DF3A01; width: 235px;height:50px;position: relative;left:122px;">UPDATE</button>
+        </form>  
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Register Modal -->
+<div id="updatePosition" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+<!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header" style="background-color:#DF3A01;">
+     
+        <h3 class="modal-title" style="color:white;">Trainer Update</h3>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" >
+
+     
+         <form action="update_position.php" method="post">        
+         <center><label>Update Position</label></center>
+         <select id="position" name="position"  required="" style="left:130px;">
+            <option value="">position</option>
+            <option value="junior">junior</option>
+            <option value="senior">senior</option>
+         </select>
+         <br>   
+       
+         <button type="submit"  class="btn" style="color: white;background-color:#DF3A01; width: 235px;height:50px;position: relative;left:122px;">UPDATE</button>
+        </form>  
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Register Modal -->
+<div id="add" class="modal fade" role="dialog" >
+  <div class="modal-dialog">
+
+<!-- Modal content-->
+    <div class="modal-content" style="width: 887px; left:-60px; top:70px;">
+      <div class="modal-header"style="background-color:#DF3A01;">
+     
+        <h3 class="modal-title" style="color:white;" >Add New Trainer</h3>
+           <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" >
+      <div class="trainer">
+        <form action="trainer_process.php" method="post">
+
+        
+         <input type="text" name="fname" required="" placeholder="Firstname">
+         <input type="text" name="lname" required="" placeholder="Lastname" style="left:40px;">
+         <input type="text" name="email" required="" placeholder="E-mail" style="left:60px;"><br>
+         <label>Contact Number</label><label style="left:170px;">Birthdate</label><label style="left:380px;">Gender</label><label style="left:450px;">Position</label><br>
+         <input type="text" name="phone" required="" placeholder="Contact Number"  style="left:20px;">
+         <input type="date" name="birthdate"  style="left:40px;">
+
+         <select id="sex" name="sex"  required="" style="left:60px;">
+            <option value="">Gender:</option>
+            <option value="M">M</option>
+            <option value="F">F</option>
+         </select>
+
+         <select id="position" name="position"  required="" style="left:60px;">
+            <option value="">Position:</option>
+            <option value="junior">junior</option>
+            <option value="senior">senior</option>
+         </select><br>
+
+         <label>Address</label><label style="left:240px;">Status</label><br>
+         <input type="text" name="address" required="" placeholder="Address">
+
+
+         <select id="status" name="status"  required="" style="left:40px;">
+            <option value="">Status:</option>
+            <option value="active">active</option>
+            <option value="inactive">inactive</option>
+         </select>
+
+       
+
+         <button type="submit"  class="btn" style="color: white;background-color:#DF3A01;float: right; width: 260px;height:50px;position: relative;left:-15px;">ADD TRAINER</button>
+         </form>
+        
+      </div>
+    </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+             
+
+              </div>
+              <!-- /.First row-->
+
+            </div>
+
+          </div>
+          <!--/.Card-->
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+    </div>
+  </main>
+  <!--Main layout-->
+
+  
+
+  <!-- SCRIPTS -->
+  <!-- JQuery -->
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="js/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="js/mdb.min.js"></script>
+  <!-- Initializations -->
+
+    <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script> 
+  <script src="jquery-3.4.1.min.js"></script>
+  
+</body>
+
+</html>
+
+<script>
+function status(trainer_id,status){
+  $('#trainer_id').val(trainer_id);
+  $('#status').val(status);
+  $('#updateStatus').modal('show');
+}
+</script>
+
+
+<script>
+function showall(trainer_id,fname, lname, phone, email,sex,birthdate,address,status,position){
+  $('#trainer_id').val(id);
+  $('#fname').val(premid);
+  $('#lname').val(midterm);
+  $('#phone').val(prefi);
+  $('#email').val(final);
+  $('#sex').val(final);
+  $('#birthdate').val(final);
+  $('#address').val(final);
+  $('#status').val(final);
+  $('#position').val(final);
+  $('#display').modal('show');
+}
+</script>

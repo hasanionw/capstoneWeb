@@ -1,0 +1,355 @@
+<?php 
+
+session_start();
+require "connect.php";
+
+if($_SESSION['admin_id']){
+        $admin_id = $_SESSION['admin_id'];
+    }
+    
+    $sql = "select * from admin where admin_id =".$admin_id."";
+    $qwe = mysqli_query($conn, $sql);
+
+?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>MEMBERS</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="css/mdb.min.css" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="css/style.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="member_style.css" >
+
+<style>
+  
+
+  .john label{
+  font-family: Helvetica;
+  font-size: 18px;
+  position: relative;
+
+}
+</style>
+</head>
+
+<body class="grey lighten-3" >
+
+  <!--Main Navigation-->
+  <header>
+
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar" >
+      <div class="container-fluid" >
+
+        <!-- Brand -->
+        <a class="navbar-brand waves-effect" href="#" style="position: relative;left:50px;">
+           Welcome Admin:
+          <strong class="green-text">
+          
+                <?php 
+                $rty = mysqli_fetch_array($qwe);
+                echo "<strong>".$rty['firstname']."</strong>";
+                ?> </li>
+                </strong>
+        </a>
+
+        <!-- Collapse -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" >
+          <span class="navbar-toggler-icon" ></span>
+        </button>
+
+        <!-- Links -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+          <!-- Left -->
+          <ul class="navbar-nav mr-auto">
+            
+          </ul>
+
+          <!-- Right -->
+          <ul class="navbar-nav nav-flex-icons">
+           
+            <li class="nav-item">
+              <div class="logout">
+               <a href="http://localhost/CAPSTONEPROJECT/">     <button type="button" style="background-color:#DF3A01; color: white" class="btn">LOGOUT</button></a>
+              </div>
+            </li>
+          </ul>
+
+        </div>
+
+      </div>
+    </nav>
+   
+
+    <!-- Sidebar -->
+     <div class="sidebar-fixed position-fixed" style="background-color:#DF3A01;" >
+      <br>
+     
+        <center><img src="logo.png" class="img-fluid" alt="" style="width: 200px; height: 180px;"></center>
+
+        <br>
+
+      <div class="list-group list-group-flush" >
+        <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-chart-pie mr-3"></i>Dashboard
+        </a>
+        <a href="#" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-user mr-3"></i>Members</a>
+        <a href="trainers.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01; color:white;">
+          <i class="fas fa-table mr-3"></i>Trainers</a>
+        
+        <a href="inventory.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-map mr-3"></i>Inventory</a>
+        <a href="promos.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-money-bill-alt mr-3"></i>Promos</a>
+        <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
+      </div>
+
+    </div>
+    <!-- Sidebar -->
+
+  </header>
+  <!--Main Navigation-->
+
+  <!--Main layout-->
+  <main class="pt-5 mx-lg-5" >
+    <div class="container-fluid mt-5">
+
+      <!-- Heading -->
+      <div class="card mb-4 wow fadeIn">
+
+        <!--Card content-->
+        <div class="card-body d-sm-flex justify-content-between"   >
+
+         
+          <div class="add">
+          <a href="#"><button data-toggle="modal" data-target="#add" type="button" style="background-color:#DF3A01; color: white" class="btn">Add Member</button></a>
+          </div>
+           <div class="view">
+            <button  type="button" style="background-color:#DF3A01; color: white" class="btn">View Member</button>
+          </div>
+             <div class="search">
+                   <button type="button" style="background-color:#DF3A01; color: white" class="btn">Search Member</button>
+            </div>
+              
+
+          <h4 class="mb-1 mb-sm-1 pt-1">          
+            <b><span style="position: relative;left: -30px; top:7px; color: #ff6c6c">MEMBERS</span></b>
+          </h4>
+        </div>
+
+      </div>
+      <!-- Heading -->
+
+
+      <!--Grid row-->
+      <div class="row wow fadeIn">
+
+        <!--Grid column-->
+        <div class="col-md-9 mb-4" >
+
+          <!--Card-->
+          <div class="card" style="width:867px;">
+           
+
+<br>
+
+             <table  style="width: 90%; position: relative; left:45px;" >
+<tr>
+  <th><center>ID</center></th>
+  <th><center>NAME</center></th>
+  <th><center>PAYMENT STATUS</center></th>
+  <th><center>TYPE</center></th>
+  <th><center>ACTION</center></th>
+</tr>
+ <?php
+/* search room number code */
+
+   
+    $sql = "SELECT * FROM member";
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+    
+        if($resultCheck > 0){
+      while($row = mysqli_fetch_assoc($result)){
+      
+      echo "<tr><td>".$row['member_id']."<td>".$row['fname']."<td>".$row['subscription']."<td>".$row['type']."<td>";
+
+?>
+ 
+
+ <span data-toggle="modal" data-target="#action">
+ <?php echo "<a href=#?member_id=".$row['member_id'].">VIEW OR EDIT</a></td></tr>";?> </span><?php }} ?>
+
+ 
+
+</table>
+<br>
+
+
+            
+  
+          </div>
+          <!--/.Card-->
+
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+       
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+      
+
+
+
+
+
+
+<!-- Register Modal -->
+<div id="add" class="modal fade" role="dialog" >
+  <div class="modal-dialog">
+
+<!-- Modal content-->
+    <div class="modal-content" style="width: 887px; height: 450px; left:-60px; top:70px;">
+      <div class="modal-header" style="background-color:#DF3A01;">
+     
+        <h3 class="modal-title"  style="color:white;">ADD NEW MEMBER</h3>
+           <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" >
+      <div class="item">
+        <form action="member_process.php" method="post">
+
+        
+         <input type="text" name="fname" required="" placeholder="First Name">
+         <input type="text" style="float:right;" name="lname" required="" placeholder="Last Name"><br>
+
+         <label>Birthdate</label><br>
+         <input type="date" name="birthdate" required="">
+         <input type="text" style="float:right;" name="phone" required=""  placeholder="phone"><br>
+
+         <input type="email" name="email" required="" placeholder="E-mail">
+
+           <select id="sex" name="sex"  required=""  style="float:right;">
+            <option value="">Gender:</option>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+         </select>
+
+          <select id="type" name="type"  required=""  style="left:80px;">
+            <option value="">Type:</option>
+            <option value="regular">Regular</option>
+            <option value="walkin">Walk-In</option>
+         </select><br>
+        
+         <select id="" name=""  style="width: 45%;">
+            <option value="">Program:</option>
+            <option value="custome">Custome</option>
+            <option value="Hardcore">Hardcore</option>
+            <option value="Softcore">Softcore</option>
+         </select><br>
+
+         <button type="submit"  class="btn" style="color: white;background-color:#DF3A01;float: right; width: 45%;height:50px;position: relative;left:5px; top:-80px;">ADD MEMBER</button>
+         </form>
+        
+      </div>
+    </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+       
+
+<!-- Register Modal -->
+<div id="action" class="modal fade" role="dialog" >
+  <div class="modal-dialog">
+
+<!-- Modal content-->
+    <div class="modal-content" style="width: 887px; height: 450px; left:-60px; top:70px;">
+      <div class="modal-header" style="background-color:#DF3A01;">
+     
+        <h3 class="modal-title"  style="color:white;">ADD NEW MEMBER</h3>
+           <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" >
+      <div class="item">
+        <form action="member_process.php" method="post">
+  <h3><center>
+  ID
+  USERNAME
+  PHONE
+  EMAIL
+  SEX
+  BIRTHDATE
+  ADDRESS
+  TYPE
+  PROGRAM
+  PROGRAM ID
+  ANNUAL MEMBERSHIP
+  START DATE
+  </center></h3>
+         </form>
+        
+      </div>
+    </div>
+    </div>
+
+  </div>
+</div>
+      
+
+              </div>
+              <!-- /.First row-->
+
+            </div>
+
+          </div>
+          <!--/.Card-->
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+    </div>
+  </main>
+  <!--Main layout-->
+
+  
+
+  <!-- SCRIPTS -->
+  <!-- JQuery -->
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="js/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="js/mdb.min.js"></script>
+  <!-- Initializations -->
+  
+</body>
+
+</html>
