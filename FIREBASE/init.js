@@ -1,4 +1,3 @@
-// Your web app's Firebase configuration
 var firebaseConfig = {
   apiKey: "AIzaSyCDA3-weE3UgposdsV5iyUiEj4bPQJ6wjo",
   authDomain: "capstoneweb-538d1.firebaseapp.com",
@@ -9,10 +8,12 @@ var firebaseConfig = {
   appId: "1:353568425583:web:f0c5d41d6ebe0e7a606f9a",
   measurementId: "G-QQBE7BPYW3"
 };
-// Initialize Firebase
+
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
 
 function signUp(){
 	var signUp_email = document.getElementById("signUp_email");
