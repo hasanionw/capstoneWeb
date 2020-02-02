@@ -1,44 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>MEMBERS</title>
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-  <link href="css/bootstrap.min.css" rel="stylesheet">
-  <link href="css/mdb.min.css" rel="stylesheet">
-  <link href="css/style.min.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="member_style.css">
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+  <meta http-equiv='x-ua-compatible' content='ie=edge'>
+
+  <title>Members - California Fitness Gym</title>
+
+  <link rel="icon" href="images/gym_logo.png">
+  <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.11.2/css/all.css'>
+  <link href='css/bootstrap.min.css' rel='stylesheet'>
+  <link href='css/mdb.min.css' rel='stylesheet'>
+  <link href='css/style.min.css' rel='stylesheet'>
 
   <style>
     .john label {
-    font-family: Helvetica;
-    font-size: 18px;
-    position: relative;
+      font-family: Helvetica;
+      font-size: 18px;
+      position: relative;
+    }
+
+    table > thead > tr > th {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .card-header > .card-title {
+      margin-bottom: 0;
+    }
+
+    .card-header > .card-title > h3 {
+      margin-block-end: 0;
+    }
+
+    #card-body {
+      max-height: 350px;
+      overflow-y: auto;
     }
   </style>
 </head>
 
-<body class="grey lighten-3" >
+<body class='grey lighten-3' >
   <header>
-    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar" >
-      <div class="container-fluid" >
-        <a class="navbar-brand waves-effect" href="#" style="position: relative;left:50px;">
-           Welcome Admin:
-        </a>
+    <nav class='navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar' >
+      <div class='container-fluid' >
+        <h3>Welcome!</h3>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" >
-          <span class="navbar-toggler-icon" ></span>
+        <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarSupportedContent'
+          aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation' >
+          <span class='navbar-toggler-icon'></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav nav-flex-icons">
-            <li class="nav-item">
-              <div class="logout">
-                <a href="#">
-                  <button type="button" style="background-color:#DF3A01; color: white" class="btn">LOGOUT</button>
+        <div class='collapse navbar-collapse' id='navbarSupportedContent'>
+          <ul class='navbar-nav nav-flex-icons'>
+            <li class='nav-item'>
+              <div class='logout'>
+                <a href='#'>
+                  <button type='button' style='background-color:#DF3A01; color: white' class='btn'>LOGOUT</button>
                 </a>
               </div>
             </li>
@@ -47,83 +65,88 @@
       </div>
     </nav>
    
-     <div class="sidebar-fixed position-fixed" style="background-color:#DF3A01;" >
+    <div class='sidebar-fixed position-fixed' style='background-color:#DF3A01;' >
       <br>
-     
-        <center><img src="logo.png" class="img-fluid" alt="" style="width: 200px; height: 180px;"></center>
-
+        <center><img src='logo.png' class='img-fluid' alt='' style='width: 200px; height: 180px;'></center>
         <br>
 
-      <div class="list-group list-group-flush" >
-        <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-chart-pie mr-3"></i>Dashboard
+      <div class='list-group list-group-flush' >
+        <a href='dashboard.html' class='list-group-item list-group-item-action waves-effect' style='background-color:#DF3A01;color:white;'>
+          <i class='fas fa-chart-pie mr-3'></i>Dashboard
         </a>
-        <a href="#" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-user mr-3"></i>Members</a>
-        <a href="trainers.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01; color:white;">
-          <i class="fas fa-table mr-3"></i>Trainers</a>
+        <a href='#' class='list-group-item list-group-item-action waves-effect' style='background-color:#DF3A01;color:white;'>
+          <i class='fas fa-user mr-3'></i>Members</a>
+        <a href='trainers.html' class='list-group-item list-group-item-action waves-effect' style='background-color:#DF3A01; color:white;'>
+          <i class='fas fa-table mr-3'></i>Trainers</a>
         
-        <a href="inventory.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-map mr-3"></i>Inventory</a>
-        <a href="promos.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-money-bill-alt mr-3"></i>Promos</a>
-        <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
+        <a href='inventory.html' class='list-group-item list-group-item-action waves-effect' style='background-color:#DF3A01;color:white;'>
+          <i class='fas fa-map mr-3'></i>Inventory</a>
+        <a href='promos.html' class='list-group-item list-group-item-action waves-effect' style='background-color:#DF3A01;color:white;'>
+          <i class='fas fa-money-bill-alt mr-3'></i>Promos</a>
+        <a href='paymentlog.html' class='list-group-item list-group-item-action waves-effect' style='background-color:#DF3A01;color:white;'>
+          <i class='fas fa-money-bill-alt mr-3'></i>Payment Log</a>
       </div>
     </div>
 
   </header>
 
-  <main class="pt-5 mx-lg-5" >
-    <div class="container-fluid mt-5">
+  <main class='pt-5 mx-lg-5' >
+    <div class='container-fluid mt-5'>
 
-      <div class="card mb-4 wow fadeIn">
-        <div class="card-body d-sm-flex justify-content-between"   >
-          <div class="add">
-            <a href="#"><button data-toggle="modal" data-target="#add" type="button" style="background-color:#DF3A01; color: white" class="btn">Add Member</button></a>
+      <div class='card mb-4 wow fadeIn'>
+        <div class='card-body d-sm-flex justify-content-between'   >
+          <div class='add'>
+            <a href='#'><button data-toggle='modal' data-target='#add' type='button' style='background-color:#DF3A01; color: white' class='btn'>Add Member</button></a>
           </div>
-          <div class="view">
-            <button  type="button" style="background-color:#DF3A01; color: white" class="btn" id="viewMembersBtn">View Member</button>
+          <div class='search'>    
+            <button type='button' style='background-color:#DF3A01; color: white' class='btn'>Search Member</button> 
           </div>
-          <div class="search">    
-            <button type="button" style="background-color:#DF3A01; color: white" class="btn">Search Member</button> 
-          </div>
-          <h4 class="mb-1 mb-sm-1 pt-1">          
-            <b><span style="position: relative;left: -30px; top:7px; color: #ff6c6c">MEMBERS</span></b>
+          <h4 class='mb-1 mb-sm-1 pt-1'>          
+            <b><span style='position: relative;left: -30px; top:7px; color: #ff6c6c'>MEMBERS</span></b>
           </h4>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-content">
-          <div class="card-header">
-            <h3 class="card-title">Members</h3>
+      <div class='card'>
+        <div class='card-content'>
+          <div class='card-header'>
+            <h3 class='card-title'>Members</h3>
           </div>
-          <div class="card-body">
-            <ul id="list">
-              
-            </ul>
+          <div class='card-body' id='card-body'>
+            <table class='table'>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>First name</th>
+                  <th>Last name</th>
+                  <th>Unique ID</th>
+                </tr>
+              </thead>
+              <tbody id='tbody'>
+
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
 
-      <div id="add" class="modal fade" role="dialog" >
-        <div class="modal-dialog">
-          <div class="modal-content" style="width: 887px; height: 450px; left:-60px; top:70px;">
-            <div class="modal-header" style="background-color:#DF3A01;">
-              <h3 class="modal-title"  style="color:white;">ADD NEW MEMBER</h3>
-              <button type="button" class="close" id="close-modal" data-dismiss="modal">&times;</button>
+      <div id='add' class='modal fade' role='dialog' >
+        <div class='modal-dialog'>
+          <div class='modal-content' style='width: 887px; height: 450px; left:-60px; top:70px;'>
+            <div class='modal-header' style='background-color:#DF3A01;'>
+              <h3 class='modal-title'  style='color:white;'>ADD NEW MEMBER</h3>
+              <button type='button' class='close' id='close-modal' data-dismiss='modal'>&times;</button>
             </div>
-            <div class="modal-body" >
-              <div class="form-row">
-                <div class="col-sm-4">
-                  <label for="memberName">First Name</label>
-                  <input type="text" id="fName" class="form-control">
-                  <label for="memberName">Last Name</label>
-                  <input type="text" id="lName" class="form-control">
+            <div class='modal-body' >
+              <div class='form-row'>
+                <div class='col-sm-4'>
+                  <label for='memberName'>First Name</label>
+                  <input type='text' id='fName' class='form-control'>
+                  <label for='memberName'>Last Name</label>
+                  <input type='text' id='lName' class='form-control'>
                 </div>
               </div>
-              <button class="btn btn-primary" id="addMemberBtn">Submit</button>
+              <button class='btn btn-primary' id='addMemberBtn'>Submit</button>
             </div>
           </div>
         </div>
@@ -131,66 +154,63 @@
     </div>
   </main>
 
-  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-  <script type="text/javascript" src="js/popper.min.js"></script>
-  <script type="text/javascript" src="js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="js/mdb.min.js"></script>
+  <script type='text/javascript' src='js/jquery-3.4.1.min.js'></script>
+  <script type='text/javascript' src='js/popper.min.js'></script>
+  <script type='text/javascript' src='js/bootstrap.min.js'></script>
+  <script type='text/javascript' src='js/mdb.min.js'></script>
 
   <!-- Firebase CDNs -->
-  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
+  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js'></script>
+  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js'></script>
+  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js'></script>
+  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js'></script>
   <!-- Local script -->
-  <script src="FIREBASE/init.js"></script>
+  <script src='FIREBASE/init.js'></script>
 
   <!-- Add member script -->
   <script>
-    var button = document.getElementById("addMemberBtn");
-    var viewBtn = document.getElementById("viewMembersBtn");
+    var button = document.getElementById('addMemberBtn');
 
-    button.addEventListener("click", function(){
-      var fname = document.getElementById("fName").value;
-      var lname = document.getElementById("lName").value;
-      var modal = document.getElementById("close-modal");
+    button.addEventListener('click', function() {
+      var fname = document.getElementById('fName').value;
+      var lname = document.getElementById('lName').value;
+      var modal = document.getElementById('close-modal');
 
-      var members = db.collection("members");
-      var member = members.where("fname", "==", fname).where("lname", "==", lname);
+      var members = db.collection('members');
+      var member = members.where('fname', '==', fname).where('lname', '==', lname);
 
       member.get().then(function(res) {
         if(res.docs.length > 0) {
-          alert("Error: Member already exists!")
+          alert('Error: Member already exists!')
         } else {
           members.add({
             fname: fname,
             lname: lname
           }).then(function() {
-            alert("Successfully added new member!");
-            modal.click();
-            document.getElementById("fName").value = "";
-            document.getElementById("lName").value = "";
+            alert('Successfully added new member!');
+            window.location.reload();
           }).catch(function(error) {
-            alert(error.message)
+            alert(error.message);
           });
         }
       });
     });
 
-    function renderData(doc) {
-      let li = document.createElement("li");
-      let ul = document.getElementById("list");
+    function renderData(doc, i) {
+      let tbody = document.getElementById('tbody');
+      let tr = document.createElement('tr');
+      let td = document.createElement('td');
 
-      li.setAttribute("data-id", doc.id);
-
-      li.innerHTML = `${doc.data().fname} ${doc.data().lname}`;
-      ul.appendChild(li);
+      tr.setAttribute('data-id', doc.id);
+      tr.innerHTML = `<td>${i}</td><td>${doc.data().fname}</td><td>${doc.data().lname}</td><td>${doc.id}</td>`;
+      tbody.appendChild(tr);
     }
 
-    viewBtn.addEventListener("click", function() {
-      db.collection("members").orderBy("fname").get().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          renderData(doc);
-        });
+    db.collection('members').orderBy('fname').get().then((snapshot) => {
+      var i = 0;
+      snapshot.forEach((doc) => {
+        i++;
+        renderData(doc, i);
       });
     });
   </script>
