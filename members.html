@@ -83,7 +83,7 @@
             <a href="#"><button data-toggle="modal" data-target="#add" type="button" style="background-color:#DF3A01; color: white" class="btn">Add Member</button></a>
           </div>
           <div class="view">
-            <button  type="button" style="background-color:#DF3A01; color: white" class="btn">View Member</button>
+            <button  type="button" style="background-color:#DF3A01; color: white" class="btn" id="viewMembersBtn">View Member</button>
           </div>
           <div class="search">    
             <button type="button" style="background-color:#DF3A01; color: white" class="btn">Search Member</button> 
@@ -94,18 +94,33 @@
         </div>
       </div>
 
+      <div class="card">
+        <div class="card-content">
+          <div class="card-header">
+            <h3 class="card-title">Members</h3>
+          </div>
+          <div class="card-body">
+            <ul id="list">
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+
       <div id="add" class="modal fade" role="dialog" >
         <div class="modal-dialog">
           <div class="modal-content" style="width: 887px; height: 450px; left:-60px; top:70px;">
             <div class="modal-header" style="background-color:#DF3A01;">
               <h3 class="modal-title"  style="color:white;">ADD NEW MEMBER</h3>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <button type="button" class="close" id="close-modal" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body" >
               <div class="form-row">
                 <div class="col-sm-4">
-                  <label for="memberName">Name</label>
-                  <input type="text" name="memberName" id="memberName" class="form-control">
+                  <label for="memberName">First Name</label>
+                  <input type="text" id="fName" class="form-control">
+                  <label for="memberName">Last Name</label>
+                  <input type="text" id="lName" class="form-control">
                 </div>
               </div>
               <button class="btn btn-primary" id="addMemberBtn">Submit</button>
@@ -131,18 +146,53 @@
 
   <!-- Add member script -->
   <script>
-    document.getElementById("addMemberBtn").addEventListener("click", function(){
-      var member = document.getElementById("memberName").value;
+    var button = document.getElementById("addMemberBtn");
+    var viewBtn = document.getElementById("viewMembersBtn");
 
-      db.collection("members").add({
-        name: member
-      }).then(function(){
-        alert("Successfully added new member!");
-        window.location.reload();
-      }).catch(function(error){
-        alert(error.message)
-      })
-    })
+    button.addEventListener("click", function(){
+      var fname = document.getElementById("fName").value;
+      var lname = document.getElementById("lName").value;
+      var modal = document.getElementById("close-modal");
+
+      var members = db.collection("members");
+      var member = members.where("fname", "==", fname).where("lname", "==", lname);
+
+      member.get().then(function(res) {
+        if(res.docs.length > 0) {
+          alert("Error: Member already exists!")
+        } else {
+          members.add({
+            fname: fname,
+            lname: lname
+          }).then(function() {
+            alert("Successfully added new member!");
+            modal.click();
+            document.getElementById("fName").value = "";
+            document.getElementById("lName").value = "";
+          }).catch(function(error) {
+            alert(error.message)
+          });
+        }
+      });
+    });
+
+    function renderData(doc) {
+      let li = document.createElement("li");
+      let ul = document.getElementById("list");
+
+      li.setAttribute("data-id", doc.id);
+
+      li.innerHTML = `${doc.data().fname} ${doc.data().lname}`;
+      ul.appendChild(li);
+    }
+
+    viewBtn.addEventListener("click", function() {
+      db.collection("members").orderBy("fname").get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          renderData(doc);
+        });
+      });
+    });
   </script>
 </body>
 </html>
