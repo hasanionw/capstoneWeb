@@ -116,10 +116,12 @@
             <table class='table'>
               <thead>
                 <tr>
-                  <th>#</th>
                   <th>First name</th>
                   <th>Last name</th>
                   <th>Unique ID</th>
+                  <th>Date Added</th>
+                  <th>Status</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody id='tbody'>
@@ -151,6 +153,57 @@
           </div>
         </div>
       </div>
+
+      <div class="modal fade" id="updateModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title">Update <span id="fname-span"></span></h3>
+              <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="col-sm-6">
+                    <label>First name</label>
+                    <input type="text" class="form-control" id="updateFname" disabled>
+                  </div>
+                  <div class="col-sm-6">
+                    <label>Last name</label>
+                    <input type="text" class="form-control" id="updateLname" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="col-sm-4">
+                    <label>Date Added</label>
+                    <input type="text" class="form-control" id="updateDateAdded" disabled>
+                  </div>
+                  <div class="col-sm-8">
+                    <label>UID</label>
+                    <input type="text" class="form-control" id="updateUID" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="col-sm-5">
+                    <label>Status</label>
+                    <select id="updateStatus" class="form-control">
+                      <option value="Paid" selected>Paid</option>
+                      <option value="Expired">Expired</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary" id="updateBtn">Update</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 
@@ -175,6 +228,8 @@
       var fname = document.getElementById('fName').value;
       var lname = document.getElementById('lName').value;
       var modal = document.getElementById('close-modal');
+      var date = new Date();
+      var dateAdded = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 
       var members = db.collection('members');
       var member = members.where('fname', '==', fname).where('lname', '==', lname);
@@ -185,7 +240,9 @@
         } else {
           members.add({
             fname: fname,
-            lname: lname
+            lname: lname,
+            status: 'Paid',
+            dateAdded: dateAdded
           }).then(function() {
             alert('Successfully added new member!');
             window.location.reload();
@@ -202,17 +259,55 @@
       let td = document.createElement('td');
 
       tr.setAttribute('data-id', doc.id);
-      tr.innerHTML = `<td>${i}</td><td>${doc.data().fname}</td><td>${doc.data().lname}</td><td>${doc.id}</td>`;
+      tr.innerHTML = 
+      `<td>${doc.data().fname}</td>
+      <td>${doc.data().lname}</td>
+      <td>${doc.id}</td>
+      <td>${doc.data().dateAdded}</td>
+      <td>${doc.data().status}</td>
+      <td>
+        <a class='btn-link text-warning' id='${doc.id}' onclick='updateMember(this.parentNode.parentNode)' data-toggle='modal' data-target='#updateModal'>Update</a>
+      </td>`;
       tbody.appendChild(tr);
     }
 
-    db.collection('members').orderBy('fname').get().then(function(snapshot) {
+    db.collection('members').orderBy('dateAdded', 'desc').get().then(function(snapshot) {
       var i = 0;
       snapshot.forEach((doc) => {
         i++;
         renderData(doc, i);
       });
     });
+
+    function updateMember(tr) {
+      let updateFname = document.getElementById('updateFname');
+      let updateLname = document.getElementById('updateLname');
+      let updateDate = document.getElementById('updateDateAdded');
+      let updateUID = document.getElementById('updateUID');
+      let span = document.getElementById('fname-span');
+      let dataId = tr.getAttribute('data-id');
+
+      db.collection('members').doc(dataId).get().then(function(doc) {
+        span.textContent = doc.data().fname;
+        updateFname.value = doc.data().fname;
+        updateLname.value = doc.data().lname;
+        updateDate.value = doc.data().dateAdded;
+        updateUID.value = doc.id;
+
+        var status = document.getElementById('updateStatus').value;
+ 
+        document.getElementById('updateBtn').addEventListener('click', () => {
+          db.collection('members').doc(doc.id).update({
+            status: status
+          }).then(() => {
+            alert('Successfully updated member!');
+            window.location.reload();
+          }).catch((error) => {
+            alert(`Error: ${error.message}`);
+          });
+        });
+      });
+    }
   </script>
 </body>
 </html>
