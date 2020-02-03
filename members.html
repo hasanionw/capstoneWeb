@@ -179,9 +179,9 @@
       var members = db.collection('members');
       var member = members.where('fname', '==', fname).where('lname', '==', lname);
 
-      member.get().then(function(res) {
-        if(res.docs.length > 0) {
-          alert('Error: Member already exists!')
+      member.get().then(function(snapshot) {
+        if(snapshot.docs.length > 0) {
+          alert('Error: Member already exists!');
         } else {
           members.add({
             fname: fname,
@@ -206,7 +206,7 @@
       tbody.appendChild(tr);
     }
 
-    db.collection('members').orderBy('fname').get().then((snapshot) => {
+    db.collection('members').orderBy('fname').get().then(function(snapshot) {
       var i = 0;
       snapshot.forEach((doc) => {
         i++;
