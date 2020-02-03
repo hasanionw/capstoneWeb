@@ -294,9 +294,8 @@
         updateDate.value = doc.data().dateAdded;
         updateUID.value = doc.id;
 
-        var status = document.getElementById('updateStatus').value;
- 
         document.getElementById('updateBtn').addEventListener('click', () => {
+          let status = document.getElementById('updateStatus').value;
           db.collection('members').doc(doc.id).update({
             status: status
           }).then(() => {
