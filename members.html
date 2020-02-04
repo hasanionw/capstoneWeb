@@ -37,6 +37,11 @@
       max-height: 350px;
       overflow-y: auto;
     }
+
+    small {
+      color: grey;
+      margin-left: 5px;
+    }
   </style>
 </head>
 
@@ -253,6 +258,21 @@
       });
     });
 
+    function showID(id) {
+      let span = document.getElementById(`${id}-span`);
+      let small = document.getElementById(`${id}-small`);
+
+      if(span.classList.contains('hidden')) {
+        small.textContent = 'Hide';
+        span.textContent = id;
+        span.classList.remove('hidden');
+      } else {
+        small.textContent = 'Show';
+        span.classList.add('hidden');
+        span.textContent = '';
+      }
+    }
+
     function renderData(doc, i) {
       let tbody = document.getElementById('tbody');
       let tr = document.createElement('tr');
@@ -262,11 +282,11 @@
       tr.innerHTML = 
       `<td>${doc.data().fname}</td>
       <td>${doc.data().lname}</td>
-      <td>${doc.id}</td>
+      <td><span class="hidden" id="${doc.id}-span"></span><a><small id='${doc.id}-small' onclick='showID("${doc.id}")'>Show</small></a></td>
       <td>${doc.data().dateAdded}</td>
       <td>${doc.data().status}</td>
       <td>
-        <a class='btn-link text-warning' id='${doc.id}' onclick='updateMember(this.parentNode.parentNode)' data-toggle='modal' data-target='#updateModal'>Update</a>
+        <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)' data-toggle='modal' data-target='#updateModal'>Update</a>
       </td>`;
       tbody.appendChild(tr);
     }
