@@ -67,6 +67,10 @@
     .logoutBtn:hover {
       text-decoration: underline;
     }
+
+    th, td {
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -119,8 +123,8 @@
             </div>
             </div>
           </div>
-          <div class='card-body card-bodyzz'>
-            <table class='table'>
+          <div class='card-body card-bodyzz table-responsive p-0'>
+            <table class='table table-hover'>
               <thead>
                 <tr>
                   <th>First name</th>
@@ -255,8 +259,8 @@
             </div>
             </div>
           </div>
-          <div class='card-body card-bodyzz'>
-            <table class='table'>
+          <div class='card-body table-responsive p-0 card-bodyzz'>
+            <table class='table table-hover'>
               <thead>
                 <tr>
                   <th>First name</th>
@@ -281,7 +285,7 @@
   <script type='text/javascript' src='js/mdb.min.js'></script>
   <script>
     $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
+      $('[data-toggle="tooltip"]').tooltip();
     });
   </script>
 
@@ -341,11 +345,11 @@
       let small = document.getElementById(`${id}-small`);
 
       if(span.classList.contains('hidden')) {
-        small.textContent = 'Hide';
+        small.innerHTML = '<i class="fas fa-eye-slash"></i>';
         span.textContent = id;
         span.classList.remove('hidden');
       } else {
-        small.textContent = 'Show';
+        small.innerHTML = '<i class="fas fa-eye"></i>';;
         span.classList.add('hidden');
         span.textContent = '';
       }
@@ -363,15 +367,20 @@
       <td>
         <span class="hidden" id="${doc.id}-span"></span>
         <a>
-          <small id='${doc.id}-small' class='text-warning' onclick='showID("${doc.id}")'>Show</small>
+          <small id='${doc.id}-small' onclick='showID("${doc.id}")' data-toggle="tooltip" title="Show ${doc.data().fname}'s UID" data-placement="top"><i class="fas fa-eye"></i></small>
         </a>
       </td>
       <td>${doc.data().dateAdded}</td>
       <td>${doc.data().status}</td>
       <td>
-        <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)' data-toggle='modal' data-target='#updateModal'>Update</a>
+        <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)' data-toggle='modal' data-target='#updateModal'><i class="fas fa-pen" data-toggle="tooltip" title="Update ${doc.data().fname}" data-placement="top"></i></a>
       </td>`;
       tbody.appendChild(tr);
+
+      var tt = $('[data-toggle="tooltip"]').tooltip();
+      tt.click(function() {
+        tt.tooltip("hide");
+      });
     }
 
     renderWalkin = (doc) => {
@@ -385,9 +394,16 @@
       <td>${doc.data().lname}</td>
       <td>${doc.id}</td>
       <td>
-        <a class="text-warning">View</a>
+        <a class="btn-link text-warning mx-2" onclick='updateMember(this.parentNode.parentNode)' data-toggle='modal' data-target='#updateModal'>
+          <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.data().fname}"></i>
+        </a>
       </td>`;
       tbody.appendChild(tr);
+
+      var tt = $('[data-toggle="tooltip"]').tooltip();
+      tt.click(function() {
+        tt.tooltip("hide");
+      });
     }
 
     db.collection('members').where('membertype', '==', 'Member').orderBy('dateAdded', 'desc').get().then((snapshot) => {
@@ -396,7 +412,7 @@
       });
     });
 
-    db.collection('members').where('membertype', '==', 'Walk-in').get().then((snapshot) => {
+    db.collection('members').where('membertype', '==', 'Walk-in').orderBy('dateAdded', 'desc').get().then((snapshot) => {
       snapshot.forEach((doc) => {
         renderWalkin(doc);
       })
