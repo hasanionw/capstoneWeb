@@ -18,10 +18,11 @@ const storage = firebase.storage();
 function signUp(){
 	var signUp_email = document.getElementById("signUp_email");
 	var signUp_password = document.getElementById("signUp_password");
-  window.location.href = "index.html"
+
 	auth.createUserWithEmailAndPassword(signUp_email.value, signUp_password.value).catch(function(error){
     alert("Error! "+error.message)
   });
+  window.location.href = "index.html";
 }
 
 
