@@ -24,6 +24,13 @@
 
 <style>
  
+tr{
+  text-align:center;
+}
+td{
+  text-align:center;
+}
+
 </style>
 </head>
 
@@ -37,7 +44,7 @@
 
         <!-- Brand -->
         <a class="navbar-brand waves-effect"  style="position: relative;left:50px;">
-           Welcome Admin:
+           Admin:
           <strong class="green-text">
           
                 
@@ -475,14 +482,16 @@
       <td>
         <a class='btn-link text-warning' onclick='updatestat(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#statusUpdate'>
-         <span style="color: #DF3A01; "><b>UPDATE</b></span></a>
+         <span style="color: #DF3A01; ">
+         <i  class="fas fa-user-edit" style="font-size: 25px"></i></span></a>
       </td>
 
        
       <td>
         <a class='btn-link text-warning' onclick='viewTrainers(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#displayallrecords'>
-         <span style="color: #DF3A01; "><b>VIEW</b></span></a>
+         <span style="color: #DF3A01; ">
+         <i class="fas fa-eye" style="font-size: 25px;color:#DF3A01;"></i></span></a>
       </td>`;
       tbody.appendChild(tr);
     }
@@ -541,6 +550,8 @@
         span.textContent = '';
       }
     }
+
+    
 
 
     function updatestat(tr) {
