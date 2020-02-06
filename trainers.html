@@ -23,8 +23,7 @@
 
 
 <style>
-  
-
+ 
 </style>
 </head>
 
@@ -148,8 +147,8 @@
 
       <div class='card'>
         <div class='card-content'>
-          <div class='card-header'>
-            <h3 class='card-title'>Members</h3>
+          <div class='card-header'style="background-color:#DF3A01; height: 70px;">
+            <h3 class='card-title' style="color:white;">TRAINERS</h3>
           </div>
           <div class='card-body' id='card-body'>
             <table class='table'>
@@ -160,6 +159,7 @@
                   <th>LASTNAME</th>
                   <th>STATUS</th>
                   <th>POSITION</th>
+                  <th>ACTION</th>
                   <th>VIEW</th>
                 </tr>
               </thead>
@@ -261,6 +261,116 @@
 
 
 
+
+
+<div id='displayallrecords' class='modal fade' role='dialog'  >
+  <div class='modal-dialog' >
+   
+      
+      <div class='modal-body' style="width:1000px;position: relative; left: -110px;">
+        
+        <div class='card'>
+          <div class='card-content'>
+            <div class='card-header'style="background-color:#DF3A01;">
+              <h3 class='card-title' style="color:white;">ALL RECORDS</h3>
+            </div>
+            <div class='card-body' id='card-body'>
+              <table class='table'>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>FIRSTNAME</th>
+                    <th>LASTNAME</th>
+                    <th>EMAIL</th>
+                    <th>PHONE</th>
+                    <th>BIRTHDATE</th>
+                    <th>SEX</th>
+                    <th>ADDRESS</th>
+                    <th>POSITION</th>
+                    <th>STATUS</th>
+                    
+                  </tr>
+                </thead>
+                <tbody id='tbody'>
+                  <tr>
+                    <td id="view-id"></td>
+                    <td id="view-fname"></td>
+                    <td id="view-lname"></td>
+                    <td id="view-email"></td>
+                    <td id="view-phone"></td>
+                    <td id="view-birthdate"></td>
+                    <td id="view-sex"></td>
+                    <td id="view-address"></td>
+                    <td id="view-position"></td>
+                    <td id="view-status"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      
+      </div>
+    
+  </div>
+</div>
+
+<div class="modal fade" id="statusUpdate">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"style="background-color:#DF3A01;">
+        <h3 class="modal-title" style="color:white;">Update <span id="fname-span"></span></h3>
+       
+        <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <div class="form-row">
+            <div class="col-sm-6">
+              <label>First name</label>
+              <input type="text" class="form-control" id="updateFname" disabled>
+            </div>
+            <div class="col-sm-6">
+              <label>Last name</label>
+              <input type="text" class="form-control" id="updateLname" disabled>
+            </div>
+            
+            <div class="col-sm-6">
+              <label>Status</label>
+              <select id="updateStatus" class="form-control">
+                <option value="active" selected>active</option>
+                <option value="inactive">inactive</option>
+              </select>
+
+            </div>
+            <div class="col-sm-6">
+              <label>Position</label>
+              <select id="updatePosition" class="form-control">
+                <option value="junior" selected>junior</option>
+                <option value="senior">senior</option>
+              </select>
+              
+          </div>
+          </div>
+        </div>
+      
+       
+      </div>
+      <div class="modal-footer"  style="height: 70px;">
+        <button class="btn" style="background-color:#DF3A01; color:white;" id="updateBtn">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
              
 
               </div>
@@ -353,22 +463,29 @@
     function renderData(doc) {
       let tbody = document.getElementById('tbody');
       let tr = document.createElement('tr');
-      let td = document.createElement('td');
 
       tr.setAttribute('data-id', doc.id);
       tr.innerHTML = 
-      `<td>${doc.id}</td>
-      <td>${doc.data().fname}</td>
-      <td>${doc.data().lname}</td>
-      <td>${doc.data().status}</td>
-      <td>${doc.data().position}</td>
-      
+      `<td><span class="hidden" id="${doc.id}-span"></span><a><small id='${doc.id}-small' onclick='showID("${doc.id}")'>Show</small></a></td>
+      <td><b>${doc.data().fname}</b></td>
+      <td><b>${doc.data().lname}<b></td>
+      <td><b>${doc.data().status}<b></td>
+      <td><b>${doc.data().position}<b></td>
+
       <td>
-        <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)' data-toggle='modal' data-target='#updateModal'>Update</a>
+        <a class='btn-link text-warning' onclick='updatestat(this.parentNode.parentNode)'
+         data-toggle='modal' data-target='#statusUpdate'>
+         <span style="color: #DF3A01; "><b>UPDATE</b></span></a>
+      </td>
+
+       
+      <td>
+        <a class='btn-link text-warning' onclick='viewTrainers(this.parentNode.parentNode)'
+         data-toggle='modal' data-target='#displayallrecords'>
+         <span style="color: #DF3A01; "><b>VIEW</b></span></a>
       </td>`;
       tbody.appendChild(tr);
     }
-    
   
     db.collection('trainers').orderBy('fname', 'desc').get().then(function(snapshot) {
       snapshot.forEach((doc) => {
@@ -376,6 +493,88 @@
         renderData(doc);
       });
     });
+
+    function viewTrainers(x) {
+      let id = x.getAttribute("data-id");
+      let viewId = document.getElementById("view-id");
+      let fname = document.getElementById("view-fname");
+      let lname = document.getElementById("view-lname");
+      let email = document.getElementById("view-email");
+      let phone = document.getElementById("view-phone");
+      let birthdate = document.getElementById("view-birthdate");
+      let sex = document.getElementById("view-sex");
+      let address = document.getElementById("view-address");
+      let position = document.getElementById("view-position");
+      let status = document.getElementById("view-status");
+      
+
+
+
+      
+      db.collection("trainers").doc(id).get().then(function(snapshot) {
+        viewId.textContent = id;
+        fname.textContent = snapshot.data().fname;
+        lname.textContent = snapshot.data().lname;
+        email.textContent = snapshot.data().email;
+        phone.textContent = snapshot.data().phone;
+        birthdate.textContent = snapshot.data().birthdate;
+        sex.textContent = snapshot.data().sex;
+        address.textContent = snapshot.data().address;
+        position.textContent = snapshot.data().position;
+        status.textContent = snapshot.data().status;
+        
+      });
+    }
+   
+
+    function showID(id) {
+      let span = document.getElementById(`${id}-span`);
+      let small = document.getElementById(`${id}-small`);
+
+      if(span.classList.contains('hidden')) {
+        small.textContent = ' Hide';
+        span.textContent = id;
+        span.classList.remove('hidden');
+      } else {
+        small.textContent = 'Show';
+        span.classList.add('hidden');
+        span.textContent = '';
+      }
+    }
+
+
+    function updatestat(tr) {
+      let updateFname = document.getElementById('updateFname');
+      let updateLname = document.getElementById('updateLname');
+      let span = document.getElementById('fname-span');
+      let dataId = tr.getAttribute('data-id');
+    
+
+      db.collection('trainers').doc(dataId).get().then(function(doc) {
+        span.textContent = doc.data().fname; // firstname na mo display sa update modal
+        updateFname.value = doc.data().fname;
+        updateLname.value = doc.data().lname;
+       
+
+      document.getElementById('updateBtn').addEventListener('click', () => {
+          let status = document.getElementById('updateStatus').value;
+          let postion = document.getElementById('updatePosition').value;
+          db.collection('trainers').doc(doc.id).update({
+            status: status,
+            postion: postion
+          }).then(() => {
+            alert('Successfully updated member!');
+            window.location.reload();
+          }).catch((error) => {
+            alert(`Error: ${error.message}`);
+          });
+        });
+      });
+    }
+
+    
+    
+    
 
     </script>
 </body>

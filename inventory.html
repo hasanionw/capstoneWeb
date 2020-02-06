@@ -1,16 +1,3 @@
-<?php 
-
-session_start();
-require "connect.php";
-
-if($_SESSION['admin_id']){
-        $admin_id = $_SESSION['admin_id'];
-    }
-    
-    $sql = "select * from admin where admin_id =".$admin_id."";
-    $qwe = mysqli_query($conn, $sql);
-
-?>
 
 
 <!DOCTYPE html>
@@ -51,10 +38,7 @@ if($_SESSION['admin_id']){
            Welcome Admin:
           <strong class="green-text">
           
-                <?php 
-                $rty = mysqli_fetch_array($qwe);
-                echo "<strong>".$rty['firstname']."</strong>";
-                ?> 
+               
                 </strong>
         </a>
 
@@ -185,25 +169,7 @@ if($_SESSION['admin_id']){
   
   
 </tr>
- <?php
-/* search room number code */
 
-   
-    $sql = "SELECT * FROM item";
-    $result = mysqli_query($conn, $sql);
-    $resultCheck = mysqli_num_rows($result);
-    
-        if($resultCheck > 0){
-      while($row = mysqli_fetch_assoc($result)){
-      
-      echo "<tr><td>".$row['item_id']."<td>".$row['item_name']."<td>".$row['category']."<td>";
-
-?>
-<span style="font-size: 17px; " data-toggle="modal" data-target="#updateStatus">
-  <?php echo "<a href=#?item_id=".$row['item_id'].">".$row['status']."</a><td>";?></span> 
-
- <span data-toggle="modal" data-target="#display">
- <?php echo "<a href=#?item_id=".$row['item_id'].">VIEW</a></td></tr>";?> </span><?php }} ?>
 
  
 
