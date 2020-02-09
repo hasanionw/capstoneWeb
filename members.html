@@ -114,13 +114,21 @@
               <span class="add-members" data-toggle="tooltip" data-placement="top" title="Add new member"><i data-toggle="modal" data-target="#add-member" class="fas fa-plus mr-2"></i></span>
               Regular Members
             </h3>
-            <div>
-            <div class="d-flex justify-content-center">
-              <input type="search"  placeholder="Search member here..." aria-label="Search" class="form-control">
-              <button class="btn btn-dark btn-sm my-0 p" type="submit">
-                <i class="fas fa-search" ></i>
-              </button>
+            <div class="d-flex justify-content-start align-items-center">
+              Sort status:
+              <select id="sort-regular" class="form-control mx-5" style="flex: 1">
+                <option value="Both">Both</option>
+                <option value="Paid">Paid</option>
+                <option value="Expired">Expired</option>
+              </select>
             </div>
+            <div>
+              <div class="d-flex justify-content-center">
+                <input type="search"  placeholder="Search member here..." aria-label="Search" class="form-control" id="search-member">
+                <button class="btn btn-dark btn-sm my-0 p" type="submit" id="search-member-btn">
+                  <i class="fas fa-search" ></i>
+                </button>
+              </div>
             </div>
           </div>
           <div class='card-body card-bodyzz table-responsive p-0'>
@@ -146,7 +154,7 @@
       <!-- Add member modal -->
       <div id='add-member' class='modal fade' role='dialog'>
         <div class='modal-dialog'>
-          <div class='modal-content' style='width: 887px; height: 450px; left:-60px; top:70px;'>
+          <div class='modal-content'>
             <div class='modal-header'>
               <h3 class='modal-title'>Add New Member</h3>
               <button type='button' class='close' id='close-modal' data-dismiss='modal'>&times;</button>
@@ -166,6 +174,29 @@
               </div>
               <div class="form-group">
                 <div class="form-row">
+                  <div class="col-sm-2">
+                    <label>Sex</label>
+                    <select id="sex" class="form-control">
+                      <option value="Male">M</option>
+                      <option value="Female">F</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-5">
+                    <label>Birthdate</label>
+                    <input type="date" id="birthdate" class="form-control">
+                  </div>
+                  <div class="col-sm-5">
+                    <label>Email</label>
+                    <input type="email" class="form-control" id="email">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="col-sm-4">
+                    <label>Phone</label>
+                    <input type="text" class="form-control" id="phone">
+                  </div>
                   <div class="col-sm-4">
                     <label>Membership type</label>
                     <select id="memberType" class="form-control">
@@ -243,6 +274,50 @@
       </div>
     </div>
 
+    <!-- Payment modal -->
+    <div class="modal fade" id="payment-modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">Add Payment for <span id="payment-fname-span"></span></h3>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <div class="form-row">
+                <div class="col-sm-6">
+                  <label>Unique ID</label>
+                  <input type="text" class="form-control" disabled id="payment-uid">
+                </div>
+                <div class="col-sm-6">
+                  <label>Name</label>
+                  <input type="text" class="form-control" disabled id="payment-name">
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-row">
+                <div class="col-sm-6">
+                  <label>Payment Description</label>
+                  <select id="payment-desc" class="form-control">
+                    <option value="monthlySubscription">Monthly Subscription</option>
+                    <option value="annualSubscription">Annual Subscription</option>
+                    <option value="walkin">Walk-in</option>
+                  </select>
+                </div>
+                <div class="col-sm-6">
+                  <label>Amount</label>
+                  <input type="text" class="form-control" id="payment-amount">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" id="add-payment-btn">Add payment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="container-fluid my-3">
       <div class='card'>
         <div class='card-content'>
@@ -251,12 +326,12 @@
               Walk-in Members
             </h3>
             <div>
-            <div class="d-flex justify-content-center">
-              <input type="search"  placeholder="Search walk-in here..." aria-label="Search" class="form-control">
-              <button class="btn btn-dark btn-sm my-0 p" type="submit">
-                <i class="fas fa-search" ></i>
-              </button>
-            </div>
+              <div class="d-flex justify-content-center">
+                <input type="search"  placeholder="Search walk-in here..." aria-label="Search" class="form-control">
+                <button class="btn btn-dark btn-sm my-0 p" type="submit">
+                  <i class="fas fa-search" ></i>
+                </button>
+              </div>
             </div>
           </div>
           <div class='card-body table-responsive p-0 card-bodyzz'>
@@ -312,10 +387,21 @@
     button.addEventListener('click', () => {
       var fname = document.getElementById('fName').value;
       var lname = document.getElementById('lName').value;
-      var membertype = document.getElementById('memberType').value;
+      var memberType = document.getElementById('memberType').value;
       var modal = document.getElementById('close-modal');
       var date = new Date();
-      var dateAdded = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+      var dateAdded = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+      var phone = document.getElementById('phone').value;
+      var monthlyRate;
+      if(memberType == 'Member') {
+        monthlyRate = 750;
+      } else {
+        monthlyRate = '';
+      }
+      var annualStart = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+      var annualEnd = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()+1}`;
+      var monthlyStart = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+      var monthlyEnd = `${date.getMonth()+2}/${date.getDate()}/${date.getFullYear()}`;
 
       var members = db.collection('members');
       var member = members.where('fname', '==', fname).where('lname', '==', lname);
@@ -327,9 +413,15 @@
           members.add({
             fname: fname,
             lname: lname,
-            membertype: membertype,
+            memberType: memberType,
             status: 'Paid',
-            dateAdded: dateAdded
+            dateAdded: dateAdded,
+            phone: phone,
+            monthlyRate: monthlyRate,
+            annualStart: annualStart,
+            annualEnd: annualEnd,
+            monthlyStart: monthlyStart,
+            monthlyEnd: monthlyEnd
           }).then(function() {
             alert('Successfully added new member!');
             window.location.reload();
@@ -373,7 +465,8 @@
       <td>${doc.data().dateAdded}</td>
       <td>${doc.data().status}</td>
       <td>
-        <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)' data-toggle='modal' data-target='#updateModal'><i class="fas fa-pen" data-toggle="tooltip" title="Update ${doc.data().fname}" data-placement="top"></i></a>
+        <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)' data-toggle='modal' data-target='#updateModal'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data().fname}" data-placement="top"></i></a>
+        <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
       </td>`;
       tbody.appendChild(tr);
 
@@ -394,9 +487,10 @@
       <td>${doc.data().lname}</td>
       <td>${doc.id}</td>
       <td>
-        <a class="btn-link text-warning mx-2" onclick='updateMember(this.parentNode.parentNode)' data-toggle='modal' data-target='#updateModal'>
-          <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.data().fname}"></i>
+        <a class="btn-link text-warning mx-1" onclick='updateMember(this.parentNode.parentNode)' data-toggle='modal' data-target='#updateModal'>
+          <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.data().fname}" style="font-size: 20px"></i>
         </a>
+        <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
       </td>`;
       tbody.appendChild(tr);
 
@@ -406,13 +500,13 @@
       });
     }
 
-    db.collection('members').where('membertype', '==', 'Member').orderBy('dateAdded', 'desc').get().then((snapshot) => {
+    db.collection('members').where('memberType', '==', 'Member').orderBy('dateAdded', 'desc').get().then((snapshot) => {
       snapshot.forEach((doc) => {
         renderData(doc);
       });
     });
 
-    db.collection('members').where('membertype', '==', 'Walk-in').orderBy('dateAdded', 'desc').get().then((snapshot) => {
+    db.collection('members').where('memberType', '==', 'Walk-in').orderBy('dateAdded', 'desc').get().then((snapshot) => {
       snapshot.forEach((doc) => {
         renderWalkin(doc);
       })
@@ -432,14 +526,15 @@
         updateFname.value = doc.data().fname;
         updateLname.value = doc.data().lname;
         updateDate.value = doc.data().dateAdded;
-        document.getElementById('updateType').value = doc.data().membertype;
+        document.getElementById('updateType').value = doc.data().memberType;
         updateUID.value = doc.id;
 
         document.getElementById('updateBtn').addEventListener('click', () => {
-          let membertype = document.getElementById('updateType').value;
+          let memberType = document.getElementById('updateType').value;
           let status = document.getElementById('updateStatus').value;
-          db.collection('members').doc(doc.id).update({
-            membertype: membertype,
+          let id = document.getElementById('updateUID').value;
+          db.collection('members').doc(id).update({
+            memberType: memberType,
             status: status
           }).then(() => {
             alert('Successfully updated member!');
@@ -450,6 +545,54 @@
         });
       });
     }
+
+    // Search member
+    document.getElementById("search-member-btn").addEventListener("click", () => {
+      let search = document.getElementById('search-member').value;
+      const members = [];
+      
+      if(search.indexOf(' ') > 0) {
+        let space = search.indexOf(' ');
+        let firstWord = search.slice(0, space);
+        let firstWordLet = firstWord.slice(0, 1).toUpperCase();
+        let firstWordRest = firstWord.slice(1, firstWord.length).toLowerCase();
+        firstWord = firstWordLet + firstWordRest;
+        let secondWord = search.slice(space, search.length);
+        let secondWordLet = secondWord.slice(1, 2).toUpperCase();
+        let secondWordRest = secondWord.slice(2, secondWord.length).toLowerCase();
+        secondWord = secondWordLet + secondWordRest;
+
+        finalSearch = `${firstWord} ${secondWord}`;
+      } else {
+        let firstLetter = search.slice(0, 1).toUpperCase();
+        let rest = search.slice(1, search.length).toLowerCase();
+
+        finalSearch = `${firstLetter}${rest}`;
+      }
+
+      db.collection('members').where('fname', '==', finalSearch).where('memberType', '==', 'Member').get().then((snapshot) => {
+        if(snapshot.docs.length > 0) {
+          let tbody = document.getElementById('tbody');
+          tbody.innerHTML = '';
+          snapshot.forEach((doc) => {
+            members.push(doc.data());
+          });
+          console.log(members);
+        } else {
+          db.collection('members').where('lname', '==', finalSearch).where('memberType', '==', 'Member').get().then((snapshot) => {
+            if(snapshot.docs.length > 0) {
+              let tbody = document.getElementById('tbody');
+              tbody.innerHTML = '';
+              snapshot.forEach((doc) => {
+                renderData(doc);
+              });
+            } else {
+              tbody.innerHTML = 'no data!';
+            }
+          });
+        }
+      });
+    });
   </script>
 </body>
 </html>
