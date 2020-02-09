@@ -81,22 +81,22 @@
         <center><img src='logo.png' class='img-fluid' alt='' style='width: 200px; height: 180px;'></center>
         <br>
 
-      <div class='list-group list-group-flush' >
-        <a href='dashboard.html' class='list-group-item list-group-item-action waves-effect' style='background-color:#DF3A01;color:white;'>
-          <i class='fas fa-chart-pie mr-3'></i>Dashboard
-        </a>
-        <a href='#' class='list-group-item list-group-item-action waves-effect' style='background-color:#DF3A01;color:white;'>
-          <i class='fas fa-user mr-3'></i>Members</a>
-        <a href='trainers.html' class='list-group-item list-group-item-action waves-effect' style='background-color:#DF3A01; color:white;'>
-          <i class='fas fa-table mr-3'></i>Trainers</a>
-        
-        <a href='inventory.html' class='list-group-item list-group-item-action waves-effect' style='background-color:#DF3A01;color:white;'>
-          <i class='fas fa-map mr-3'></i>Inventory</a>
-        <a href='promos.html' class='list-group-item list-group-item-action waves-effect' style='background-color:#DF3A01;color:white;'>
-          <i class='fas fa-money-bill-alt mr-3'></i>Promos</a>
-        <a href='paymentlog.html' class='list-group-item list-group-item-action waves-effect' style='background-color:#DF3A01;color:white;'>
-          <i class='fas fa-money-bill-alt mr-3'></i>Payment Log</a>
-      </div>
+        <div class="list-group list-group-flush" >
+          <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-chart-pie mr-3"></i>Dashboard
+          </a>
+          <a href="#" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-user mr-3"></i>Members</a>
+          <a href="trainers.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01; color:white;">
+            <i class="fas fa-user-shield mr-3"></i>Trainers</a>
+          
+          <a href="inventory.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-dumbbell  mr-3"></i>Inventory</a>
+          <a href="promos.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-percent mr-3"></i>Promos</a>
+          <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
+        </div>
     </div>
 
   </header>
@@ -345,7 +345,7 @@
       let small = document.getElementById(`${id}-small`);
 
       if(span.classList.contains('hidden')) {
-        small.innerHTML = '<i class="fas fa-eye-slash"></i>';
+        small.innerHTML = ' <i class="fas fa-eye"></i>';
         span.textContent = id;
         span.classList.remove('hidden');
       } else {
@@ -367,13 +367,17 @@
       <td>
         <span class="hidden" id="${doc.id}-span"></span>
         <a>
-          <small id='${doc.id}-small' onclick='showID("${doc.id}")' data-toggle="tooltip" title="Show ${doc.data().fname}'s UID" data-placement="top"><i class="fas fa-eye"></i></small>
+          <small id='${doc.id}-small' onclick='showID("${doc.id}")'
+           data-toggle="tooltip" title="Show ${doc.data().fname}'s UID" data-placement="top">
+           <i class="fas fa-eye"></i></small>
         </a>
       </td>
       <td>${doc.data().dateAdded}</td>
       <td>${doc.data().status}</td>
       <td>
-        <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)' data-toggle='modal' data-target='#updateModal'><i class="fas fa-pen" data-toggle="tooltip" title="Update ${doc.data().fname}" data-placement="top"></i></a>
+        <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)'
+         data-toggle='modal' data-target='#updateModal'><i class="fas fa-pen"
+          data-toggle="tooltip" title="Update ${doc.data().fname}" data-placement="top"></i></a>
       </td>`;
       tbody.appendChild(tr);
 
