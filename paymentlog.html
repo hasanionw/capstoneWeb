@@ -1,16 +1,3 @@
-html<?php 
-
-session_start();
-require "connect.php";
-
-if($_SESSION['admin_id']){
-        $admin_id = $_SESSION['admin_id'];
-    }
-    
-    $sql = "select * from admin where admin_id =".$admin_id."";
-    $qwe = mysqli_query($conn, $sql);
-
-?>
 
 
 <!DOCTYPE html>
@@ -49,13 +36,7 @@ if($_SESSION['admin_id']){
         <!-- Brand -->
         <a class="navbar-brand waves-effect"  style="position: relative;left:50px;">
            Welcome Admin:
-          <strong class="green-text">
           
-                <?php 
-                $rty = mysqli_fetch_array($qwe);
-                echo "<strong>".$rty['firstname']."</strong>";
-                ?> 
-                </strong>
         </a>
 
         <!-- Collapse -->
@@ -96,22 +77,22 @@ if($_SESSION['admin_id']){
 
         <br>
 
-      <div class="list-group list-group-flush" >
-        <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-chart-pie mr-3"></i>Dashboard
-        </a>
-        <a href="members.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-user mr-3"></i>Members</a>
-        <a href="trainers.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01; color:white;">
-          <i class="fas fa-table mr-3"></i>Trainers</a>
-        
-        <a href="inventory.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-map mr-3"></i>Inventory</a>
-        <a href="promos.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-money-bill-alt mr-3"></i>Promos</a>
-        <a href="#" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
-      </div>
+        <div class="list-group list-group-flush" >
+          <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-chart-pie mr-3"></i>Dashboard
+          </a>
+          <a href="members.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-user mr-3"></i>Members</a>
+          <a href="trainers.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01; color:white;">
+            <i class="fas fa-user-shield mr-3"></i>Trainers</a>
+          
+          <a href="inventory.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-dumbbell  mr-3"></i>Inventory</a>
+          <a href="promos.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-percent mr-3"></i>Promos</a>
+          <a href="#" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
+        </div>
 
     </div>
     <!-- Sidebar -->
@@ -175,7 +156,7 @@ if($_SESSION['admin_id']){
               <table  style="width: 90%; position: relative; left:45px;" >
 <tr>
 
-  <th><center>PAYMENT ID</center></th>
+  <th><center></center>PAYMENT ID</center></th>
   <th><center>MEMBER ID</center></th>
   <th><center>MEMBER NAME</center></th>
   <th><center>DATE OF PAYMENT</center></th>
@@ -296,16 +277,17 @@ if($_SESSION['admin_id']){
       </div>
       <div class="modal-body" >
       <div class="item">
-        <form action="paymentlog_process.php" method="post">
+        
 
         
-         <input type="text" name="member_id" required="" placeholder="Member ID">
+         <input type="text" id="memid" required="" placeholder="Member ID">
 
-           <select id="type" name="type"  required="" style="left:60px;">
-            <option value="">Type of Subscription:</option>
-            <option value="Annual Subscription">Annual Subscription</option>
+           <select id="paymentmethod" name="type"  required="" style="left:60px;">
+            <option value="Annual Subscription" selected>Annual Subscription</option>
             <option value="Monthly Subscription">Monthly Subscription</option>
          </select><br>
+
+         <input type="date" name="member_id" required="" placeholder="Member ID">
         
          <input type="text" name="amount" required="" placeholder="Amount"  style="left:20px;"><br>
       
@@ -313,8 +295,8 @@ if($_SESSION['admin_id']){
         <textarea rows="5" cols="100" class="form-control" id="description" name="description"required data-validation-required-message="Please enter description" placeholder="Enter description" maxlength="999" style=" width: 340px; position: relative; height:120px;left: 510px; top: -70px;"></textarea>
        
 
-         <button type="submit"  class="btn" style="color: white;background-color:#DF3A01;float: left; width: 340px;height:50px;position: relative;left:15px; top:-120px;">ADD PAYMENT</button>
-         </form>
+         <button type="submit"  class="addBtn" style="color: white;background-color:#DF3A01;float: left; width: 340px;height:50px;position: relative;left:15px; top:-120px;">ADD PAYMENT</button>
+         
         
       </div>
     </div>
@@ -357,6 +339,54 @@ if($_SESSION['admin_id']){
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="js/mdb.min.js"></script>
   <!-- Initializations -->
+
+   <!-- Firebase CDNs -->
+   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
+   <!-- Local script -->
+   <script src="FIREBASE/init.js"></script>
+
+   <script>
+    var button = document.getElementById('addBtn');
+
+    button.addEventListener('click', function() {
+      var promoname = document.getElementById('promoname').value;
+      var amount = document.getElementById('amount').value;
+      var stat = document.getElementById('stat').value;
+      var start = document.getElementById('start').value;
+      var end = document.getElementById('end').value;
+      var description = document.getElementById('description').value;
+      
+    
+
+      var promos = db.collection('promos');
+      var discount = promos.where('start', '==', start).where('end', '==', end);
+
+      discount.get().then(function(snapshot) {
+        if(snapshot.docs.length > 0) {
+          alert('Error: promo date already exists!');
+        } else {
+          promos.add({
+            promoname: promoname,
+            amount: amount,
+            stat: stat,
+            start: start,
+            end: end,
+            description: description
+            
+          }).then(function() {
+            alert('Successfully added new Inventory!');
+            window.location.reload();
+          }).catch(function(error) {
+            alert(error.message);
+          });
+        }
+      });
+    });
+
+  </script>
   
 </body>
 

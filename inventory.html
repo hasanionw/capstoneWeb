@@ -1,16 +1,3 @@
-<?php 
-
-session_start();
-require "connect.php";
-
-if($_SESSION['admin_id']){
-        $admin_id = $_SESSION['admin_id'];
-    }
-    
-    $sql = "select * from admin where admin_id =".$admin_id."";
-    $qwe = mysqli_query($conn, $sql);
-
-?>
 
 
 <!DOCTYPE html>
@@ -30,10 +17,14 @@ if($_SESSION['admin_id']){
   <link href="css/mdb.min.css" rel="stylesheet">
   <!-- Your custom styles (optional) -->
   <link href="css/style.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="inventory_style.css" >
+    
 
 <style>
   
+  .card-bodyzz {
+      max-height: 325px;
+      overflow-y: auto;
+    }
 
 </style>
 </head>
@@ -51,10 +42,7 @@ if($_SESSION['admin_id']){
            Welcome Admin:
           <strong class="green-text">
           
-                <?php 
-                $rty = mysqli_fetch_array($qwe);
-                echo "<strong>".$rty['firstname']."</strong>";
-                ?> 
+               
                 </strong>
         </a>
 
@@ -96,22 +84,22 @@ if($_SESSION['admin_id']){
 
         <br>
 
-      <div class="list-group list-group-flush" >
-        <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-chart-pie mr-3"></i>Dashboard
-        </a>
-        <a href="members.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-user mr-3"></i>Members</a>
-        <a href="trainers.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01; color:white;">
-          <i class="fas fa-table mr-3"></i>Trainers</a>
-        
-        <a href="#" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-map mr-3"></i>Inventory</a>
-        <a href="promos.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-money-bill-alt mr-3"></i>Promos</a>
-        <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
-      </div>
+        <div class="list-group list-group-flush" >
+          <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-chart-pie mr-3"></i>Dashboard
+          </a>
+          <a href="members.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-user mr-3"></i>Members</a>
+          <a href="trainers.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01; color:white;">
+            <i class="fas fa-user-shield mr-3"></i>Trainers</a>
+          
+          <a href="#" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-dumbbell  mr-3"></i>Inventory</a>
+          <a href="promos.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-percent mr-3"></i>Promos</a>
+          <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
+        </div>
 
     </div>
     <!-- Sidebar -->
@@ -122,173 +110,146 @@ if($_SESSION['admin_id']){
   <!--Main layout-->
   <main class="pt-5 mx-lg-5" >
     <div class="container-fluid mt-5">
-
-      <!-- Heading -->
-      <div class="card mb-4 wow fadeIn"style="height: 100px;">
-
-        <!--Card content-->
-        <div class="card-body d-sm-flex justify-content-between">
-
-         
-      
-           
-            <button data-toggle="modal" data-target="#add" type="button" style="background-color:#DF3A01; color: white;height: 45px;" class="btn">ADD ITEM</button>
-
-          <select  style="left:-40px; background-color:#DF3A01; width: 150px; height: 45px; color:white; ">
-       
-            <option value="">SORT BY:</option>
-            <option value="Working">Working</option>
-            <option value="Damage">Damage</option>
-          
-
-         </select>
+<Br>
+     
 
 
-          
-          <form class="d-flex justify-content-center">
-            <!-- Default input -->
-            <input type="search"  placeholder="Type your query" aria-label="Search" class="form-control" style="height: 45px;" >
-            <button class="btn " style="background-color:#DF3A01; color: white; height:45px; top:-5px;" type="submit">
-              <i class="fas fa-search"  ></i>
-            </button>
-
-          </form>
-            
-              
-
-        </div>
-
-      </div>
-      <!-- Heading -->
-
-
-      <!--Grid row-->
-      <div class="row wow fadeIn">
-
-        <!--Grid column-->
-        <div class="col-md-9 mb-4" >
-
-          <!--Card-->
-          <div class="card" style="width:867px;">
-            <br>
-             
-              <table  style="width: 90%; position: relative; left:45px;" >
-<tr>
-
-  <th><center>ID</center></th>
-  <th><center>NAME</center></th>
-  <th><center>CATEGORY</center></th>
-  <th><center>STATUS</center></th>
-  <th><center>ACTION</center></th>
-  
-
-  
-  
-</tr>
- <?php
-/* search room number code */
-
-   
-    $sql = "SELECT * FROM item";
-    $result = mysqli_query($conn, $sql);
-    $resultCheck = mysqli_num_rows($result);
-    
-        if($resultCheck > 0){
-      while($row = mysqli_fetch_assoc($result)){
-      
-      echo "<tr><td>".$row['item_id']."<td>".$row['item_name']."<td>".$row['category']."<td>";
-
-?>
-<span style="font-size: 17px; " data-toggle="modal" data-target="#updateStatus">
-  <?php echo "<a href=#?item_id=".$row['item_id'].">".$row['status']."</a><td>";?></span> 
-
- <span data-toggle="modal" data-target="#display">
- <?php echo "<a href=#?item_id=".$row['item_id'].">VIEW</a></td></tr>";?> </span><?php }} ?>
-
- 
-
-</table>
-
-            <br>
+      <div class='card'>
+        <div class='card-content'>
+          <div class='card-header flexHeader'>
+            <h3 class='card-title'>
+              <span class="add-trainer" data-toggle="tooltip" data-placement="top" title="Add new trainer">
+                <i style="color:#DF3A01;" data-toggle="modal" data-target="#add" class="fas fa-plus mr-2"></i></span>
+              Inventory
+            </h3>
+            <div>
+            <div class="d-flex justify-content-center" style="width:300px; height:0px; position: relative; top: -45px; left: 630px;">
+              <input type="search"  placeholder="Search inventory here..." aria-label="Search" class="form-control">
+              <button class="btn  btn-sm my-0 p" style="background-color:#DF3A01; color:white; height: 38px;" type="submit">
+                <i class="fas fa-search" ></i>
+              </button>
+            </div>
+            </div>
           </div>
-          <!--/.Card-->
+          
+          <div id='card-body' class='card-body table-responsive p-0 card-bodyzz'>  
+            <table class='table table-hover'>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>NAME</th>
+                  <th>CATEGORY</th>
+                  <th>QUANTITY</th>
+                  <th>UPDATE</th>
+                  <th>VIEW</th>
+                  
+                </tr>
+              </thead>
+              <tbody id='tbody'>
 
+              </tbody>
+            </table>
+          </div>
         </div>
-        <!--Grid column-->
-
-        <!--Grid column-->
-       
-        <!--Grid column-->
-
       </div>
-      <!--Grid row-->
 
       
-<!-- Register Modal -->
-<div id="display" class="modal fade" role="dialog" >
-  <div class="modal-dialog">
+      <div class="modal fade" id="displayallrecords">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header"style="background-color:#DF3A01;">
+              <h3 class="modal-title" style="color:white;">Inventory information</h3>
+             
+              <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="col-sm-6">
+                    <label>Inventory ID</label>
+                    <input type="text" class="form-control" id="view-id" disabled>
+                  </div>
+                  
+                   <div class="col-sm-6">
+                    <label>Name</label>
+                    <input type="text" class="form-control" id="view-name" disabled>
+                  </div>
+                  <div class="col-sm-6">
+                    <label>Category</label>
+                    <input type="text" class="form-control" id="view-category" disabled>
+                  </div>
+                  <div class="col-sm-6">
+                    <label>Total Quantity </label>
+                    <input type="text" class="form-control" id="view-quantity" disabled>
+                  </div>
+                  <div class="col-sm-6">
+                    <label>No. of Working</label>
+                    <input type="text" class="form-control" id="view-working" disabled>
+                  </div>
+                  <div class="col-sm-6">
+                    <label>No. of Damage</label>
+                    <input type="text" class="form-control" id="view-damage" disabled>
+                  </div>
+                  <div class="col-sm-6">
+                    <label>Description</label>
+                    <textarea id="view-description" style="height: 100px; width: 465px;" class="form-control" disabled></textarea>
+                  </div>
+                 
+                 
+                </div>
+                </div>
+              </div>
+            
+             
+            </div>
+            
+          </div>
+        </div>
 
-<!-- Modal content-->
-    <div class="modal-content" style="width:900px; left:-60px; top:190px;">
+<div class="modal fade" id="update">
+  <div class="modal-dialog">
+    <div class="modal-content">
       <div class="modal-header"style="background-color:#DF3A01;">
-     
-        <h3 class="modal-title" style="text-align: center; color:white;">ITEM Information</h3>
-           <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body" >
-
-       <table width = "100%" >
-          
-
-           <tr>
-                <th><center>ID</center></th>
-                <th><center>NAME</center></th>
-                <th><center>DSCRIPTION</center></th>
-                <th><center>CATEGORY</center></th>
-                <th><center>QUANTITY</center></th>
-                <th><center>STATUS</center></th>
-               
-                          
-          </tr>
-          
-        
-           
-         </table>
-
-      </div>
-    
-    </div>
-
-  </div>
-</div>
-
-<!-- Register Modal -->
-<div id="updateStatus" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-<!-- Modal content-->
-    <div class="modal-content" >
-      <div class="modal-header" style="background-color:#DF3A01;">
-     
-        <h3 class="modal-title" style="color:white;">Item Update</h3>
-           <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body" >
-
-     
-         <form action="" method="post">        
-         <center><label>Update Status</label></center>
-         <center><select id="status" name="status"  required="">
-            <option value="">status</option>
-            <option value="Working">Working</option>
-            <option value="Damage">Damage</option>
-         </select></center>
-         <br>   
+        <h3 class="modal-title" style="color:white;">Update <span id="fname-span"></span></h3>
        
-         <center><button type="submit"  class="btn" style="color: white;background-color:#DF3A01; width: 235px;height:50px;">UPDATE</button></center>
-        </form>  
+        <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <div class="form-row">
+            <div class="col-sm-6">
+              <label>Name</label>
+              <input type="text" class="form-control" id="updatename" disabled>
+            </div>
+            <div class="col-sm-6">
+              <label>Quantity</label>
+              <input type="text" class="form-control" id="updatequantity" >
+            </div>
+            <div class="col-sm-6">
+              <label>No. of Working</label>
+              <input type="text" class="form-control" id="updateworking" >
+            </div>
+            <div class="col-sm-6">
+              <label>No. of Damage</label>
+              <input type="text" class="form-control" id="updatedamage" >
+            </div>
+            
+            <div class="col-sm-6">
+              <label>Category</label>
+              <select id="updatecategory" class="form-control">
+                <option value="Free Weights" selected>Free Weights</option>
+                <option value="Cardio Machines">Cardio Machines</option>
+              </select>
 
-
+            </div>
+            
+          </div>
+        </div>
+      
+       
+      </div>
+      <div class="modal-footer"  style="height: 70px;">
+        <button class="btn" style="background-color:#DF3A01; color:white;" id="updateBtn">Update</button>
       </div>
     </div>
   </div>
@@ -312,25 +273,25 @@ if($_SESSION['admin_id']){
       </div>
       <div class="modal-body" >
       <div class="item">
-        <form action="inventory_process.php" method="post">
 
-        
-         <input type="text" name="item_name" required="" placeholder="Item name">
+         <input type="text" id="name" required="" placeholder="Item name">
 
            <select id="category" name="category"  required="" style="left:60px;">
-            <option value="">Category:</option>
-            <option value="Free Weights">Free Weights</option>
+            <option value="Free Weights" selected>Free Weights</option>
             <option value="Cardio Machines">Cardio Machines</option>
          </select><br>
         
-         <input type="text" name="quantity" required="" placeholder="Quantity"  style="left:20px;">
+         <input type="text" id="quantity" required="" placeholder="Quantity"  style="left:20px;"><br>
+
+         <input type="text" id="working" required="" placeholder="number of working" >
+         <input type="text" id="damage" required="" placeholder="number of damage"  >
+
+         
+
+        <textarea rows="5" cols="100" class="form-control" id="description" required data-validation-required-message="Please enter description" placeholder="Enter description" maxlength="999" style=" width: 350px; position: relative; height:100px;left: 500px; top: -70px;"></textarea>
        
 
-       
-        <textarea rows="5" cols="100" class="form-control" id="description" name="description"required data-validation-required-message="Please enter description" placeholder="Enter description" maxlength="999" style=" width: 350px; position: relative; height:100px;left: 500px; top: -70px;"></textarea>
-       
-
-         <button type="submit"  class="btn" style="color: white;background-color:#DF3A01;float: left; width: 340px;height:50px;position: relative;left:15px; top:-100px;">ADD ITEM</button>
+         <button type="submit"  id="addBtn"  class="btn" style="color: white;background-color:#DF3A01;float: left; width: 340px;height:50px;position: relative;left:15px; top:-100px;">ADD ITEM</button>
          </form>
         
       </div>
@@ -339,11 +300,6 @@ if($_SESSION['admin_id']){
 
   </div>
 </div>
-
-
-
-             
-
               </div>
               <!-- /.First row-->
 
@@ -374,6 +330,180 @@ if($_SESSION['admin_id']){
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="js/mdb.min.js"></script>
   <!-- Initializations -->
+
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script> 
+  <script src="jquery-3.4.1.min.js"></script>
+
+   <!-- Firebase CDNs -->
+   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
+   <!-- Local script -->
+   <script src="FIREBASE/init.js"></script>
+
+
+   <script>
+    var button = document.getElementById('addBtn');
+
+    button.addEventListener('click', function() {
+      var name = document.getElementById('name').value;
+      var category = document.getElementById('category').value;
+      var quantity = document.getElementById('quantity').value;
+      var working = document.getElementById('working').value;
+      var damage = document.getElementById('damage').value;
+      var description = document.getElementById('description').value;
+      
+     
+   
+      
+
+      var inventory = db.collection('inventory');
+      var storage = inventory.where('name', '==', name);
+
+      storage.get().then(function(snapshot) {
+        if(snapshot.docs.length > 0) {
+          alert('Error: Inventory already exists!');
+        } else {
+          inventory.add({
+            name: name,
+            category: category,
+            quantity: quantity,
+            working: working,
+            damage: damage,
+            description: description
+            
+          }).then(function() {
+            alert('Successfully added new Inventory!');
+            window.location.reload();
+          }).catch(function(error) {
+            alert(error.message);
+          });
+        }
+      });
+    });
+
+    function renderData(doc) {
+      let tbody = document.getElementById('tbody');
+      let tr = document.createElement('tr');
+
+      tr.setAttribute('data-id', doc.id);
+      tr.innerHTML = 
+      `<td><span class="hidden" id="${doc.id}-span"></span><a>
+      <small id='${doc.id}-small' onclick='showID("${doc.id}")'>
+      <i style="font-size: 20px;color:#DF3A01;" class="fas fa-eye"></i></small></a></td>
+      <td><b>${doc.data().name}</b></td>
+      <td><b>${doc.data().category}<b></td>
+        <td><b>${doc.data().quantity}<b></td>
+      
+
+      <td>
+        <a class='btn-link text-warning' onclick='updatefunction(this.parentNode.parentNode)'
+         data-toggle='modal' data-target='#update'>
+         <span style="color: #DF3A01; ">
+         <i  class="fas fa-user-edit" style="font-size: 20px"></i></span></a>
+      </td>
+      
+      <td>
+        <a class='btn-link text-warning' onclick='viewInventory(this.parentNode.parentNode)'
+         data-toggle='modal' data-target='#displayallrecords'>
+         <span style="color: #DF3A01; ">
+         <i class="fas fa-eye" style="font-size: 20px;color:#DF3A01;"></i></span></a>
+      </td> `;
+
+      tbody.appendChild(tr);
+    }
+  
+    db.collection('inventory').orderBy('name', 'desc').get().then(function(snapshot) {
+      snapshot.forEach((doc) => {
+       
+        renderData(doc);
+      });
+    });
+
+
+    function showID(id) {
+      let span = document.getElementById(`${id}-span`);
+      let small = document.getElementById(`${id}-small`);
+
+      if(span.classList.contains('hidden')) {
+        small.innerHTML = ' <i style="font-size: 20px;color:black;" class="fas fa-eye-slash"></i>';
+        span.textContent = id;
+        span.classList.remove('hidden');
+      } else {
+        small.innerHTML = '<i style="font-size: 20px;color:#DF3A01;" class="fas fa-eye"></i>';
+        span.classList.add('hidden');
+        span.textContent = '';
+      }
+    }
+
+
+
+    function updatefunction(tr) {
+      let updatename = document.getElementById('updatename');
+      let updatequantity = document.getElementById('updatequantity');
+      let updateworking = document.getElementById('updateworking');
+      let updatedamage = document.getElementById('updatedamage');
+      let span = document.getElementById('fname-span');
+      let dataId = tr.getAttribute('data-id');
+    
+
+      db.collection('inventory').doc(dataId).get().then(function(doc) {
+        span.textContent = doc.data().name; // firstname na mo display sa update modal
+        updatename.value = doc.data().name;
+        updatequantity.value = doc.data().quantity;
+        updateworking.value = doc.data().working;
+        updatedamage.value = doc.data().damage;
+       
+
+      document.getElementById('updateBtn').addEventListener('click', () => {
+          let quantity = document.getElementById('updatequantity').value;
+          let category = document.getElementById('updatecategory').value;
+          let working = document.getElementById('updateworking').value;
+          let damage = document.getElementById('updatedamage').value;
+          db.collection('inventory').doc(doc.id).update({
+            quantity: quantity,
+            category: category,
+            working: working,
+            damage: damage
+              
+          }).then(() => {
+            alert('Successfully updated Inventory!');
+            window.location.reload();
+          }).catch((error) => {
+            alert(`Error: ${error.message}`);
+          });
+        });
+      });
+    }
+
+
+    function viewInventory(x) {
+      let dataid = x.getAttribute("data-id");
+      let viewId = document.getElementById("view-id");
+      let name = document.getElementById("view-name");
+      let category = document.getElementById("view-category");
+      let quantity = document.getElementById("view-quantity");
+      let working = document.getElementById("view-working");
+      let damage = document.getElementById("view-damage");
+      let description = document.getElementById("view-description");
+      
+      
+  
+      db.collection("inventory").doc(dataid).get().then(function(doc) {
+        viewId.value = dataid;
+        name.value = doc.data().name;
+        category.value = doc.data().category;
+        quantity.value = doc.data().quantity;
+        working.value = doc.data().working;
+        damage.value = doc.data().damage;
+        description.value = doc.data().description;
+       
+        
+      });
+    }
+  </script>
   
 </body>
 
