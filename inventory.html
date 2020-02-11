@@ -25,7 +25,17 @@
       max-height: 325px;
       overflow-y: auto;
     }
+    .flexHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
+    .flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 </style>
 </head>
 
@@ -39,11 +49,7 @@
 
         <!-- Brand -->
         <a class="navbar-brand waves-effect"  style="position: relative;left:50px;">
-           Welcome Admin:
-          <strong class="green-text">
-          
-               
-                </strong>
+          <h4>Welcome, <span id="username"></span>!</h4>
         </a>
 
         <!-- Collapse -->
@@ -123,7 +129,7 @@
               Inventory
             </h3>
             <div>
-            <div class="d-flex justify-content-center" style="width:300px; height:0px; position: relative; top: -45px; left: 630px;">
+            <div class="d-flex justify-content-center">
               <input type="search"  placeholder="Search inventory here..." aria-label="Search" class="form-control">
               <button class="btn  btn-sm my-0 p" style="background-color:#DF3A01; color:white; height: 38px;" type="submit">
                 <i class="fas fa-search" ></i>
@@ -478,6 +484,13 @@
       });
     }
 
+    auth.onAuthStateChanged(function(user) {
+      let span = document.getElementById('username');
+
+      if(user) {
+        span.textContent = user.email;
+      }
+    })
 
     function viewInventory(x) {
       let dataid = x.getAttribute("data-id");

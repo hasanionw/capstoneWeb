@@ -35,7 +35,7 @@
 
         <!-- Brand -->
         <a class="navbar-brand waves-effect"  style="position: relative;left:50px;">
-           Welcome Admin:
+          <h4>Welcome, <span id="username"></span>!</h4>
           
         </a>
 
@@ -58,7 +58,7 @@
            
             <li class="nav-item">
               <div class="logout">
-               <a href="http://localhost/CAPSTONEPROJECT/">     <button type="button"style="background-color:#DF3A01; color: white" class="btn" >LOGOUT</button></a>
+               <a href="#">     <button type="button"style="background-color:#DF3A01; color: white" class="btn" >LOGOUT</button></a>
               </div>
             </li>
           </ul>
@@ -385,6 +385,15 @@
         }
       });
     });
+
+    auth.onAuthStateChanged(function(user) {
+      let span = document.getElementById('username');
+
+      if(user) {
+        span.textContent = user.email;
+      }
+    })
+
 
   </script>
   

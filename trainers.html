@@ -34,7 +34,17 @@
       max-height: 325px;
       overflow-y: auto;
     }
+    .flexHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
+    .flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
 </style>
 </head>
@@ -49,11 +59,7 @@
 
         <!-- Brand -->
         <a class="navbar-brand waves-effect"  style="position: relative;left:50px;">
-           Admin:
-          <strong class="green-text">
-          
-                
-                </strong>
+          <h4>Welcome, <span id="username"></span>!</h4>
         </a>
 
         <!-- Collapse -->
@@ -74,8 +80,9 @@
           <ul class="navbar-nav nav-flex-icons">
            
             <li class="nav-item">
+              
               <div class="logout">
-               <a href="http://localhost/CAPSTONEPROJECT/">     <button type="button"style="background-color:#DF3A01; color: white" class="btn" >LOGOUT</button></a>
+               <a href="#">     <button type="button"style="background-color:#DF3A01; color: white" class="btn" >LOGOUT</button></a>
               </div>
             </li>
           </ul>
@@ -126,21 +133,22 @@
       <br>
       <div class='card'>
         <div class='card-content'>
-          <div class='card-header flexHeader'>
+            <div class='card-header flexHeader'>
             <h3 class='card-title'>
               <span class="add-trainer" data-toggle="tooltip" data-placement="top" title="Add new trainer">
                 <i style="color:#DF3A01;" data-toggle="modal" data-target="#add" class="fas fa-plus mr-2"></i></span>
               Trainers
             </h3>
             <div>
-            <div class="d-flex justify-content-center" style="width:300px; height:0px; position: relative; top: -45px; left: 630px;">
-              <input type="search"  placeholder="Search trainer here..." aria-label="Search" class="form-control">
-              <button class="btn  btn-sm my-0 p" style="background-color:#DF3A01; color:white; height: 38px;" type="submit">
-                <i class="fas fa-search" ></i>
-              </button>
-            </div>
+              <div class="d-flex justify-content-center">
+                <input type="search"  placeholder="Search Trainer here..." aria-label="Search" class="form-control" id="#">
+                <button class="btn  btn-sm my-0 p" style="background-color:#DF3A01; color:white; height: 38px;" type="submit">
+                  <i class="fas fa-search" ></i>
+                </button>
+              </div>
             </div>
           </div>
+          
           <div id='card-body' class='card-body table-responsive p-0 card-bodyzz'>  
             <table class='table table-hover'>
               <thead>
@@ -490,7 +498,13 @@
       });
     });
 
-    
+    auth.onAuthStateChanged(function(user) {
+      let span = document.getElementById('username');
+
+      if(user) {
+        span.textContent = user.email;
+      }
+    })
        
 
     function viewTrainers(x) {
