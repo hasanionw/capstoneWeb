@@ -299,9 +299,7 @@
                 <div class="col-sm-6">
                   <label>Payment Description</label>
                   <select id="payment-desc" class="form-control">
-                    <option value="monthlySubscription">Monthly Subscription</option>
-                    <option value="annualSubscription">Annual Subscription</option>
-                    <option value="walkin">Walk-in</option>
+               
                   </select>
                 </div>
                 <div class="col-sm-6">
@@ -354,6 +352,9 @@
     </div>
   </main>
 
+  <a data-toggle='modal' data-target='#updateModal' style="display: none" id="showUpdateModal"></a>
+  <a data-toggle='modal' data-target='#payment-modal' style="display: none" id="showPaymentModal"></a>
+
   <script type='text/javascript' src='js/jquery-3.4.1.min.js'></script>
   <script type='text/javascript' src='js/popper.min.js'></script>
   <script type='text/javascript' src='js/bootstrap.min.js'></script>
@@ -372,7 +373,7 @@
   <!-- Local script -->
   <script src='FIREBASE/init.js'></script>
 
-  <!-- Add member script -->
+  <!-- Functions -->
   <script>
     auth.onAuthStateChanged(function(user) {
       let span = document.getElementById('username');
@@ -385,26 +386,27 @@
     var button = document.getElementById('addMemberBtn');
 
     button.addEventListener('click', () => {
-      var fname = document.getElementById('fName').value;
-      var lname = document.getElementById('lName').value;
-      var memberType = document.getElementById('memberType').value;
-      var modal = document.getElementById('close-modal');
-      var date = new Date();
-      var dateAdded = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
-      var phone = document.getElementById('phone').value;
-      var monthlyRate;
+      let fname = document.getElementById('fName').value;
+      let lname = document.getElementById('lName').value;
+      let memberType = document.getElementById('memberType').value;
+      let modal = document.getElementById('close-modal');
+      let date = new Date();
+      let dateAdded = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+      let phone = document.getElementById('phone').value;
+      let monthlyRate;
       if(memberType == 'Member') {
         monthlyRate = 750;
       } else {
         monthlyRate = '';
       }
-      var annualStart = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
-      var annualEnd = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()+1}`;
-      var monthlyStart = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
-      var monthlyEnd = `${date.getMonth()+2}/${date.getDate()}/${date.getFullYear()}`;
 
-      var members = db.collection('members');
-      var member = members.where('fname', '==', fname).where('lname', '==', lname);
+      let annualStart = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+      let annualEnd = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()+1}`;
+      let monthlyStart = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+      let monthlyEnd = `${date.getMonth()+2}/${date.getDate()}/${date.getFullYear()}`;
+
+      let members = db.collection('members');
+      let member = members.where('fname', '==', fname).where('lname', '==', lname);
 
       member.get().then((snapshot) => {
         if(snapshot.docs.length > 0) {
@@ -467,8 +469,8 @@
       <td>${doc.data().dateAdded}</td>
       <td>${doc.data().status}</td>
       <td>
-        <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)' data-toggle='modal' data-target='#updateModal'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data().fname}" data-placement="top"></i></a>
-        <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
+        <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data().fname}" data-placement="top"></i></a>
+        <a class='btn-link text-success' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
       </td>`;
       tbody.appendChild(tr);
 
@@ -489,10 +491,10 @@
       <td>${doc.data().lname}</td>
       <td>${doc.id}</td>
       <td>
-        <a class="btn-link text-warning mx-1" onclick='updateMember(this.parentNode.parentNode)' data-toggle='modal' data-target='#updateModal'>
+        <a class="btn-link text-warning mx-1" onclick='updateMember(this.parentNode.parentNode)'>
           <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.data().fname}" style="font-size: 20px"></i>
         </a>
-        <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
+        <a class='btn-link text-success' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
       </td>`;
       tbody.appendChild(tr);
 
@@ -530,7 +532,9 @@
         updateDate.value = doc.data().dateAdded;
         document.getElementById('updateType').value = doc.data().memberType;
         updateUID.value = doc.id;
-
+      }).then(() => {
+        document.getElementById('showUpdateModal').click();
+        
         document.getElementById('updateBtn').addEventListener('click', () => {
           let memberType = document.getElementById('updateType').value;
           let status = document.getElementById('updateStatus').value;
@@ -540,7 +544,7 @@
             status: status
           }).then(() => {
             alert('Successfully updated member!');
-            window.location.reload();
+            document.getElementById('showPaymentModal').click();
           }).catch((error) => {
             alert(`Error: ${error.message}`);
           });
@@ -551,7 +555,6 @@
     // Search member
     document.getElementById("search-member-btn").addEventListener("click", () => {
       let search = document.getElementById('search-member').value;
-      const members = [];
       
       if(search.indexOf(' ') > 0) {
         let space = search.indexOf(' ');
@@ -595,6 +598,62 @@
         }
       });
     });
+
+    // Add payment
+    addPayment = (tr) => {
+      let id = tr.getAttribute('data-id');
+      let uid = document.getElementById('payment-uid');
+      uid.value = id;
+      let name = document.getElementById('payment-name');
+      let span = document.getElementById('payment-fname-span');
+
+      db.collection('members').doc(id).get().then((snapshot) => {
+        let fullName = `${snapshot.data().fname} ${snapshot.data().lname}`;
+        let select = document.getElementById('payment-desc');
+
+        span.textContent = snapshot.data().fname 
+        name.value = fullName;
+
+        if(snapshot.data().memberType == 'Walk-in') {
+          select.innerHTML = '<option>Walk-in</option>';
+          select.setAttribute('disabled', 'disabled');
+        } else {
+          select.innerHTML = `<option value="Monthly Subscription">Monthly Subscription</option>
+                              <option value="Annual Subscription">Annual Subscription</option>`;
+          select.removeAttribute('disabled');
+        }
+      }).then(() => {
+        document.getElementById('showPaymentModal').click();
+      });
+
+      document.getElementById('add-payment-btn').addEventListener('click', () => {
+        let amount = document.getElementById('payment-amount').value;
+        let paymentDesc = document.getElementById('payment-desc').value;
+        let date = new Date();
+        let dateOfPayment = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+        
+        addZero = (i) => {
+          if (i < 10) {
+            i = "0" + i;
+          }
+
+          return i;
+        }
+
+        let timeOfPayment = `${addZero(date.getHours())}:${addZero(date.getMinutes())}:${addZero(date.getSeconds())}`;
+
+        db.collection('payments').add({
+          memberId: id,
+          amount: amount,
+          paymentDesc: paymentDesc,
+          dateOfPayment: dateOfPayment,
+          timeOfPayment: timeOfPayment
+        }).then(() => {
+          alert('Successfully added payment!');
+          window.location.reload();
+        });
+      });
+    }
   </script>
 </body>
 </html>
