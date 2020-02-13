@@ -20,7 +20,26 @@
     
 
 <style>
-  
+  input[type=text], input[type=date] {
+  background-color:honeydew;
+  height: 45px;
+} 
+
+.train select{
+  height: 45px;
+  background-color:honeydew;
+}
+
+.bot button{
+  background-color:#DF3A01;
+  color:white;
+} 
+.bot{
+  height:70px;
+  background-color:honeydew;
+}
+
+
   .card-bodyzz {
       max-height: 325px;
       overflow-y: auto;
@@ -36,6 +55,11 @@
       align-items: center;
       justify-content: space-between;
     }
+    table > thead > tr > th {
+      font-weight: bold;
+      text-transform: uppercase;
+      
+    }
 </style>
 </head>
 
@@ -49,7 +73,7 @@
 
         <!-- Brand -->
         <a class="navbar-brand waves-effect"  style="position: relative;left:50px;">
-          <h4>Welcome, <span id="username"></span>!</h4>
+          <h4>Welcome,<b><span id="username"></span>!</b></h4>
         </a>
 
         <!-- Collapse -->
@@ -71,7 +95,7 @@
            
             <li class="nav-item">
               <div class="logout">
-               <a href="http://localhost/CAPSTONEPROJECT/">     <button type="button"style="background-color:#DF3A01; color: white" class="btn" >LOGOUT</button></a>
+               <a href="#"><button type="button"style="background-color:#DF3A01; color: white" class="btn" >LOGOUT</button></a>
               </div>
             </li>
           </ul>
@@ -264,46 +288,68 @@
 
 
 
-
-
-<!-- Register Modal -->
-<div id="add" class="modal fade" role="dialog" >
+<div class="modal fade" id="add" >
   <div class="modal-dialog">
-
-<!-- Modal content-->
-    <div class="modal-content" style="width: 887px; height: 350px; left:-60px; top:70px;">
-      <div class="modal-header" style="background-color:#DF3A01;">
-     
-        <h3 class="modal-title"  style="color:white;">Add New ITEM</h3>
-           <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body" >
-      <div class="item">
-
-         <input type="text" id="name" required="" placeholder="Item name">
-
-           <select id="category" name="category"  required="" style="left:60px;">
-            <option value="Free Weights" selected>Free Weights</option>
-            <option value="Cardio Machines">Cardio Machines</option>
-         </select><br>
-        
-         <input type="text" id="quantity" required="" placeholder="Quantity"  style="left:20px;"><br>
-
-         <input type="text" id="working" required="" placeholder="number of working" >
-         <input type="text" id="damage" required="" placeholder="number of damage"  >
-
-         
-
-        <textarea rows="5" cols="100" class="form-control" id="description" required data-validation-required-message="Please enter description" placeholder="Enter description" maxlength="999" style=" width: 350px; position: relative; height:100px;left: 500px; top: -70px;"></textarea>
+    <div class="modal-content" >
+      <div class="modal-header"style="background-color:#DF3A01;">
+        <h3 class="modal-title" style="color:white;">Add new Item <span id="fname-span"></span></h3>
        
+        <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <div class="form-row">
 
-         <button type="submit"  id="addBtn"  class="btn" style="color: white;background-color:#DF3A01;float: left; width: 340px;height:50px;position: relative;left:15px; top:-100px;">ADD ITEM</button>
-         </form>
+           
+
+
+            <div class="col-sm-6">
+              <label>Item name</label>
+              <input type="text" id="name"  class="form-control" required="" placeholder="Item name">
+            </div>
+            <div class="col-sm-6">
+              <label>Quantity</label>
+              <input type="text" id="quantity"  class="form-control" required="" placeholder="Quantity">
+            </div>  
+          <div class="col-sm-6">
+              <label>No. of working</label>
+              <input type="text" id="working"  class="form-control" required="" placeholder="number of working" >
+            </div>
+            <div class="col-sm-6">
+              <label>No. of Damage</label>
+              <input type="text" id="damage"  class="form-control" required="" placeholder="number of damage"  >
+          </div>
+          <div class="col-sm-6 train">
+            
+              <label>Category</label><br>
+              <select id="category"  class="form-control" name="category"  required="" style="left:60px;">
+                <option value="Free Weights" selected>Free Weights</option>
+                <option value="Cardio Machines">Cardio Machines</option>
+             </select>
+            
+          </div>
+          <div class="col-sm-6 train"></div>
+          <div class="col-sm-6 train">
+            <label>Description</label><br>
+            <textarea  class="form-control" rows="5" style="height: 100px; width: 465px;" cols="100"  id="description" 
+            required data-validation-required-message="Please enter description"
+             placeholder="Enter description" maxlength="999" 
+              >
+            </textarea>
+        </div>
+       
         
+            
+                
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer bot">
+        <button type="submit"  id="addBtn"  class="btn" >ADD ITEM</button>
+   
       </div>
     </div>
-    </div>
-
   </div>
 </div>
               </div>
@@ -351,6 +397,8 @@
 
 
    <script>
+     
+               
     var button = document.getElementById('addBtn');
 
     button.addEventListener('click', function() {
