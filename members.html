@@ -38,6 +38,10 @@
       overflow-y: auto;
     }
 
+    .card-bodyzz::-webkit-scrollbar {
+      width: 0;
+    }
+
     small {
       color: grey;
       margin-left: 5px;
@@ -70,6 +74,13 @@
 
     th, td {
       text-align: center;
+    }
+
+    .new-code-body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
   </style>
 </head>
@@ -193,14 +204,22 @@
               </div>
               <div class="form-group">
                 <div class="form-row">
+                  <div class="col-sm-12">
+                    <label>Address</label>
+                    <input type="text" class="form-control" id="address">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-row">
                   <div class="col-sm-4">
-                    <label>Phone</label>
+                    <label>Cellphone Number</label>
                     <input type="text" class="form-control" id="phone">
                   </div>
                   <div class="col-sm-4">
                     <label>Membership type</label>
                     <select id="memberType" class="form-control">
-                      <option value="Member" selected>Member</option>
+                      <option value="Regular" selected>Regular</option>
                       <option value="Walk-in">Walk-in</option>
                     </select>
                   </div>
@@ -252,7 +271,7 @@
                   <div class="col-sm-7">
                     <label>Membership Type</label>
                     <select id="updateType" class="form-control">
-                      <option value="Member">Member</option>
+                      <option value="Regular">Regular</option>
                       <option value="Walk-in">Walk-in</option>
                     </select>
                   </div>
@@ -298,13 +317,32 @@
               <div class="form-row">
                 <div class="col-sm-6">
                   <label>Payment Description</label>
-                  <select id="payment-desc" class="form-control">
+                  <select id="payment-desc" class="form-control" onchange="paymentDescChange()">
                
                   </select>
                 </div>
                 <div class="col-sm-6">
                   <label>Amount</label>
-                  <input type="text" class="form-control" id="payment-amount">
+                  <input type="text" class="form-control" id="payment-amount" disabled>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center">
+              <small><a href="#"><span id="showCalc">Show Calculator</span></a></small>
+            </div>
+            <div id="calculator" class="form-group" style="display: none">
+              <div class="form-row">
+                <div class="col-sm-4">
+                  <label>Cash</label>
+                  <input type="text" class="form-control" id="payment-cash">
+                </div>
+                <div class="col-sm-4">
+                  <label>Change</label>
+                  <input type="text" class="form-control" id="payment-change" disabled>
+                </div>
+                <div class="col-sm-2">
+                  <label></label>
+                  <button class="btn btn-primary btn-sm" id="enterCalc">Enter</button>
                 </div>
               </div>
             </div>
@@ -316,6 +354,7 @@
       </div>
     </div>
 
+    <!-- Walk-in Card -->
     <div class="container-fluid my-3">
       <div class='card'>
         <div class='card-content'>
@@ -352,8 +391,22 @@
     </div>
   </main>
 
+  <!-- New Member Modal -->
+  <div class="modal fade" id="new-member-code">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body new-code-body" id="new-member-body">
+          <h3><span id="new-member-name"></span>'s UID:</h3>
+          <h2 id="new-member-uid" style='font-weight: bold'></h2>
+          <small id="new-member-small">This code is to be used for the member's mobile activation in the Mobile app.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <a data-toggle='modal' data-target='#updateModal' style="display: none" id="showUpdateModal"></a>
   <a data-toggle='modal' data-target='#payment-modal' style="display: none" id="showPaymentModal"></a>
+  <a data-toggle='modal' data-target='#new-member-code' style="display: none" id="showNewMemberCode"></a>
 
   <script type='text/javascript' src='js/jquery-3.4.1.min.js'></script>
   <script type='text/javascript' src='js/popper.min.js'></script>
@@ -363,6 +416,9 @@
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });
+
+ 
+
   </script>
 
   <!-- Firebase CDNs -->
@@ -385,14 +441,25 @@
 
     var button = document.getElementById('addMemberBtn');
 
+    var addMemberModal = document.getElementById('add-member');
+    addMemberModal.addEventListener('keyup', (evt) => {
+      if(evt.keyCode == 13) {
+        button.click();
+      } else if(evt.keyCode == 27) {
+        document.getElementById('close-modal').click();
+      }
+    }); 
+
     button.addEventListener('click', () => {
       let fname = document.getElementById('fName').value;
       let lname = document.getElementById('lName').value;
+      let email = document.getElementById('email').value;
       let memberType = document.getElementById('memberType').value;
       let modal = document.getElementById('close-modal');
       let date = new Date();
       let dateAdded = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
       let phone = document.getElementById('phone').value;
+      let address = document.getElementById('address').value;
       let monthlyRate;
       if(memberType == 'Member') {
         monthlyRate = 750;
@@ -408,9 +475,20 @@
       let members = db.collection('members');
       let member = members.where('fname', '==', fname).where('lname', '==', lname);
 
-      member.get().then((snapshot) => {
+      if(fname === '') {
+        alert('ERROR: First name is required!');
+      } else if(lname === '') {
+        alert('ERROR: Last name is required!');
+      } else if(email === '') {
+        alert('ERROR: Email is required!');
+      } else if(address === '') {
+        alert('ERROR: Address is required!');
+      } else if(phone === '') {
+        alert('ERROR: Cellphone number is required!');
+      } else {
+        member.get().then((snapshot) => {
         if(snapshot.docs.length > 0) {
-          alert('Error: Member already exists!');
+          alert('ERROR: Member already exists!');
         } else {
           members.add({
             fname: fname,
@@ -423,15 +501,74 @@
             annualStart: annualStart,
             annualEnd: annualEnd,
             monthlyStart: monthlyStart,
-            monthlyEnd: monthlyEnd
+            monthlyEnd: monthlyEnd,
+            address: address
           }).then(function() {
-            alert('Successfully added new member!');
-            window.location.reload();
+            member.get().then((snapshot) => {
+              snapshot.forEach((doc) => {
+                if(doc.data().memberType == 'Regular') {
+                  member.get().then((snapshot) => {
+                    snapshot.forEach((doc) => {
+                      document.getElementById('new-member-name').textContent = `${doc.data().fname} ${doc.data().lname}`;
+                      document.getElementById('new-member-uid').textContent = doc.id;
+                    });
+                  }).then(() => {
+                    document.getElementById('close-modal').click();
+                    document.getElementById('showNewMemberCode').click();
+                    document.onclick = (e) => {
+                      let x = e.target.id;
+                      if(x != "new-member-body" && x != "new-member-name" && x != "new-member-uid" && x != "new-member-small") {
+                        window.location.reload();
+                      }
+                    }
+                  });
+                } else {
+                  alert('Successfully added new walk-in!');
+                  window.location.reload();
+                }
+              })
+            })
           }).catch(function(error) {
             alert(error.message);
           });
         }
       });
+      }
+    });
+
+    paymentDescChange = () => {
+      let paymentDesc = document.getElementById('payment-desc').value;
+      let amount = document.getElementById('payment-amount');
+
+      if(paymentDesc == 'Annual Subscription') {
+        amount.removeAttribute('value');
+        amount.value = '200';
+      } else if(paymentDesc == 'Monthly Subscription') {
+        amount.removeAttribute('value');
+        amount.value = '750';
+      }
+    }
+
+    document.getElementById('showCalc').addEventListener('click', () => {
+      let calc = document.getElementById('calculator');
+      if(calc.style.display == 'none') {
+        calc.style.display = 'block';
+        document.getElementById('showCalc').innerHTML = 'Hide Calculator';
+      } else {
+        calc.style.display = 'none';
+        document.getElementById('showCalc').innerHTML = 'Show Calculator';
+      }
+    });
+
+    document.getElementById('enterCalc').addEventListener('click', () => {
+      let cash = document.getElementById('payment-cash');
+      let change = document.getElementById('payment-change');
+      let amount = document.getElementById('payment-amount');
+
+      let x = parseInt(cash.value);
+      let y = parseInt(amount.value);
+
+      change.value = x-y;
     });
 
     showID = (id) => {
@@ -455,6 +592,7 @@
       let td = document.createElement('td');
 
       tr.setAttribute('data-id', doc.id);
+      tr.setAttribute('onclick', 'viewMember()');
       tr.innerHTML = 
       `<td>${doc.data().fname}</td>
       <td>${doc.data().lname}</td>
@@ -469,6 +607,7 @@
       <td>${doc.data().dateAdded}</td>
       <td>${doc.data().status}</td>
       <td>
+        <a class='btn-link text-secondary' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
         <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data().fname}" data-placement="top"></i></a>
         <a class='btn-link text-success' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
       </td>`;
@@ -491,6 +630,7 @@
       <td>${doc.data().lname}</td>
       <td>${doc.id}</td>
       <td>
+        <a class='btn-link text-secondary' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
         <a class="btn-link text-warning mx-1" onclick='updateMember(this.parentNode.parentNode)'>
           <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.data().fname}" style="font-size: 20px"></i>
         </a>
@@ -504,7 +644,7 @@
       });
     }
 
-    db.collection('members').where('memberType', '==', 'Member').orderBy('dateAdded', 'desc').get().then((snapshot) => {
+    db.collection('members').where('memberType', '==', 'Regular').orderBy('dateAdded', 'desc').get().then((snapshot) => {
       snapshot.forEach((doc) => {
         renderData(doc);
       });
@@ -575,7 +715,7 @@
         finalSearch = `${firstLetter}${rest}`;
       }
 
-      db.collection('members').where('fname', '==', finalSearch).where('memberType', '==', 'Member').get().then((snapshot) => {
+      db.collection('members').where('fname', '==', finalSearch).where('memberType', '==', 'Regular').get().then((snapshot) => {
         if(snapshot.docs.length > 0) {
           let tbody = document.getElementById('tbody');
           tbody.innerHTML = '';
@@ -584,7 +724,7 @@
           });
           console.log(members);
         } else {
-          db.collection('members').where('lname', '==', finalSearch).where('memberType', '==', 'Member').get().then((snapshot) => {
+          db.collection('members').where('lname', '==', finalSearch).where('memberType', '==', 'Regular').get().then((snapshot) => {
             if(snapshot.docs.length > 0) {
               let tbody = document.getElementById('tbody');
               tbody.innerHTML = '';
@@ -610,6 +750,7 @@
       db.collection('members').doc(id).get().then((snapshot) => {
         let fullName = `${snapshot.data().fname} ${snapshot.data().lname}`;
         let select = document.getElementById('payment-desc');
+        let amount = document.getElementById('payment-amount');
 
         span.textContent = snapshot.data().fname 
         name.value = fullName;
@@ -617,18 +758,23 @@
         if(snapshot.data().memberType == 'Walk-in') {
           select.innerHTML = '<option>Walk-in</option>';
           select.setAttribute('disabled', 'disabled');
+          amount.removeAttribute('value');
+          amount.value = 50;
         } else {
           select.innerHTML = `<option value="Monthly Subscription">Monthly Subscription</option>
                               <option value="Annual Subscription">Annual Subscription</option>`;
           select.removeAttribute('disabled');
+          amount.value = 750;
         }
       }).then(() => {
         document.getElementById('showPaymentModal').click();
       });
 
+     
       document.getElementById('add-payment-btn').addEventListener('click', () => {
-        let amount = document.getElementById('payment-amount').value;
+        let amount = document.getElementById('payment-amount');
         let paymentDesc = document.getElementById('payment-desc').value;
+
         let date = new Date();
         let dateOfPayment = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
         
