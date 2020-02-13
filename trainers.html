@@ -18,19 +18,37 @@
   <link href="css/mdb.min.css" rel="stylesheet">
   <!-- Your custom styles (optional) -->
   <link href="css/style.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="trainer_style.css" >
+    
 
 
 
 <style>
  
 
+input[type=text], input[type=date] {
+  background-color:honeydew;
+  height: 45px;
+} 
+
+.train select{
+  height: 45px;
+  background-color:honeydew;
+}
+
+.bot button{
+  background-color:#DF3A01;
+  color:white;
+} 
+.bot{
+  height:70px;
+  background-color:honeydew;
+}
 
 .viewbutton input[type="text"]{
   width:220px;
 }
 
-.card-bodyzz {
+.card-bodyzz {  
       max-height: 325px;
       overflow-y: auto;
     }
@@ -45,6 +63,13 @@
       align-items: center;
       justify-content: space-between;
     }
+    table > thead > tr > th {
+      font-weight: bold;
+      text-transform: uppercase;
+      
+    }
+
+   
 
 </style>
 </head>
@@ -59,7 +84,7 @@
 
         <!-- Brand -->
         <a class="navbar-brand waves-effect"  style="position: relative;left:50px;">
-          <h4>Welcome, <span id="username"></span>!</h4>
+          <h4>Welcome, <b><span id="username"></span>!</b></h4>
         </a>
 
         <!-- Collapse -->
@@ -150,6 +175,7 @@
           </div>
           
           <div id='card-body' class='card-body table-responsive p-0 card-bodyzz'>  
+            
             <table class='table table-hover'>
               <thead>
                 <tr>
@@ -166,7 +192,8 @@
 
               </tbody>
             </table>
-          </div>
+          
+        </div>
           </div>
         </div>
       </div>
@@ -203,62 +230,73 @@
 
 
 
- <!-- Register Modal -->
- <div id="add" class="modal fade" role="dialog" >
+<div class="modal fade" id="add" >
   <div class="modal-dialog">
-
-<!-- Modal content-->
-    <div class="modal-content" style="width: 887px; left:-60px; top:70px;">
+    <div class="modal-content" >
       <div class="modal-header"style="background-color:#DF3A01;">
-     
-        <h3 class="modal-title" style="color:white;" >Add New Trainer</h3>
-           <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body" >
-      <div class="trainer">
-      
-
-        
-         <input type="text" id="fname" required="" placeholder="Firstname">
-         <input type="text" id="lname" required="" placeholder="Lastname" style="left:40px;">
-         <input type="text" id="email" required="" placeholder="E-mail" style="left:60px;"><br>
-         <input type="text" id="phone" required="" placeholder="Contact Number"  style="left:20px;">
-         <input type="date" id="birthdate"  style="left:40px;">
-
-         <select id="sex" name="sex"  required="" style="left:60px;">
-           
-            <option value="M" selected>M</option>
-            <option value="F">F</option>
-         </select>
-
-         <select id="position" name="position"  required="" style="left:60px;">
-           
-            <option value="junior"selected>junior</option>
-            <option value="senior">senior</option>
-         </select><br>
-
-         <label>Address</label><label style="left:240px;">Status</label><br>
-         <input type="text" id="address" required="" placeholder="Address">
-
-
-         <select id="status" name="status"  required="" style="left:40px;">
-            
-            <option value="active"selected>active</option>
-            <option value="inactive">inactive</option>
-         </select>
-
+        <h3 class="modal-title" style="color:white;">Add new trainer <span id="fname-span"></span></h3>
        
-
-         <button id="addtrainer" type="submit"  class="btn" style="color: white;background-color:#DF3A01;float: right; width: 260px;height:50px;position: relative;left:-15px;">ADD TRAINER</button>
+       
+    
+        <button type='button' class='close' id='close-modal' data-dismiss='modal'>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row d-flex justify-content-center align-items-center mt-1 mb-3" style="flex-direction: column; ">
+          <div id="profilepic" style="border-radius: 50px; height: 100px; width: 100px; overflow: hidden; background-position: 50% 50%; background-size: cover;  text-align: center;">
+            <img src="fuck.jpg" id="output" alt="" style="height: 100%; width: 100%; object-fit: cover;">
+      
+          </div>
          
-        
+          <p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>
+          <p><label for="file" style="cursor: pointer;">Upload Image</label></p>
+        </div>
+        <div class="form-group">
+          <div class="form-row">
+            <div class="col-sm-6">
+              <label>First name</label>
+              <input type="text" id="fname" class="form-control" required="" placeholder="Firstname">
+            </div>
+            <div class="col-sm-6">
+              <label>Last name</label>
+              <input type="text" id="lname" class="form-control" required="" placeholder="Lastname">
+            </div>  
+          <div class="col-sm-6">
+              <label>E-mail</label>
+              <input type="text" id="email" class="form-control" required="" placeholder="E-mail">
+            </div>
+            <div class="col-sm-6">
+              <label>Contact</label>
+              <input type="text" id="phone" class="form-control" required="" placeholder="Contact Number" >
+          </div>
+          <div class="col-sm-6">
+              <label>Birthdate</label>
+              <input type="date" class="form-control" id="birthdate" >
+          </div>
+          <div class="col-sm-6">
+            <label>Address</label>
+            <input type="text" class="form-control" id="address" required="" placeholder="Address">
+        </div>
+          <div class="col-sm-6 train">
+              <label>Gender</label><br>
+              <select id="sex" class="form-control" name="sex"  required="">
+                  <option value="M"selected>M</option>
+                  <option value="F">F</option>
+               </select>
+          </div>
+
+              
+          
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer bot">
+          <button id="addtrainer" type="submit"  class="btn" >ADD TRAINER</button>
+
       </div>
     </div>
-    </div>
-
   </div>
 </div>
-
 
 
 
@@ -291,7 +329,7 @@
               <input type="text" class="form-control" id="view-email" disabled>
             </div>
             <div class="col-sm-6">
-              <label>Contact</label>
+              <label>Cellphone Number</label>
               <input type="text" class="form-control" id="view-phone" disabled>
             </div>
             <div class="col-sm-6">
@@ -326,7 +364,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="statusUpdate">
+<div class="modal fade" id="update">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header"style="background-color:#DF3A01;">
@@ -346,7 +384,7 @@
               <input type="text" class="form-control" id="updateLname" disabled>
             </div>
             
-            <div class="col-sm-6">
+            <div class="col-sm-6 train">
               <label>Status</label>
               <select id="updateStatus" class="form-control">
                 <option value="active" selected>active</option>
@@ -354,7 +392,7 @@
               </select>
 
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6 train">
               <label>Position</label>
               <select id="updatePosition" class="form-control">
                 <option value="junior" selected>junior</option>
@@ -417,18 +455,25 @@
    <script src="FIREBASE/init.js"></script>
 
    <script>
+
+var loadFile = function(event) {
+                  var image = document.getElementById('output');
+                  image.src = URL.createObjectURL(event.target.files[0]);
+              };
+
+
     var button = document.getElementById('addtrainer');
 
     button.addEventListener('click', function() {
       var fname = document.getElementById('fname').value;
       var lname = document.getElementById('lname').value;
       var email = document.getElementById('email').value;
-      var phone = document.getElementById('phone').value;
+      var cellphoneNo = document.getElementById('phone').value;
       var birthdate = document.getElementById('birthdate').value;
       var sex = document.getElementById('sex').value;
-      var position = document.getElementById('position').value;
+     
       var address = document.getElementById('address').value;
-      var status = document.getElementById('status').value;
+     
       var date = new Date();
       var dateAdded = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
       
@@ -444,10 +489,10 @@
             fname: fname,
             lname: lname,
             email: email,
-            phone: phone,
+            cellphoneNo: cellphoneNo,
             birthdate: birthdate,
             sex: sex,
-            position: position,
+            position: 'junior',
             address: address,
             status: 'active'
           }).then(function() {
@@ -476,7 +521,7 @@
 
       <td>
         <a class='btn-link text-warning' onclick='updatestat(this.parentNode.parentNode)'
-         data-toggle='modal' data-target='#statusUpdate'>
+         data-toggle='modal' data-target='#update'>
          <span style="color: #DF3A01; ">
          <i  class="fas fa-user-edit" style="font-size: 20px"></i></span></a>
       </td>
@@ -584,9 +629,6 @@
       });
     }
 
-    
-    
-    
 
     </script>
 </body>
