@@ -17,9 +17,16 @@
   <link href="css/mdb.min.css" rel="stylesheet">
   <!-- Your custom styles (optional) -->
   <link href="css/style.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="promos_style.css" >
+   
 
 <style>
+
+input[type=text], input[type=date] {
+  background-color:honeydew;
+  height: 45px;
+} 
+
+
   .card-bodyzz {
       max-height: 325px;
       overflow-y: auto;
@@ -43,6 +50,7 @@
       font-weight: bold;
       text-transform: uppercase;
     }
+    
 </style>
 </head>
 
@@ -56,7 +64,7 @@
 
         <!-- Brand -->
         <a class="navbar-brand waves-effect"  style="position: relative;left:50px;">
-          <h4>Welcome, <span id="username"></span>!</h4>
+          <h4>ADMIN: <b><span class="text-primary" id="username"></span></b></h4>
          
         </a>
 
@@ -79,7 +87,8 @@
            
             <li class="nav-item">
               <div class="logout">
-               <a href="#">     <button type="button"style="background-color:#DF3A01; color: white" class="btn" >LOGOUT</button></a>
+                <button id="logoutBtn" type="button" style="background-color:#DF3A01; color: white" class="btn">LOGOUT</button>
+            
               </div>
             </li>
           </ul>
@@ -129,7 +138,7 @@
         <div class='card-content'>
           <div class='card-header flexHeader'>
             <h3 class='card-title'>
-              <span class="add-trainer" data-toggle="tooltip" data-placement="top" title="Add new trainer">
+              <span class="add-trainer" data-toggle="tooltip" data-placement="top" title="Add new Promo">
                 <i style="color:#DF3A01;" data-toggle="modal" data-target="#add" class="fas fa-plus mr-2"></i></span>
              Promos
             </h3>
@@ -152,8 +161,9 @@
                   <th>AMOUNT</th>
                   <th>DATE STARTED</th>
                   <th>DATE END</th>      
+                  <th>ACTION</th>
                   <th>DELETE</th>
-                  <th>VIEW</th>
+                  
 
                 </tr>
               </thead>
@@ -171,59 +181,123 @@
 
       
 
-
-
-
-
-
-
-
-<!-- Register Modal -->
-<div id="add" class="modal fade" role="dialog" >
-  <div class="modal-dialog">
-
-<!-- Modal content-->
-    <div class="modal-content" style="width: 887px; height: 350px; left:-60px; top:70px;">
-      <div class="modal-header" style="background-color:#DF3A01;">
-     
-        <h3 class="modal-title"  style="color:white;">Add new promo</h3>
-           <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <div class="modal fade" id="update">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header"style="background-color:#DF3A01;">
+              <h3 class="modal-title" style="color:white;"> <span id="fname-span"></span></h3>
+             
+              <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="col-sm-6">
+                    <label>Promo Name</label>
+                    <input type="text" class="form-control" id="updatepromoname" disabled>
+                  </div>
+                  <div class="col-sm-6"></div>
+                  <div class="col-sm-6">
+                    <label>Amount</label>
+                    <input type="text" class="form-control" id="updateamount" >
+                  </div>
+                  <div class="col-sm-6">
+                    <label>Date Started</label>
+                    <input type="date" class="form-control" id="updatestart" >
+                  </div>
+                  <div class="col-sm-6">
+                    <label>Date Ended</label>
+                    <input type="date" class="form-control" id="updateend" >
+                  </div>
+                  
+                  <div class="col-sm-6">
+                    <label>Status</label>
+                    <select id="updatestat" class="form-control" style="height:45px; background-color:honeydew">
+                      <option value="permanent" selected>permanent</option>
+                      <option value="temporary">temporary</option>
+                    </select>
+      
+                  </div>
+                  
+                </div>
+              </div>
+            
+             
+            </div>
+            <div class="modal-footer"  style="height: 70px;">
+              <button class="btn" style="background-color:#DF3A01; color:white;" id="updateBtn">Update</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="modal-body" >
-      <div class="item">
 
-         <input type="text" id="promoname" required="" placeholder="promo name">
 
-         <select id="stat" class="form-control" style="width: 200px">
-          <option value="permanent" selected>permanent</option>
-          <option value="temporary">temporary</option>
-        </select>
-        
-         <input type="text" id="amount" required="" placeholder="Amount"  style="left:20px;"><br>
 
-         <input type="date" id="start" required=""  >
-         <input type="date" id="end" required=""  >
 
-         
 
-        <textarea rows="5" cols="100" class="form-control" id="description" required data-validation-required-message="Please enter description" placeholder="Enter description" maxlength="999" style=" width: 350px; position: relative; height:100px;left: 500px; top: -70px;"></textarea>
-       
 
-         <button type="submit"  id="addBtn"  class="btn" style="color: white;background-color:#DF3A01;float: left; width: 340px;height:50px;position: relative;left:15px; top:-100px;">ADD PROMO</button>
-         </form>
-        
+      <div class="modal fade" id="add" >
+        <div class="modal-dialog">
+          <div class="modal-content" >
+            <div class="modal-header" style="background-color:#DF3A01;">
+              <h3 class="modal-title" style="color:white;">Add Promo </h3>  
+           
+              <button type='button' class='close' id='close-modal' data-dismiss='modal'>&times;</button>
+            </div>  
+            <div class="modal-body">
+              <div class="form-group">
+                <div class="form-row">
+
+                  <div class="col-sm-6">
+                    <label>Promo Name</label>
+                    <input type="text" id="promoname" class="form-control" required placeholder="promo name">
+                  </div>
+                  <div class="col-sm-6">
+                    <label>Status</label>
+                    <select id="stat" required class="form-control" style="height:45px; background-color:honeydew">
+                      <option value="permanent" selected>permanent</option>
+                      <option value="temporary">temporary</option>
+                    </select>
+                  </div>  
+                
+                  <div class="col-sm-6">
+                    <label>Amount</label>
+                    <input type="text" class="form-control" required id="amount" required="" placeholder="Amount"  >
+                </div>
+                <div class="col-sm-6 ">
+                  <label>Start Date</label><br>
+                  <input type="date" class="form-control" id="start" required  >
+                </div>
+                <div class="col-sm-6 ">
+                  <label>End Date</label><br>
+                  <input type="date" class="form-control" id="end" required  >
+              </div>
+              <div class="col-sm-6 "> </div>
+              
+              <div class="col-sm-6 ">
+                <label>Description</label><br>
+                <textarea rows="5" class="form-control" 
+                cols="100" class="form-control" required id="description"
+                 required data-validation-required-message="Please enter description" 
+                 placeholder="Enter description" maxlength="999" style="height: 100px; width: 465px;"
+                 ></textarea>
+              </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer bot">
+              <button type="submit"  id="addBtn"  class="btn" style="color: white;background-color:#DF3A01;">ADD PROMO</button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    </div>
-
-  </div>
-</div>
 
 <div class="modal fade" id="displayallrecords">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header"style="background-color:#DF3A01;">
-        <h3 class="modal-title" style="color:white;">Promo Information</h3>
+        <h3 class="modal-title" style="color:white;"><span id="viewfname-span"></span></h3>
        
         <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
       </div>
@@ -375,26 +449,42 @@
       tr.innerHTML = 
       `<td><span class="hidden" id="${doc.id}-span"></span><a>
       <small id='${doc.id}-small' onclick='showID("${doc.id}")'>
-      <i style="font-size: 20px;color:#DF3A01;" class="fas fa-eye"></i></small></a></td>
+      <i data-toggle="tooltip" data-placement="top" title="show ${doc.data().promoname}"
+      style="font-size: 20px;" class="fas fa-eye text-success"></i></small></a></td>
       <td><b>${doc.data().promoname}</b></td>
       <td><b>${doc.data().amount}<b></td>
       
       <td><b>${doc.data().start}<b></td>
       <td><b>${doc.data().end}<b></td>
           
-        <td>
-        <a class='btn-link text-warning' onclick='deleteDoc(this.parentNode.parentNode)'>
-         <span style="color: #DF3A01; ">
-          <i class="fas fa-trash-alt" style="font-size: 20px;"></i></span></a>
+       
+
+      <td>
+        <a class='btn-link text-primary' onclick='updatefunction(this.parentNode.parentNode)' 
+        data-toggle='modal' data-target='#update'>
+        <i data-toggle="tooltip" data-placement="top" title="update ${doc.data().promoname}"
+        class="fas fa-edit" style="font-size: 20px;"></i></a>
+
+        <a class='btn-link text-success' onclick='viewPromos(this.parentNode.parentNode)'
+        data-toggle='modal' data-target='#displayallrecords'>
+        <i data-toggle="tooltip" data-placement="top" title="view ${doc.data().promoname}" 
+        class="fas fa-eye" style="font-size: 20px;"></i></a>
       </td>
 
       <td>
-        <a class='btn-link text-warning' onclick='viewPromos(this.parentNode.parentNode)'
-         data-toggle='modal' data-target='#displayallrecords'>
-         <span style="color: #DF3A01; ">
-         <i class="fas fa-eye" style="font-size: 20px;color:#DF3A01;"></i></span></a>
+        <a class='btn-link text-danger' onclick='deleteDoc(this.parentNode.parentNode)' >
+        <i data-toggle="tooltip" data-placement="top" title="Delete ${doc.data().promoname}"
+        class="fas fa-trash-alt" style="font-size: 20px;"></i></a>
       </td>`;
+
+      
       tbody.appendChild(tr);
+      
+      let tt = $('[data-toggle="tooltip"]').tooltip();
+      tt.click(function() {
+        tt.tooltip("hide");
+      });
+    
     }
   
     db.collection('promos').orderBy('start', 'desc').get().then(function(snapshot) {
@@ -404,25 +494,74 @@
       });
     });
 
+
+
+    function updatefunction(tr) {
+      let updatepromoname = document.getElementById('updatepromoname');
+      let updateamount = document.getElementById('updateamount');
+      let updatestart = document.getElementById('updatestart');
+      let updateend = document.getElementById('updateend');
+      let updatestat = document.getElementById('updatestat');
+
+      let span = document.getElementById('fname-span');
+      let dataId = tr.getAttribute('data-id');
+
+      db.collection('promos').doc(dataId).get().then(function(doc) {
+        span.textContent = doc.data().promoname; // firstname na mo display sa update modal
+        updatepromoname.value = doc.data().promoname;
+        updateamount.value = doc.data().amount;
+        updatestart.value = doc.data().start;
+        updateend.value = doc.data().end;
+        updatestat.value = doc.data().stat;
+
+        document.getElementById('updateBtn').addEventListener('click', () => {
+          let amount = document.getElementById('updateamount').value;
+          let start = document.getElementById('updatestart').value;
+          let end = document.getElementById('updateend').value;
+          let stat = document.getElementById('updatestat').value;
+          db.collection('promos').doc(doc.id).update({
+            amount: amount,
+            start: start,
+            end: end,
+            stat: stat
+              
+          }).then(() => {
+            alert('Successfully updated Inventory!');
+            window.location.reload();
+          }).catch((error) => {
+            alert(`Error: ${error.message}`);
+          });
+        });
+      });
+    }
+    
+    
+
 function deleteDoc(tr){
+
     var id = tr.getAttribute('data-id');
-    db.collection("promos").doc(id).delete().then(function() {
+    var x = confirm("Are you sure?");
+    if(x === true){
+    db.collection("promos").doc(id).delete()
+    .then(function() {
     console.log("Document successfully deleted!");
     window.location.reload();
 }).catch(function(error) {
     console.error("Error removing document: ", error);
 });
 }
+}
+
     function showID(id) {
       let span = document.getElementById(`${id}-span`);
       let small = document.getElementById(`${id}-small`);
 
       if(span.classList.contains('hidden')) {
-        small.innerHTML = ' <i style="font-size: 20px;color:black;" class="fas fa-eye-slash"></i>';
+        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye-slash text-primary"></i>';
         span.textContent = id;
         span.classList.remove('hidden');
       } else {
-        small.innerHTML = ' <i style="font-size: 20px;color:#DF3A01;" class="fas fa-eye"></i>';
+        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye text-danger"></i>';
         span.classList.add('hidden');
         span.textContent = '';
       } 
@@ -430,6 +569,7 @@ function deleteDoc(tr){
 
 
     function viewPromos(x) {
+      let span = document.getElementById('viewfname-span');
       let dataid = x.getAttribute("data-id");
       let viewId = document.getElementById("view-id");
       let promoname = document.getElementById("view-promoname");
@@ -442,6 +582,7 @@ function deleteDoc(tr){
       
   
       db.collection("promos").doc(dataid).get().then(function(doc) {
+        span.textContent = doc.data().promoname;
         viewId.value = dataid;
         promoname.value = doc.data().promoname;
         amount.value = doc.data().amount;
@@ -455,7 +596,31 @@ function deleteDoc(tr){
     }
 
 
+// logout script
+document.getElementById("logoutBtn").addEventListener("click", function() {
+      var x = confirm("Are you sure?");
+      if(x === true){
+        firebase.auth().signOut().then(function() {
+          alert("Logout successful!");
+          window.location.href = "index.html";
+        }).catch(function() {
+          alert("Failed to log out!");
+        })
+      }
+    });
 
+    firebase.auth().onAuthStateChanged(function(user){
+      if(user) {
+        
+      } else {
+        window.location.href = "index.html";
+      }
+    })
+
+     // tool tip sa plus button
+     $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
   </script>
   
 </body>

@@ -73,7 +73,7 @@
 
         <!-- Brand -->
         <a class="navbar-brand waves-effect"  style="position: relative;left:50px;">
-          <h4>Welcome,<b><span id="username"></span>!</b></h4>
+          <h4>ADMIN: <b><span class="text-primary" id="username"></span></b></h4>
         </a>
 
         <!-- Collapse -->
@@ -95,7 +95,8 @@
            
             <li class="nav-item">
               <div class="logout">
-               <a href="#"><button type="button"style="background-color:#DF3A01; color: white" class="btn" >LOGOUT</button></a>
+                <button id="logoutBtn" type="button" style="background-color:#DF3A01; color: white" class="btn">LOGOUT</button>
+            
               </div>
             </li>
           </ul>
@@ -148,10 +149,20 @@
         <div class='card-content'>
           <div class='card-header flexHeader'>
             <h3 class='card-title'>
-              <span class="add-trainer" data-toggle="tooltip" data-placement="top" title="Add new trainer">
+              <span class="add-trainer" data-toggle="tooltip" data-placement="top" title="Add new Item">
                 <i style="color:#DF3A01;" data-toggle="modal" data-target="#add" class="fas fa-plus mr-2"></i></span>
               Inventory
             </h3>
+
+            <div class="d-flex justify-content-start align-items-center">
+              Sort status:
+              <select id="sort-regular" class="form-control mx-5" style="flex: 1">
+                <option value="Both">Both</option>
+                <option id="weights" value="active">Free Weights</option>
+                <option id="machines" value="inactive">Cardio Machines</option>
+              </select>
+            </div>
+            
             <div>
             <div class="d-flex justify-content-center">
               <input type="search"  placeholder="Search inventory here..." aria-label="Search" class="form-control">
@@ -170,8 +181,8 @@
                   <th>NAME</th>
                   <th>CATEGORY</th>
                   <th>QUANTITY</th>
-                  <th>UPDATE</th>
-                  <th>VIEW</th>
+                  <th>ACTION</th>
+                  
                   
                 </tr>
               </thead>
@@ -188,7 +199,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header"style="background-color:#DF3A01;">
-              <h3 class="modal-title" style="color:white;">Inventory information</h3>
+              <h3 class="modal-title" style="color:white;">information <span id="viewfname-span"></span></h3>
              
               <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
             </div>
@@ -287,71 +298,74 @@
 
 
 
-
 <div class="modal fade" id="add" >
   <div class="modal-dialog">
     <div class="modal-content" >
-      <div class="modal-header"style="background-color:#DF3A01;">
-        <h3 class="modal-title" style="color:white;">Add new Item <span id="fname-span"></span></h3>
-       
-        <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
-      </div>
+      <div class="modal-header" style="background-color:#DF3A01;">
+        <h3 class="modal-title" style="color:white;">Add new Item </h3>  
+     
+        <button type='button' class='close' id='close-modal' data-dismiss='modal'>&times;</button>
+      </div>  
       <div class="modal-body">
+        <div class="row d-flex mt-1 mb-3" style="flex-direction: row; position: relative;left: 70px;">
+          <div id="profilepic" style="border-radius: 50px; height: 100px; width: 100px; overflow: hidden; background-position: 50% 50%; background-size: cover;  text-align: center;">
+            <img src="box.jpg" id="output" alt="" style="height: 100%; width: 100%; object-fit: cover;">
+            
+          </div>
+          <p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>
+          <p><label for="file" style="cursor: pointer;"><i  data-toggle="tooltip" data-placement="top" title="Add item picture" style="font-size: 35px; color:teal;" class="fas fa-plus-circle"></i></label></p>
+
+          <div class="col-sm-6" style="position: relative; left: 35px;">
+            <label>Item name</label>
+            <input type="text" id="name"  class="form-control" required="" placeholder="Item name">
+          </div>
+
+        </div>
         <div class="form-group">
           <div class="form-row">
-
-           
-
-
-            <div class="col-sm-6">
-              <label>Item name</label>
-              <input type="text" id="name"  class="form-control" required="" placeholder="Item name">
-            </div>
             <div class="col-sm-6">
               <label>Quantity</label>
-              <input type="text" id="quantity"  class="form-control" required="" placeholder="Quantity">
-            </div>  
-          <div class="col-sm-6">
-              <label>No. of working</label>
-              <input type="text" id="working"  class="form-control" required="" placeholder="number of working" >
+                <input type="text" id="quantity"  class="form-control" required="" placeholder="Quantity">
             </div>
             <div class="col-sm-6">
+              <label>No. of working</label>
+              <input type="text" id="working"  class="form-control" required="" placeholder="number of working" >
+            </div>  
+          
+            <div class="col-sm-6">
               <label>No. of Damage</label>
-              <input type="text" id="damage"  class="form-control" required="" placeholder="number of damage"  >
+                <input type="text" id="damage"  class="form-control" required="" placeholder="number of damage"  >
           </div>
           <div class="col-sm-6 train">
-            
-              <label>Category</label><br>
-              <select id="category"  class="form-control" name="category"  required="" style="left:60px;">
-                <option value="Free Weights" selected>Free Weights</option>
-                <option value="Cardio Machines">Cardio Machines</option>
-             </select>
-            
+            <label>Category</label><br>
+            <select id="category"  class="form-control" name="category"  required="" style="left:60px;">
+              <option value="Free Weights" selected>Free Weights</option>
+              <option value="Cardio Machines">Cardio Machines</option>
+           </select>
           </div>
-          <div class="col-sm-6 train"></div>
-          <div class="col-sm-6 train">
+          <div class="col-sm-6 ">
             <label>Description</label><br>
-            <textarea  class="form-control" rows="5" style="height: 100px; width: 465px;" cols="100"  id="description" 
-            required data-validation-required-message="Please enter description"
-             placeholder="Enter description" maxlength="999" 
-              >
-            </textarea>
+             
+
+              <textarea rows="5" class="form-control" 
+              cols="100" class="form-control" id="description"
+               required data-validation-required-message="Please enter description" 
+               placeholder="Enter description" maxlength="999" style="height: 100px; width: 465px;"
+               ></textarea>
         </div>
-       
-        
-            
-                
           </div>
         </div>
       </div>
 
       <div class="modal-footer bot">
         <button type="submit"  id="addBtn"  class="btn" >ADD ITEM</button>
-   
+     
+
       </div>
     </div>
   </div>
 </div>
+
               </div>
               <!-- /.First row-->
 
@@ -398,7 +412,8 @@
 
    <script>
      
-               
+ 
+// creating a data 
     var button = document.getElementById('addBtn');
 
     button.addEventListener('click', function() {
@@ -408,11 +423,8 @@
       var working = document.getElementById('working').value;
       var damage = document.getElementById('damage').value;
       var description = document.getElementById('description').value;
-      
-     
-   
-      
 
+// checking if there is a duplicate data
       var inventory = db.collection('inventory');
       var storage = inventory.where('name', '==', name);
 
@@ -438,6 +450,13 @@
       });
     });
 
+     // para mo upload kag picture    
+var loadFile = function(event) {
+                  var image = document.getElementById('output');
+                  image.src = URL.createObjectURL(event.target.files[0]);
+              };
+
+// display data in the table
     function renderData(doc) {
       let tbody = document.getElementById('tbody');
       let tr = document.createElement('tr');
@@ -446,29 +465,35 @@
       tr.innerHTML = 
       `<td><span class="hidden" id="${doc.id}-span"></span><a>
       <small id='${doc.id}-small' onclick='showID("${doc.id}")'>
-      <i style="font-size: 20px;color:#DF3A01;" class="fas fa-eye"></i></small></a></td>
+      <i data-toggle="tooltip" data-placement="top" title="Show ${doc.data().name}"
+       style="font-size: 20px;" class="fas fa-eye text-success"></i></small></a></td>
       <td><b>${doc.data().name}</b></td>
       <td><b>${doc.data().category}<b></td>
         <td><b>${doc.data().quantity}<b></td>
       
 
-      <td>
-        <a class='btn-link text-warning' onclick='updatefunction(this.parentNode.parentNode)'
-         data-toggle='modal' data-target='#update'>
-         <span style="color: #DF3A01; ">
-         <i  class="fas fa-user-edit" style="font-size: 20px"></i></span></a>
-      </td>
+     
       
       <td>
-        <a class='btn-link text-warning' onclick='viewInventory(this.parentNode.parentNode)'
+        <a class='btn-link text-primary' onclick='updatefunction(this.parentNode.parentNode)'
+         data-toggle='modal' data-target='#update'>
+         <i data-toggle="tooltip" data-placement="top" title="Update ${doc.data().name}"
+         class="fas fa-edit" style="font-size: 20px"></i></a>
+
+        <a class='btn-link text-success' onclick='viewInventory(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#displayallrecords'>
-         <span style="color: #DF3A01; ">
-         <i class="fas fa-eye" style="font-size: 20px;color:#DF3A01;"></i></span></a>
+         <i data-toggle="tooltip" data-placement="top" title="view ${doc.data().name}" class="fas fa-eye" style="font-size: 20px;"></i></a>
       </td> `;
 
       tbody.appendChild(tr);
+
+      let tt = $('[data-toggle="tooltip"]').tooltip();
+      tt.click(function() {
+        tt.tooltip("hide");
+      });
+
     }
-  
+    // display data by name 
     db.collection('inventory').orderBy('name', 'desc').get().then(function(snapshot) {
       snapshot.forEach((doc) => {
        
@@ -477,23 +502,25 @@
     });
 
 
+    // ID show and hide in the table
     function showID(id) {
       let span = document.getElementById(`${id}-span`);
       let small = document.getElementById(`${id}-small`);
 
       if(span.classList.contains('hidden')) {
-        small.innerHTML = ' <i style="font-size: 20px;color:black;" class="fas fa-eye-slash"></i>';
+        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye-slash text-primary"></i>';
         span.textContent = id;
         span.classList.remove('hidden');
       } else {
-        small.innerHTML = '<i style="font-size: 20px;color:#DF3A01;" class="fas fa-eye"></i>';
+        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye text-danger"></i>';
         span.classList.add('hidden');
         span.textContent = '';
-      }
+      } 
     }
 
 
 
+// update function
     function updatefunction(tr) {
       let updatename = document.getElementById('updatename');
       let updatequantity = document.getElementById('updatequantity');
@@ -540,7 +567,9 @@
       }
     })
 
+// show all the inputed data in the modal
     function viewInventory(x) {
+      let span = document.getElementById('viewfname-span');
       let dataid = x.getAttribute("data-id");
       let viewId = document.getElementById("view-id");
       let name = document.getElementById("view-name");
@@ -553,6 +582,7 @@
       
   
       db.collection("inventory").doc(dataid).get().then(function(doc) {
+        span.textContent = doc.data().name; 
         viewId.value = dataid;
         name.value = doc.data().name;
         category.value = doc.data().category;
@@ -564,6 +594,33 @@
         
       });
     }
+
+    // logout script
+    document.getElementById("logoutBtn").addEventListener("click", function() {
+      var x = confirm("Are you sure?");
+      if(x === true){
+        firebase.auth().signOut().then(function() {
+          alert("Logout successful!");
+          window.location.href = "index.html";
+        }).catch(function() {
+          alert("Failed to log out!");
+        })
+      }
+    });
+
+    // security, must login
+    firebase.auth().onAuthStateChanged(function(user){
+      if(user) {
+        
+      } else {
+        window.location.href = "index.html";
+      }
+    })
+
+    // tool tip sa plus button
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
   </script>
   
 </body>
