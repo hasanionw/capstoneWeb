@@ -428,7 +428,7 @@
           <button type='button' class='close' id='close-view-modal' data-dismiss='modal'>&times;</button>
         </div>
         <div class="modal-body">
-          <div class="flexLa">
+          <div class="flexLa" id="flexLa">
             <div class="qrcode-container mt-2 mb-1" id="view-qrcode">
 
             </div>
@@ -619,7 +619,7 @@
             fname: fname,
             lname: lname,
             memberType: memberType,
-            status: 'Paid',
+            status: 'N/A',
             sex: sex,
             dateAdded: dateAdded,
             phone: phone,
@@ -758,11 +758,24 @@
         phone.value = doc.data().phone;
         sex.value = doc.data().sex;
         memberType.value = doc.data().memberType;
-        annualStart.value = doc.data().annualStart;
-        rate.value = doc.data().monthlyRate;
-        monthlyStart.value = doc.data().monthlyStart;
-        monthlyEnd.value = doc.data().monthlyEnd;
-        status.value = doc.data().status;
+        
+        if(doc.data().memberType == 'Walk-in') {
+          document.getElementById('flexLa').style.display = 'none';
+          monthlyStart.value = 'N/A';
+          annualStart.value = 'N/A';
+          monthlyEnd.value = 'N/A';
+          status.value = 'N/A';
+          rate.value = 'N/A';
+        } else {
+          document.getElementById('flexLa').style.display = 'flex';
+          monthlyStart.value = doc.data().monthlyStart;
+          annualStart.value = doc.data().annualStart;
+          monthlyEnd.value = doc.data().monthlyEnd;
+          status.value = doc.data().status;
+          rate.value = doc.data().monthlyRate;
+        }
+        
+        
         address.value = doc.data().address;
  
         qrcode.makeCode(id);
@@ -863,13 +876,21 @@
         document.getElementById('updateBtn').addEventListener('click', () => {
           let memberType = document.getElementById('updateType').value;
           let status = document.getElementById('updateStatus').value;
+
+          if(memberType == 'Regular') {
+            rate = 750;
+          } else {
+            rate = '';
+          }
+
           let id = document.getElementById('updateUID').value;
           db.collection('members').doc(id).update({
             memberType: memberType,
-            status: status
+            status: status,
+            monthlyRate: rate
           }).then(() => {
             alert('Successfully updated member!');
-            document.getElementById('showPaymentModal').click();
+            window.location.reload();
           }).catch((error) => {
             alert(`Error: ${error.message}`);
           });
