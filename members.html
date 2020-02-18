@@ -82,6 +82,12 @@
       align-items: center;
       flex-direction: column;
     }
+
+    .qrcode-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   </style>
 </head>
 
@@ -398,7 +404,109 @@
         <div class="modal-body new-code-body" id="new-member-body">
           <h3><span id="new-member-name"></span>'s UID:</h3>
           <h2 id="new-member-uid" style='font-weight: bold'></h2>
+          <div id="qrcode" class="mt-3 mb-5">
+
+          </div>
           <small id="new-member-small">This code is to be used for the member's mobile activation in the Mobile app.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="view-member-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">View <span id="view-member-name"></span></h3>
+          <button type='button' class='close' id='close-view-modal' data-dismiss='modal'>&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="qrcode-container mt-2 mb-4" id="view-qrcode">
+
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-12">
+                <label>UID</label>
+                <input type="text" class="form-control" id="view-uid" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-6">
+                <label>First Name</label>
+                <input type="text" class="form-control" id="view-fname" disabled>
+              </div>
+              <div class="col-sm-6">
+                <label>Last Name</label>
+                <input type="text" class="form-control" id="view-lname" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-3">
+                <label>Sex</label>
+                <input type="text" class="form-control" id="view-sex" disabled>
+              </div>
+              <div class="col-sm-3">
+                <label>Status</label>
+                <input type="text" class="form-control" id="view-status" disabled>
+              </div>
+              <div class="col-sm-6">
+                <label>Cellphone Number</label>
+                <input type="text" class="form-control" id="view-phone" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-12">
+                <label>Email</label>
+                <input type="text" class="form-control" id="view-email" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-12">
+                <label>Address</label>
+                <input type="text" class="form-control" id="view-address" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-4">
+                <label>Membership Type</label>
+                <input type="text" class="form-control" id="view-memberType" disabled>
+              </div>
+              <div class="col-sm-6">
+                <label>Annual Membership Start Date</label>
+                <input type="text" class="form-control" id="view-annualStart" disabled>
+              </div>
+              <div class="col-sm-2">
+                <label>Rate</label>
+                <input type="text" class="form-control" id="view-monthlyRate" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-6">
+                <label>Monthly Subscription Start Date</label>
+                <input type="text" class="form-control" id="view-monthlyStart" disabled>
+              </div>
+              <div class="col-sm-6">
+                <label>Monthly Subscription Expiry Date</label>
+                <input type="text" class="form-control" id="view-monthlyEnd" disabled>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-warning" id="update-member-from-view-modal">Update</button>
         </div>
       </div>
     </div>
@@ -407,6 +515,7 @@
   <a data-toggle='modal' data-target='#updateModal' style="display: none" id="showUpdateModal"></a>
   <a data-toggle='modal' data-target='#payment-modal' style="display: none" id="showPaymentModal"></a>
   <a data-toggle='modal' data-target='#new-member-code' style="display: none" id="showNewMemberCode"></a>
+  <a data-toggle='modal' data-target='#view-member-modal' style="display: none" id="viewMemberModal"></a>
 
   <script type='text/javascript' src='js/jquery-3.4.1.min.js'></script>
   <script type='text/javascript' src='js/popper.min.js'></script>
@@ -426,6 +535,7 @@
   <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js'></script>
   <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js'></script>
   <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js'></script>
+  <script src="js/qrcode.js"></script>
   <!-- Local script -->
   <script src='FIREBASE/init.js'></script>
 
@@ -439,6 +549,7 @@
       }
     })
 
+    var updateFromView = document.getElementById('update-member-from-view-modal');
     var button = document.getElementById('addMemberBtn');
 
     var addMemberModal = document.getElementById('add-member');
@@ -456,12 +567,13 @@
       let email = document.getElementById('email').value;
       let memberType = document.getElementById('memberType').value;
       let modal = document.getElementById('close-modal');
+      let sex = document.getElementById('sex').value;
       let date = new Date();
       let dateAdded = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
       let phone = document.getElementById('phone').value;
       let address = document.getElementById('address').value;
       let monthlyRate;
-      if(memberType == 'Member') {
+      if(memberType == 'Regular') {
         monthlyRate = 750;
       } else {
         monthlyRate = '';
@@ -483,7 +595,9 @@
         alert('ERROR: Email is required!');
       } else if(address === '') {
         alert('ERROR: Address is required!');
-      } else if(phone === '') {
+      } else if(sex === '') {
+        alert('ERROR: Sex is required!');
+      }else if(phone === '') {
         alert('ERROR: Cellphone number is required!');
       } else {
         member.get().then((snapshot) => {
@@ -495,6 +609,7 @@
             lname: lname,
             memberType: memberType,
             status: 'Paid',
+            sex: sex,
             dateAdded: dateAdded,
             phone: phone,
             monthlyRate: monthlyRate,
@@ -502,7 +617,8 @@
             annualEnd: annualEnd,
             monthlyStart: monthlyStart,
             monthlyEnd: monthlyEnd,
-            address: address
+            address: address,
+            email: email
           }).then(function() {
             member.get().then((snapshot) => {
               snapshot.forEach((doc) => {
@@ -511,9 +627,15 @@
                     snapshot.forEach((doc) => {
                       document.getElementById('new-member-name').textContent = `${doc.data().fname} ${doc.data().lname}`;
                       document.getElementById('new-member-uid').textContent = doc.id;
+                      new QRCode('qrcode', {
+                        text: `${doc.data().fname} ${doc.data().lname}`,
+                        height: 100,
+                        width: 100
+                      });
                     });
                   }).then(() => {
                     document.getElementById('close-modal').click();
+                    
                     document.getElementById('showNewMemberCode').click();
                     document.onclick = (e) => {
                       let x = e.target.id;
@@ -535,6 +657,12 @@
       });
       }
     });
+
+    updateFromView.onclick = () => {
+      let x = document.getElementById('close-view-modal').click();
+      let uid = document.getElementById('view-uid');
+      updateMember(uid);
+    }
 
     paymentDescChange = () => {
       let paymentDesc = document.getElementById('payment-desc').value;
@@ -586,13 +714,51 @@
       }
     }
 
+    viewMember = (tr) => {
+      let id = tr.getAttribute('data-id');
+     
+      db.collection('members').doc(id).get().then((doc) => {
+        document.getElementById('view-member-name').textContent = doc.data().fname;
+
+        let fname = document.getElementById('view-fname');
+        let lname = document.getElementById('view-lname');
+        let email = document.getElementById('view-email');
+        let phone = document.getElementById('view-phone');
+        let sex = document.getElementById('view-sex');
+        let memberType = document.getElementById('view-memberType');
+        let annualStart = document.getElementById('view-annualStart');
+        let monthlyStart = document.getElementById('view-monthlyStart');
+        let monthlyEnd = document.getElementById('view-monthlyEnd');
+        let rate = document.getElementById('view-monthlyRate');
+        let status = document.getElementById('view-status');
+        let address = document.getElementById('view-address');
+        let uid = document.getElementById('view-uid');
+
+        uid.value = id;
+        uid.setAttribute('data-id', id);
+        fname.value = doc.data().fname;
+        lname.value = doc.data().lname;
+        email.value = doc.data().email;
+        phone.value = doc.data().phone;
+        sex.value = doc.data().sex;
+        memberType.value = doc.data().memberType;
+        annualStart.value = doc.data().annualStart;
+        rate.value = doc.data().monthlyRate;
+        monthlyStart.value = doc.data().monthlyStart;
+        monthlyEnd.value = doc.data().monthlyEnd;
+        status.value = doc.data().status;
+        address.value = doc.data().address;
+      }).then(() => {
+        document.getElementById('viewMemberModal').click();
+      });
+    }
+
     renderData = (doc) => {
       let tbody = document.getElementById('tbody');
       let tr = document.createElement('tr');
       let td = document.createElement('td');
 
       tr.setAttribute('data-id', doc.id);
-      tr.setAttribute('onclick', 'viewMember()');
       tr.innerHTML = 
       `<td>${doc.data().fname}</td>
       <td>${doc.data().lname}</td>
@@ -630,7 +796,7 @@
       <td>${doc.data().lname}</td>
       <td>${doc.id}</td>
       <td>
-        <a class='btn-link text-secondary' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
+        <a class='btn-link text-secondary' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px' style='color: #DF3A01'></i></a>
         <a class="btn-link text-warning mx-1" onclick='updateMember(this.parentNode.parentNode)'>
           <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.data().fname}" style="font-size: 20px"></i>
         </a>
