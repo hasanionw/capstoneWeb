@@ -31,8 +31,7 @@
 
         <!-- Brand -->
         <a class="navbar-brand waves-effect" href="#" style="position: relative;left:50px;">
-           Welcome Admin:
-          <strong class="green-text">
+          <h4>ADMIN: <b><span class="text-primary" id="username"></span></b></h4>
           
         </a>
 
@@ -54,7 +53,9 @@
           <ul class="navbar-nav nav-flex-icons">
            
             <li class="nav-item">
-               <button id="logoutBtn" type="button" style="background-color:#DF3A01; color: white" class="btn">LOGOUT</button>
+               
+              <button id="logoutBtn" type="button" style="background-color:#DF3A01; color: white" class="btn">LOGOUT</button>
+            
             </li>
           </ul>
 
@@ -313,6 +314,14 @@
         alert(user.email);
       } else {
         window.location.href = "index.html";
+      }
+    })
+
+    auth.onAuthStateChanged(function(user) {
+      let span = document.getElementById('username');
+
+      if(user) {
+        span.textContent = user.email;
       }
     })
   </script>

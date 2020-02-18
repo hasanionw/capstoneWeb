@@ -68,6 +68,7 @@ input[type=text], input[type=date] {
       text-transform: uppercase;
       
     }
+    
 
    
 
@@ -84,7 +85,7 @@ input[type=text], input[type=date] {
 
         <!-- Brand -->
         <a class="navbar-brand waves-effect"  style="position: relative;left:50px;">
-          <h4>Welcome, <b><span id="username"></span>!</b></h4>
+          <h4>ADMIN: <b><span class="text-primary" id="username"></span></b></h4>
         </a>
 
         <!-- Collapse -->
@@ -107,7 +108,8 @@ input[type=text], input[type=date] {
             <li class="nav-item">
               
               <div class="logout">
-               <a href="#">     <button type="button"style="background-color:#DF3A01; color: white" class="btn" >LOGOUT</button></a>
+                <button id="logoutBtn" type="button" style="background-color:#DF3A01; color: white" class="btn">LOGOUT</button>
+            
               </div>
             </li>
           </ul>
@@ -161,9 +163,17 @@ input[type=text], input[type=date] {
             <div class='card-header flexHeader'>
             <h3 class='card-title'>
               <span class="add-trainer" data-toggle="tooltip" data-placement="top" title="Add new trainer">
-                <i style="color:#DF3A01;" data-toggle="modal" data-target="#add" class="fas fa-plus mr-2"></i></span>
+                <i style="color:#DF3A01;"  data-toggle="modal" data-target="#add" class="fas fa-plus mr-2"></i></span>
               Trainers
             </h3>
+            <div class="d-flex justify-content-start align-items-center">
+              Sort status:
+              <select id="sort-regular" class="form-control mx-5" style="flex: 1">
+                <option value="Both">Both</option>
+                <option id="sortactive" value="active">active</option>
+                <option id="sortinactive" value="inactive">inactive</option>
+              </select>
+            </div>
             <div>
               <div class="d-flex justify-content-center">
                 <input type="search"  placeholder="Search Trainer here..." aria-label="Search" class="form-control" id="#">
@@ -184,8 +194,8 @@ input[type=text], input[type=date] {
                   <th>LASTNAME</th>
                   <th>STATUS</th>
                   <th>POSITION</th>
-                  <th>UPDATE</th>
-                  <th>VIEW</th>
+                  <th>ACTION</th>
+                  
                 </tr>
               </thead>
               <tbody id='tbody'>
@@ -223,32 +233,28 @@ input[type=text], input[type=date] {
   </div>
 </div>
 
-
-
-
-
-
-
-
 <div class="modal fade" id="add" >
   <div class="modal-dialog">
     <div class="modal-content" >
-      <div class="modal-header"style="background-color:#DF3A01;">
-        <h3 class="modal-title" style="color:white;">Add new trainer <span id="fname-span"></span></h3>
-       
-       
-    
+      <div class="modal-header" style="background-color:#DF3A01;">
+        <h3 class="modal-title" style="color:white;">Add new trainer </h3>  
+     
         <button type='button' class='close' id='close-modal' data-dismiss='modal'>&times;</button>
-      </div>
+      </div>  
       <div class="modal-body">
-        <div class="row d-flex justify-content-center align-items-center mt-1 mb-3" style="flex-direction: column; ">
+        <div class="row d-flex mt-1 mb-3" style="flex-direction: row; position: relative;left: 70px;">
           <div id="profilepic" style="border-radius: 50px; height: 100px; width: 100px; overflow: hidden; background-position: 50% 50%; background-size: cover;  text-align: center;">
-            <img src="fuck.jpg" id="output" alt="" style="height: 100%; width: 100%; object-fit: cover;">
-      
+            <img src="trainer.png" id="output" alt="" style="height: 100%; width: 100%; object-fit: cover;">
+            
           </div>
-         
           <p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>
-          <p><label for="file" style="cursor: pointer;">Upload Image</label></p>
+          <p><label for="file" style="cursor: pointer;"><i  data-toggle="tooltip" data-placement="top" title="Add profile picture" style="font-size: 35px;color:teal;" class="fas fa-plus-circle"></i></label></p>
+
+          <div class="col-sm-6" style="position: relative; left: 35px;">
+            <label>E-mail</label>
+            <input type="text" id="email" class="form-control" required="" placeholder="E-mail">
+          </div>
+
         </div>
         <div class="form-group">
           <div class="form-row">
@@ -260,10 +266,7 @@ input[type=text], input[type=date] {
               <label>Last name</label>
               <input type="text" id="lname" class="form-control" required="" placeholder="Lastname">
             </div>  
-          <div class="col-sm-6">
-              <label>E-mail</label>
-              <input type="text" id="email" class="form-control" required="" placeholder="E-mail">
-            </div>
+          
             <div class="col-sm-6">
               <label>Contact</label>
               <input type="text" id="phone" class="form-control" required="" placeholder="Contact Number" >
@@ -305,7 +308,7 @@ input[type=text], input[type=date] {
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header"style="background-color:#DF3A01;">
-        <h3 class="modal-title" style="color:white;">Information</h3>
+        <h3 class="modal-title" style="color:white;">Information of <span id="viewfname-span"></span></h3>
        
         <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
       </div>
@@ -456,12 +459,7 @@ input[type=text], input[type=date] {
 
    <script>
 
-var loadFile = function(event) {
-                  var image = document.getElementById('output');
-                  image.src = URL.createObjectURL(event.target.files[0]);
-              };
-
-
+    // creating a data 
     var button = document.getElementById('addtrainer');
 
     button.addEventListener('click', function() {
@@ -473,11 +471,11 @@ var loadFile = function(event) {
       var sex = document.getElementById('sex').value;
      
       var address = document.getElementById('address').value;
-     
+  
       var date = new Date();
       var dateAdded = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-      
-
+          
+      // checking if there is a duplicate 
       var trainers = db.collection('trainers');
       var trainer = trainers.where('fname', '==', fname).where('lname', '==', lname).where('email', '==', email);
 
@@ -505,6 +503,13 @@ var loadFile = function(event) {
       });
     });
 
+    // para mo upload kag picture
+    var loadFile = function(event) {
+    var image = document.getElementById('output');
+    image.src = URL.createObjectURL(event.target.files[0]);
+ };
+
+// display data in the table  
     function renderData(doc) {
       let tbody = document.getElementById('tbody');
       let tr = document.createElement('tr');
@@ -513,29 +518,36 @@ var loadFile = function(event) {
       tr.innerHTML = 
       `<td><span class="hidden" id="${doc.id}-span"></span><a>
       <small id='${doc.id}-small' onclick='showID("${doc.id}")'>
-      <i style="font-size: 20px;color:#DF3A01;" class="fas fa-eye"></i></small></a></td>
+      <i data-toggle="tooltip" data-placement="top" title="Show ${doc.data().fname}" style="font-size: 20px;" class="fas fa-eye text-success"></i></small></a></td>
       <td><b>${doc.data().fname}</b></td>
       <td><b>${doc.data().lname}<b></td>
       <td><b>${doc.data().status}<b></td>
       <td><b>${doc.data().position}<b></td>
+      
 
       <td>
-        <a class='btn-link text-warning' onclick='updatestat(this.parentNode.parentNode)'
+        <a id="usc" class='btn-link text-primary edit' onclick='updatestat(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#update'>
-         <span style="color: #DF3A01; ">
-         <i  class="fas fa-user-edit" style="font-size: 20px"></i></span></a>
-      </td>
+         <i  data-toggle="tooltip" data-placement="top" title="Update ${doc.data().fname}"
+         class="fas fa-user-edit" style="font-size: 20px"></i></a>
+         
 
-       
-      <td>
-        <a class='btn-link text-warning' onclick='viewTrainers(this.parentNode.parentNode)'
+        <a class='btn-link text-success' onclick='viewTrainers(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#displayallrecords'>
-         <span style="color: #DF3A01; ">
-         <i class="fas fa-eye" style="font-size: 20px;color:#DF3A01;"></i></span></a>
+         <i data-toggle="tooltip" data-placement="top" title="view ${doc.data().fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
       </td>`;
       tbody.appendChild(tr);
+
+      let tt = $('[data-toggle="tooltip"]').tooltip();
+      tt.click(function() {
+        tt.tooltip("hide");
+      });
+    
     }
+
+    
   
+    // display data by firstname 
     db.collection('trainers').orderBy('fname', 'desc').get().then(function(snapshot) {
       snapshot.forEach((doc) => {
        
@@ -543,6 +555,7 @@ var loadFile = function(event) {
       });
     });
 
+    // display the email of the admin in the header
     auth.onAuthStateChanged(function(user) {
       let span = document.getElementById('username');
 
@@ -551,7 +564,7 @@ var loadFile = function(event) {
       }
     })
        
-
+// show all the inputed data in the modal
     function viewTrainers(x) {
       let dataid = x.getAttribute("data-id");
       let viewId = document.getElementById("view-id");
@@ -564,9 +577,11 @@ var loadFile = function(event) {
       let address = document.getElementById("view-address");
       let position = document.getElementById("view-position");
       let status = document.getElementById("view-status");
+      let span = document.getElementById('viewfname-span');
       
   
       db.collection("trainers").doc(dataid).get().then(function(doc) {
+        span.textContent = doc.data().fname;
         viewId.value = dataid;
         fname.value = doc.data().fname;
         lname.value = doc.data().lname;
@@ -581,25 +596,23 @@ var loadFile = function(event) {
       });
     }
     
-
+    // ID show and hide in the table
     function showID(id) {
       let span = document.getElementById(`${id}-span`);
       let small = document.getElementById(`${id}-small`);
 
       if(span.classList.contains('hidden')) {
-        small.innerHTML = ' <i style="font-size: 20px;color:black;" class="fas fa-eye-slash"></i>';
+        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye-slash text-primary"></i>';
         span.textContent = id;
         span.classList.remove('hidden');
       } else {
-        small.innerHTML = '<i style="font-size: 20px;color:#DF3A01;" class="fas fa-eye"></i>';
+        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye text-danger"></i>';
         span.classList.add('hidden');
         span.textContent = '';
-      }
+      } 
     }
 
-    
-
-
+// update function
     function updatestat(tr) {
       let updateFname = document.getElementById('updateFname');
       let updateLname = document.getElementById('updateLname');
@@ -616,19 +629,49 @@ var loadFile = function(event) {
       document.getElementById('updateBtn').addEventListener('click', () => {
           let status = document.getElementById('updateStatus').value;
           let position = document.getElementById('updatePosition').value;
-          db.collection('trainers').doc(doc.id).update({
+          let usc = document.getElementById(`usc`);
+        
+            db.collection('trainers').doc(doc.id).update({
             status: status,
             position: position 
           }).then(() => {
             alert('Successfully updated Trainer!');
             window.location.reload();
-          }).catch((error) => {
+          })
+            .catch((error) => {
             alert(`Error: ${error.message}`);
           });
         });
       });
     }
 
+
+// logout script
+    document.getElementById("logoutBtn").addEventListener("click", function() {
+      var x = confirm("Are you sure?");
+      if(x === true){
+        firebase.auth().signOut().then(function() {
+          alert("Logout successful!");
+          window.location.href = "index.html";
+        }).catch(function() {
+          alert("Failed to log out!");
+        })
+      }
+    });
+
+    // security, must login
+    firebase.auth().onAuthStateChanged(function(user){
+      if(user) {
+        
+      } else {
+        window.location.href = "index.html";
+      }
+    })
+
+      // tool tip sa plus button
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
 
     </script>
 </body>
