@@ -714,6 +714,11 @@
       }
     }
 
+    var qrcode = new QRCode("view-qrcode", {
+      height: 120,
+      width: 120
+    });
+
     viewMember = (tr) => {
       let id = tr.getAttribute('data-id');
      
@@ -748,6 +753,9 @@
         monthlyEnd.value = doc.data().monthlyEnd;
         status.value = doc.data().status;
         address.value = doc.data().address;
+ 
+        qrcode.makeCode(id);
+
       }).then(() => {
         document.getElementById('viewMemberModal').click();
       });
