@@ -1,83 +1,108 @@
-
-
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang='en'>
 <head>
-  <meta charset="utf-8">
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+  <meta http-equiv='x-ua-compatible' content='ie=edge'>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>PAYMENT LOG</title>
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-  <!-- Bootstrap core CSS -->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
-  <!-- Material Design Bootstrap -->
-  <link href="css/mdb.min.css" rel="stylesheet">
-  <!-- Your custom styles (optional) -->
-  <link href="css/style.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="paymentlog_style.css" >
+  <title>Payment Log - California Fitness Gym</title>
 
-<style>
-  
-  table > thead > tr > th {
+  <link rel="icon" href="images/gym_logo.png">
+  <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.11.2/css/all.css'>
+  <link href='css/bootstrap.min.css' rel='stylesheet'>
+  <link href='css/mdb.min.css' rel='stylesheet'>
+  <link href='css/style.min.css' rel='stylesheet'>
+
+  <style>
+    .john label {
+      font-family: Helvetica;
+      font-size: 18px;
+      position: relative;
+    }
+
+    table > thead > tr > th {
       font-weight: bold;
       text-transform: uppercase;
     }
-</style>
+
+    .card-header > .card-title {
+      margin-bottom: 0;
+    }
+
+    .card-header > .card-title > h3 {
+      margin-block-end: 0;
+    }
+
+    .card-bodyzz {
+      max-height: 325px;
+      overflow-y: auto;
+    }
+
+    .card-bodyzz::-webkit-scrollbar {
+      width: 0;
+    }
+
+    small {
+      color: grey;
+      margin-left: 5px;
+    }
+
+    .add-members {
+      color: #DF3A01;
+    }
+
+    .add-members:hover {
+      filter: brightness(70%);
+      cursor: pointer;
+    }
+
+    .flexHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logoutBtn:hover {
+      text-decoration: underline;
+    }
+
+    th, td {
+      text-align: center;
+    }
+
+    .new-code-body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .qrcode-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flexLa {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+  </style>
 </head>
 
-<body class="grey lighten-3" >
-
-  <!--Main Navigation-->
-  <header>
-
-    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar" >
-      <div class="container-fluid" >
-
-        <!-- Brand -->
-        <a class="navbar-brand waves-effect"  style="position: relative;left:50px;">
-          <h4>Welcome, <span id="username"></span>!</h4>
-          
-        </a>
-
-        <!-- Collapse -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" >
-          <span class="navbar-toggler-icon" ></span>
-        </button>
-
-        <!-- Links -->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-          <!-- Left -->
-          <ul class="navbar-nav mr-auto">
-            
-          </ul>
-
-          <!-- Right -->
-          <ul class="navbar-nav nav-flex-icons">
-           
-            <li class="nav-item">
-              <div class="logout">
-               <a href="#">     <button type="button"style="background-color:#DF3A01; color: white" class="btn" >LOGOUT</button></a>
-              </div>
-            </li>
-          </ul>
-
-        </div>
-
-      </div>
-    </nav>
-   
-
-    <!-- Sidebar -->
-     <div class="sidebar-fixed position-fixed" style="background-color:#DF3A01;" >
+<body class='grey lighten-3' >
+  <header>   
+    <div class='sidebar-fixed position-fixed' style='background-color:#DF3A01;' >
       <br>
-     
-        <center><img src="logo.png" class="img-fluid" alt="" style="width: 200px; height: 180px;"></center>
-
+        <center><img src='logo.png' class='img-fluid' alt='' style='width: 200px; height: 180px;'></center>
         <br>
 
         <div class="list-group list-group-flush" >
@@ -88,318 +113,112 @@
             <i class="fas fa-user mr-3"></i>Members</a>
           <a href="trainers.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01; color:white;">
             <i class="fas fa-user-shield mr-3"></i>Trainers</a>
-          
           <a href="inventory.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
             <i class="fas fa-dumbbell  mr-3"></i>Inventory</a>
           <a href="promos.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
             <i class="fas fa-percent mr-3"></i>Promos</a>
-          <a href="#" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
             <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
         </div>
-
     </div>
-    <!-- Sidebar -->
 
   </header>
-  <!--Main Navigation-->
 
-  <!--Main layout-->
-  <main class="pt-5 mx-lg-5" >
-    <div class="container-fluid mt-5">
-
-      <!-- Heading -->
-      <div class="card mb-4 wow fadeIn"style="height: 100px;">
-
-        <!--Card content-->
-        <div class="card-body d-sm-flex justify-content-between">
-
-         
-      
-           
-            <button data-toggle="modal" data-target="#add" type="button" style="background-color:#DF3A01; color: white;height: 45px;" class="btn">ADD PAYMENT</button>
-
-          <select  style="left:-40px; background-color:#DF3A01; width: 150px; height: 45px; color:white; ">
-       
-            <option value="">SORT BY:</option>
-            <option value="Working">Working</option>
-            <option value="Damage">Damage</option>
-          
-
-         </select>
-
-
-          
-          <form class="d-flex justify-content-center">
-            <!-- Default input -->
-            <input type="search"  placeholder="Type your query" aria-label="Search" class="form-control" style="height: 45px;" >
-            <button class="btn " style="background-color:#DF3A01; color: white; height:45px; top:-5px;" type="submit">
-              <i class="fas fa-search"  ></i>
-            </button>
-
-          </form>
-            
-              
-
-        </div>
-
-      </div>
-      <!-- Heading -->
-
-
-      <!--Grid row-->
-      <div class="row wow fadeIn">
-
-        <!--Grid column-->
-        <div class="col-md-9 mb-4" >
-
-          <!--Card-->
-          <div class="card" style="width:867px;">
-            <br>
-             
-              <table  style="width: 90%; position: relative; left:45px;" >
-<tr>
-
-  <th><center></center>PAYMENT ID</center></th>
-  <th><center>MEMBER ID</center></th>
-  <th><center>MEMBER NAME</center></th>
-  <th><center>DATE OF PAYMENT</center></th>
-  <th><center>DESCRIPTION</center></th>
-  <th><center>ACTION</center></th>
-  
-
-  
-  
-</tr>
- 
-
- 
-
-</table>
-
-            <br>
-          </div>
-          <!--/.Card-->
-
-        </div>
-        <!--Grid column-->
-
-        <!--Grid column-->
-       
-        <!--Grid column-->
-
-      </div>
-      <!--Grid row-->
-
-      
-<!-- Register Modal -->
-<div id="display" class="modal fade" role="dialog" >
-  <div class="modal-dialog">
-
-<!-- Modal content-->
-    <div class="modal-content" style="width:900px; left:-60px; top:190px;">
-      <div class="modal-header"style="background-color:#DF3A01;">
-     
-        <h3 class="modal-title" style="text-align: center; color:white;">PROMO INFORMATION</h3>
-           <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body" >
-
-       <table width = "100%" >
-          
-
-           <tr>
-                <th><center>ID</center></th>
-                <th><center>NAME</center></th>
-                <th><center>DSCRIPTION</center></th>
-                <th><center>STATUS</center></th>
-                <th><center>AMOUNT</center></th>
-                <th><center>START DATE</center></th>
-                <th><center>END DATE</center></th>
-               
-                          
-          </tr>
-          
-        
-           
-         </table>
-
-      </div>
-    
+  <main class='pt-5 mx-lg-5' >
+    <div class="flex mx-4">
+      <h4>Welcome, <span id="username"></span>!</h4>
+      <button class="btn btn-outline-danger">Logout</button>
     </div>
-
-  </div>
-</div>
-
-<!-- Register Modal -->
-<div id="updateStatus" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-<!-- Modal content-->
-    <div class="modal-content" >
-      <div class="modal-header" style="background-color:#DF3A01;">
-     
-        <h3 class="modal-title" style="color:white;">Item Update</h3>
-           <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body" >
-
-     
-         <form action="" method="post">        
-         <center><label>Update Status</label></center>
-         <center><select id="status" name="status"  required="">
-            <option value="">status</option>
-            <option value="Working">Working</option>
-            <option value="Damage">Damage</option>
-         </select></center>
-         <br>   
-       
-         <center><button type="submit"  class="btn" style="color: white;background-color:#DF3A01; width: 235px;height:50px;">UPDATE</button></center>
-        </form>  
-
-
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-<!-- Register Modal -->
-<div id="add" class="modal fade" role="dialog" >
-  <div class="modal-dialog">
-
-<!-- Modal content-->
-    <div class="modal-content" style="width: 887px; height: 340px; left:-60px; top:70px;">
-      <div class="modal-header" style="background-color:#DF3A01;">
-     
-        <h3 class="modal-title"  style="color:white;">ADD NEW PAYMENT</h3>
-           <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body" >
-      <div class="item">
-        
-
-        
-         <input type="text" id="memid" required="" placeholder="Member ID">
-
-           <select id="paymentmethod" name="type"  required="" style="left:60px;">
-            <option value="Annual Subscription" selected>Annual Subscription</option>
-            <option value="Monthly Subscription">Monthly Subscription</option>
-         </select><br>
-
-         <input type="date" name="member_id" required="" placeholder="Member ID">
-        
-         <input type="text" name="amount" required="" placeholder="Amount"  style="left:20px;"><br>
-      
-
-        <textarea rows="5" cols="100" class="form-control" id="description" name="description"required data-validation-required-message="Please enter description" placeholder="Enter description" maxlength="999" style=" width: 340px; position: relative; height:120px;left: 510px; top: -70px;"></textarea>
-       
-
-         <button type="submit"  class="addBtn" style="color: white;background-color:#DF3A01;float: left; width: 340px;height:50px;position: relative;left:15px; top:-120px;">ADD PAYMENT</button>
-         
-        
-      </div>
-    </div>
-    </div>
-
-  </div>
-</div>
-
-
-
-             
-
+    <div class="container mt-5">
+      <div class="card">
+        <div class="card-content">
+          <div class="card-header flexHeader">
+            <h3 class="card-title">Payment Log</h3>
+            <div>
+              <div class="d-flex justify-content-center">
+                <input type="search"  placeholder="Search here..." aria-label="Search" class="form-control" id="search-member">
+                <button class="btn btn-dark btn-sm my-0 p" type="submit" id="search-member-btn">
+                  <i class="fas fa-search" ></i>
+                </button>
               </div>
-              <!-- /.First row-->
-
             </div>
-
           </div>
-          <!--/.Card-->
+          <div class="card-body card-bodyzz table-responsive p-0">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Date of Payment</th>
+                  <th>Name</th>
+                  <th>Payment Description</th>
+                  <th>Amount</th>
+                  <th>Payment Type</th>
+                </tr>
+              </thead>
+              <tbody>
 
+              </tbody>
+            </table>
+          </div>
         </div>
-        <!--Grid column-->
-
       </div>
-      <!--Grid row-->
-
     </div>
   </main>
-  <!--Main layout-->
 
-  
+  <script type='text/javascript' src='js/jquery-3.4.1.min.js'></script>
+  <script type='text/javascript' src='js/popper.min.js'></script>
+  <script type='text/javascript' src='js/bootstrap.min.js'></script>
+  <script type='text/javascript' src='js/mdb.min.js'></script>
+  <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });   
+  </script>
 
-  <!-- SCRIPTS -->
-  <!-- JQuery -->
-  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-  <!-- Bootstrap tooltips -->
-  <script type="text/javascript" src="js/popper.min.js"></script>
-  <!-- Bootstrap core JavaScript -->
-  <script type="text/javascript" src="js/bootstrap.min.js"></script>
-  <!-- MDB core JavaScript -->
-  <script type="text/javascript" src="js/mdb.min.js"></script>
-  <!-- Initializations -->
+  <!-- Firebase CDNs -->
+  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js'></script>
+  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js'></script>
+  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js'></script>
+  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js'></script>
+  <script src="js/qrcode.js"></script>
+  <!-- Local script -->
+  <script src='FIREBASE/init.js'></script>
 
-   <!-- Firebase CDNs -->
-   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
-   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
-   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
-   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
-   <!-- Local script -->
-   <script src="FIREBASE/init.js"></script>
-
-   <script>
-    var button = document.getElementById('addBtn');
-
-    button.addEventListener('click', function() {
-      var promoname = document.getElementById('promoname').value;
-      var amount = document.getElementById('amount').value;
-      var stat = document.getElementById('stat').value;
-      var start = document.getElementById('start').value;
-      var end = document.getElementById('end').value;
-      var description = document.getElementById('description').value;
-      
-    
-
-      var promos = db.collection('promos');
-      var discount = promos.where('start', '==', start).where('end', '==', end);
-
-      discount.get().then(function(snapshot) {
-        if(snapshot.docs.length > 0) {
-          alert('Error: promo date already exists!');
-        } else {
-          promos.add({
-            promoname: promoname,
-            amount: amount,
-            stat: stat,
-            start: start,
-            end: end,
-            description: description
-            
-          }).then(function() {
-            alert('Successfully added new Inventory!');
-            window.location.reload();
-          }).catch(function(error) {
-            alert(error.message);
-          });
-        }
-      });
-    });
-
+  <!-- Functions -->
+  <script>
     auth.onAuthStateChanged(function(user) {
       let span = document.getElementById('username');
 
       if(user) {
         span.textContent = user.email;
       }
-    })
+    });
 
+    // Render payments
+    renderPayment = (doc) => {
+      let tbody = document.getElementsByTagName('tbody')[0];
+      let tr = document.createElement('tr');
+      let name;
+      
+      db.collection('members').doc(`${doc.data().memberId}`).get().then((snap) => {
+        name = `${snap.data().fname} ${snap.data().lname}`;
+      }).finally(() => {
+        tr.innerHTML = 
+        `<td>${doc.data().dateOfPayment}</td>
+        <td>${name}</td>
+        <td>${doc.data().paymentDesc}</td>
+        <td>${doc.data().amount}</td>
+        <td>Cash</td>`;
 
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Get payments
+    db.collection('payments').orderBy('dateOfPayment', 'desc').orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
+      snapshot.forEach((doc) => {
+        renderPayment(doc);
+      });
+    });
   </script>
-  
 </body>
-
 </html>

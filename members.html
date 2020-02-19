@@ -420,6 +420,7 @@
     </div>
   </div>
 
+  <!-- View Member Modal -->
   <div class="modal fade" id="view-member-modal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -536,9 +537,6 @@
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });
-
- 
-
   </script>
 
   <!-- Firebase CDNs -->
@@ -547,6 +545,7 @@
   <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js'></script>
   <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js'></script>
   <script src="js/qrcode.js"></script>
+
   <!-- Local script -->
   <script src='FIREBASE/init.js'></script>
 
@@ -774,8 +773,7 @@
           status.value = doc.data().status;
           rate.value = doc.data().monthlyRate;
         }
-        
-        
+
         address.value = doc.data().address;
  
         qrcode.makeCode(id);
@@ -807,7 +805,7 @@
       <td>
         <a class='btn-link text-secondary' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
         <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data().fname}" data-placement="top"></i></a>
-        <a class='btn-link text-success' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
+        <a class='btn-link text-success' onclick='addPayment("${doc.id}")'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
       </td>`;
       tbody.appendChild(tr);
 
@@ -832,7 +830,7 @@
         <a class="btn-link text-warning mx-1" onclick='updateMember(this.parentNode.parentNode)'>
           <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.data().fname}" style="font-size: 20px"></i>
         </a>
-        <a class='btn-link text-success' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
+        <a class='btn-link text-success' onclick='addPayment("${doc.id}")'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
       </td>`;
       tbody.appendChild(tr);
 
@@ -946,64 +944,56 @@
     });
 
     // Add payment
-    addPayment = (tr) => {
-      let id = tr.getAttribute('data-id');
-      let uid = document.getElementById('payment-uid');
-      uid.value = id;
-      let name = document.getElementById('payment-name');
-      let span = document.getElementById('payment-fname-span');
-
-      db.collection('members').doc(id).get().then((snapshot) => {
-        let fullName = `${snapshot.data().fname} ${snapshot.data().lname}`;
-        let select = document.getElementById('payment-desc');
+    addPayment = (id) => {
+      db.collection('members').doc(id).get().then((doc) => {
+        let uid = document.getElementById('payment-uid');
+        let name = document.getElementById('payment-name');
+        let paymentDesc = document.getElementById('payment-desc');
         let amount = document.getElementById('payment-amount');
+        let span = document.getElementById('payment-fname-span');
 
-        span.textContent = snapshot.data().fname 
-        name.value = fullName;
-
-        if(snapshot.data().memberType == 'Walk-in') {
-          select.innerHTML = '<option>Walk-in</option>';
-          select.setAttribute('disabled', 'disabled');
-          amount.removeAttribute('value');
-          amount.value = 50;
-        } else {
-          select.innerHTML = `<option value="Monthly Subscription">Monthly Subscription</option>
-                              <option value="Annual Subscription">Annual Subscription</option>`;
-          select.removeAttribute('disabled');
+        uid.value = id;
+        name.value = `${doc.data().fname} ${doc.data().lname}`;
+        span.textContent = doc.data().fname;
+        if(doc.data().memberType == 'Regular') {
+          paymentDesc.innerHTML =
+            `<option value="Monthly Subscription" selected>Monthly Subscription</option>
+            <option value="Annual Subscription">Annual Subscription</option>`;
           amount.value = 750;
+        } else {
+          paymentDesc.setAttribute('disabled', 'disabled');
+          paymentDesc.innerHTML = 
+            `<option value="Walk-in Fee" selected>Walk-in Fee</option>`;
+          amount.value = 50;
         }
-      }).then(() => {
+
         document.getElementById('showPaymentModal').click();
-      });
-
-     
-      document.getElementById('add-payment-btn').addEventListener('click', () => {
+      }).then(() => {
+        let payBtn = document.getElementById('add-payment-btn');
+        let uid = document.getElementById('payment-uid');
         let amount = document.getElementById('payment-amount');
-        let paymentDesc = document.getElementById('payment-desc').value;
+        let paymentDesc = document.getElementById('payment-desc');
 
+        // Date
         let date = new Date();
         let dateOfPayment = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
-        
-        addZero = (i) => {
-          if (i < 10) {
-            i = "0" + i;
-          }
 
-          return i;
+        // Time
+        let timeOfPayment = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        payBtn.onclick = () => {
+          db.collection('payments').add({
+            amount: amount.value,
+            dateOfPayment: dateOfPayment,
+            memberId: uid.value,
+            paymentDesc: paymentDesc.value,
+            timeOfPayment: timeOfPayment
+          }).then(() => {
+            alert('Successfully added payment!');
+            window.location.reload();
+          }).catch((err) => {
+            alert(`ERROR: ${err.message}`);
+          });
         }
-
-        let timeOfPayment = `${addZero(date.getHours())}:${addZero(date.getMinutes())}:${addZero(date.getSeconds())}`;
-
-        db.collection('payments').add({
-          memberId: id,
-          amount: amount,
-          paymentDesc: paymentDesc,
-          dateOfPayment: dateOfPayment,
-          timeOfPayment: timeOfPayment
-        }).then(() => {
-          alert('Successfully added payment!');
-          window.location.reload();
-        });
       });
     }
   </script>
