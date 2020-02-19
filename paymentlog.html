@@ -1,107 +1,96 @@
 <!DOCTYPE html>
 <html lang='en'>
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
-  <meta http-equiv='x-ua-compatible' content='ie=edge'>
+  <head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+    <meta http-equiv='x-ua-compatible' content='ie=edge'>
 
-  <title>Payment Log - California Fitness Gym</title>
+    <title>Payment Log - California Fitness Gym</title>
 
-  <link rel="icon" href="images/gym_logo.png">
-  <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.11.2/css/all.css'>
-  <link href='css/bootstrap.min.css' rel='stylesheet'>
-  <link href='css/mdb.min.css' rel='stylesheet'>
-  <link href='css/style.min.css' rel='stylesheet'>
+    <link rel="icon" href="images/gym_logo.png">
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.11.2/css/all.css'>
+    <link href='css/bootstrap.min.css' rel='stylesheet'>
+    <link href='css/mdb.min.css' rel='stylesheet'>
+    <link href='css/style.min.css' rel='stylesheet'>
 
-  <style>
-    .john label {
-      font-family: Helvetica;
-      font-size: 18px;
-      position: relative;
-    }
+    <style>
+      .john label {
+        font-family: Helvetica;
+        font-size: 18px;
+        position: relative;
+      }
 
-    table > thead > tr > th {
-      font-weight: bold;
-      text-transform: uppercase;
-    }
+      table > thead > tr > th {
+        font-weight: bold;
+        text-transform: uppercase;
+      }
 
-    .card-header > .card-title {
-      margin-bottom: 0;
-    }
+      .card-header > .card-title {
+        margin-bottom: 0;
+      }
 
-    .card-header > .card-title > h3 {
-      margin-block-end: 0;
-    }
+      .card-header > .card-title > h3 {
+        margin-block-end: 0;
+      }
 
-    .card-bodyzz {
-      max-height: 325px;
-      overflow-y: auto;
-    }
+      .card-bodyzz {
+        max-height: 325px;
+        overflow-y: auto;
+      }
 
-    .card-bodyzz::-webkit-scrollbar {
-      width: 0;
-    }
+      .card-bodyzz::-webkit-scrollbar {
+        width: 0;
+      }
 
-    small {
-      color: grey;
-      margin-left: 5px;
-    }
+      small {
+        color: grey;
+        margin-left: 5px;
+      }
 
-    .add-members {
-      color: #DF3A01;
-    }
+      .add-members {
+        color: #DF3A01;
+      }
 
-    .add-members:hover {
-      filter: brightness(70%);
-      cursor: pointer;
-    }
+      .add-members:hover {
+        filter: brightness(70%);
+        cursor: pointer;
+      }
 
-    .flexHeader {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+      .flexHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-    .flex {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+      .flex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
 
-    .logoutBtn:hover {
-      text-decoration: underline;
-    }
+      .logoutBtn:hover {
+        text-decoration: underline;
+      }
 
-    th, td {
-      text-align: center;
-    }
+      th, td {
+        text-align: center;
+        vertical-align: middle !important;
+      }
 
-    .new-code-body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
+      .name-anchor:hover {
+        text-decoration: underline;
+      }
 
-    .qrcode-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+      .card-body p {
+        margin-bottom: 0 !important;
+      }
+    </style>
+  </head>
 
-    .flexLa {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-    }
-  </style>
-</head>
-
-<body class='grey lighten-3' >
-  <header>   
-    <div class='sidebar-fixed position-fixed' style='background-color:#DF3A01;' >
-      <br>
+  <body class='grey lighten-3' >
+    <header>   
+      <div class='sidebar-fixed position-fixed' style='background-color:#DF3A01;' >
+        <br>
         <center><img src='logo.png' class='img-fluid' alt='' style='width: 200px; height: 180px;'></center>
         <br>
 
@@ -120,41 +109,103 @@
           <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
             <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
         </div>
-    </div>
+      </div>
+    </header>
 
-  </header>
-
-  <main class='pt-5 mx-lg-5' >
-    <div class="flex mx-4">
-      <h4>Welcome, <span id="username"></span>!</h4>
-      <button class="btn btn-outline-danger">Logout</button>
-    </div>
-    <div class="container mt-5">
-      <div class="card">
-        <div class="card-content">
-          <div class="card-header flexHeader">
-            <h3 class="card-title">Payment Log</h3>
-            <div>
-              <div class="d-flex justify-content-center">
-                <input type="search"  placeholder="Search here..." aria-label="Search" class="form-control" id="search-member">
-                <button class="btn btn-dark btn-sm my-0 p" type="submit" id="search-member-btn">
-                  <i class="fas fa-search" ></i>
-                </button>
+    <main class='pt-5 mx-lg-5' >
+      <div class="flex mx-4">
+        <h4>Welcome, <span id="username"></span>!</h4>
+        <button class="btn btn-outline-danger">Logout</button>
+      </div>
+      <div class="container mt-5">
+        <div class="row d-flex align-items-center">
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-header flexHeader">
+                  <h3 class="card-title">Payment Log</h3>
+                  <select id="sortDate" class="form-control" style="width: 35%">
+                    <option value="">Today</option>
+                    <option value="">Yesterday</option>
+                    <option value="">Last 7 days</option>
+                    <option value="">Last 30 days</option>
+                    <option value="">All-time</option>
+                  </select>
+                </div>
+                <div class="card-body card-bodyzz table-responsive p-0" style="height: 325px">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Date of Payment</th>
+                        <th>Name</th>
+                        <th>Payment Description</th>
+                        <th>Amount</th>
+                        <th>Payment Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+      
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
-          <div class="card-body card-bodyzz table-responsive p-0">
-            <table class="table table-hover">
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-header flexHeader">
+                  <h3 class="card-title">Member Information</h3>
+                </div>
+                <div class="card-body card-bodyzz">
+                  <h4 class="mb-3"><b id="info-name"></b></h4>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <p><b>UID:</b></p>
+                      <span id="info-uid"></span>
+                    </div>
+                    <div class="col-sm-6">
+                      <p><b>Membership Type:</b></p>
+                      <span id="info-memberType"></span>
+                    </div>
+                  </div>
+                  <div class="my-5 d-flex justify-content-center">
+                    <button class="btn btn-light" id="view-history-btn" disabled>View Payment History</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Member Payment History Modal -->
+    <div class="modal fade" id="view-history-modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header flexHeader" style="background-color: #DF3A01">
+            <h3 class="modal-title text-white"><span><b id="history-name"></b></span>'s Payment History</h3>
+            <select id="sortDate" class="form-control" style="width: 35%">
+              <option value="">Today</option>
+              <option value="">Yesterday</option>
+              <option value="">Last 7 days</option>
+              <option value="">Last 30 days</option>
+              <option value="">All-time</option>
+            </select>
+          </div>
+          <div class="modal-body table-responsive p-0">
+            <table class="table">
               <thead>
                 <tr>
-                  <th>Date of Payment</th>
-                  <th>Name</th>
                   <th>Payment Description</th>
                   <th>Amount</th>
                   <th>Payment Type</th>
+                  <th>Date of Payment</th>
+                  <th>Time of Payment</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="history-tbody">
 
               </tbody>
             </table>
@@ -162,63 +213,128 @@
         </div>
       </div>
     </div>
-  </main>
 
-  <script type='text/javascript' src='js/jquery-3.4.1.min.js'></script>
-  <script type='text/javascript' src='js/popper.min.js'></script>
-  <script type='text/javascript' src='js/bootstrap.min.js'></script>
-  <script type='text/javascript' src='js/mdb.min.js'></script>
-  <script>
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip();
-    });   
-  </script>
+    <button data-toggle="modal" data-target="#view-history-modal" id="viewHistoryModal" style="display: none"></button>
 
-  <!-- Firebase CDNs -->
-  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js'></script>
-  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js'></script>
-  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js'></script>
-  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js'></script>
-  <script src="js/qrcode.js"></script>
-  <!-- Local script -->
-  <script src='FIREBASE/init.js'></script>
+    <script type='text/javascript' src='js/jquery-3.4.1.min.js'></script>
+    <script type='text/javascript' src='js/popper.min.js'></script>
+    <script type='text/javascript' src='js/bootstrap.min.js'></script>
+    <script type='text/javascript' src='js/mdb.min.js'></script>
+    <script>
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      });   
+    </script>
 
-  <!-- Functions -->
-  <script>
-    auth.onAuthStateChanged(function(user) {
-      let span = document.getElementById('username');
+    <!-- Firebase CDNs -->
+    <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js'></script>
+    <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js'></script>
+    <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js'></script>
+    <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js'></script>
+    <script src="js/qrcode.js"></script>
+    <!-- Local script -->
+    <script src='FIREBASE/init.js'></script>
 
-      if(user) {
-        span.textContent = user.email;
+    <!-- Functions -->
+    <script>
+      auth.onAuthStateChanged(function(user) {
+        let span = document.getElementById('username');
+
+        if(user) {
+          span.textContent = user.email;
+        }
+      });
+
+      // Render Information
+      renderInformation = (elem) => {
+        id = elem.getAttribute('data-id');
+
+        db.collection('members').doc(id).get().then((doc) => {
+          let name = document.getElementById('info-name');
+          let uid = document.getElementById('info-uid');
+          let memberType = document.getElementById('info-memberType');
+
+          name.textContent = `${doc.data().fname} ${doc.data().lname}`;
+          uid.textContent = doc.id;
+          memberType.textContent = doc.data().memberType;
+
+          document.getElementById('view-history-btn').removeAttribute('disabled');
+        });
       }
-    });
 
-    // Render payments
-    renderPayment = (doc) => {
-      let tbody = document.getElementsByTagName('tbody')[0];
-      let tr = document.createElement('tr');
-      let name;
-      
-      db.collection('members').doc(`${doc.data().memberId}`).get().then((snap) => {
-        name = `${snap.data().fname} ${snap.data().lname}`;
-      }).finally(() => {
+      displayPayment = (doc, name) => {
+        let tbody = document.getElementsByTagName('tbody')[0];
+        let tr = document.createElement('tr');
+
         tr.innerHTML = 
-        `<td>${doc.data().dateOfPayment}</td>
-        <td>${name}</td>
-        <td>${doc.data().paymentDesc}</td>
-        <td>${doc.data().amount}</td>
-        <td>Cash</td>`;
+          `<td>${doc.data().dateOfPayment}</td>
+          <td>
+            <a href="#" class="name-anchor" style="color: #DF3A01" onclick="renderInformation(this)" data-id="${doc.data().memberId}">${doc.data().memberName}</a>
+          </td>
+          <td>${doc.data().paymentDesc}</td>
+          <td>${doc.data().amount}</td>
+          <td>Cash</td>`;
 
         tbody.appendChild(tr);
-      });
-    }
+      }
 
-    // Get payments
-    db.collection('payments').orderBy('dateOfPayment', 'desc').orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
-      snapshot.forEach((doc) => {
-        renderPayment(doc);
+      // // Render payments
+      // renderPayment = (doc) => {
+      //   let name;
+        
+      //   db.collection('members').doc(`${doc.data().memberId}`).get().then((snap) => {
+      //     name = `${snap.data().fname} ${snap.data().lname}`;
+      //   }).then(() => {
+      //     displayPayment(doc, name);
+      //   });
+      // }
+
+      // Get payments
+      db.collection('payments').orderBy('dateOfPayment', 'desc').orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          displayPayment(doc);
+        });
       });
-    });
-  </script>
-</body>
+
+      // Render Payment History
+      renderHistory = (doc) => {
+        let tbody = document.getElementById('history-tbody');
+        let tr = document.createElement('tr');
+
+        tr.innerHTML = 
+          `<td>${doc.data().paymentDesc}</td>
+          <td>${doc.data().amount}</td>
+          <td>Cash</td>
+          <td>${doc.data().dateOfPayment}</td>
+          <td>${doc.data().timeOfPayment}</td>`;
+
+        tbody.appendChild(tr);
+      }
+
+      // View History Modal
+      let viewHistoryBtn = document.getElementById("view-history-btn");
+      viewHistoryBtn.onclick = () => {
+        let btn = document.getElementById('viewHistoryModal');
+        let id = document.getElementById('info-uid').textContent;
+
+        db.collection('members').doc(id).get().then((doc) => {
+          document.getElementById('history-name').textContent = doc.data().fname;
+        }).then(() => {
+          db.collection('payments')
+            .where('memberId', '==', id)
+            .orderBy('dateOfPayment', 'desc')
+            .orderBy('timeOfPayment', 'desc')
+            .get().then((snapshot) => {
+              snapshot.forEach((doc) => {
+                renderHistory(doc);
+              });
+            }).then(() => {
+              document.getElementById('viewHistoryModal').click();
+            });
+        }).finally(() => {
+          document.getElementById('history-tbody').innerHTML = '';
+        });
+      }
+    </script>
+  </body>
 </html>

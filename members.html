@@ -973,6 +973,7 @@
         let uid = document.getElementById('payment-uid');
         let amount = document.getElementById('payment-amount');
         let paymentDesc = document.getElementById('payment-desc');
+        let name = document.getElementById('payment-name');
 
         // Date
         let date = new Date();
@@ -986,7 +987,8 @@
             dateOfPayment: dateOfPayment,
             memberId: uid.value,
             paymentDesc: paymentDesc.value,
-            timeOfPayment: timeOfPayment
+            timeOfPayment: timeOfPayment,
+            memberName: name.value
           }).then(() => {
             alert('Successfully added payment!');
             window.location.reload();
