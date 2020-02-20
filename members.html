@@ -170,7 +170,6 @@
                   <th>First name</th>
                   <th>Last name</th>
                   <th>Unique ID</th>
-                  <th>Date Added</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -375,8 +374,8 @@
       </div>
     </div>
 
-    <!-- Walk-in Card -->
-    <div class="container-fluid my-3">
+    <!-- Walk-in and Program Card -->
+    <div class="container-fluid mt-4 mb-3">
       <div class="row">
         <div class="col-sm-7">
           <div class='card'>
@@ -400,7 +399,6 @@
                     <tr>
                       <th>First name</th>
                       <th>Last name</th>
-                      <th>Unique ID</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -421,7 +419,19 @@
                   Programs
                 </h3>
               </div>
-              <div class="card-body card-bodyzz"></div>
+              <div class="card-body card-bodyzz table-responsive-0 p-0">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Program Name</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="program-tbody">
+
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -823,7 +833,6 @@
            <i class="fas fa-eye"></i></small>
         </a>
       </td>
-      <td>${doc.data().dateAdded}</td>
       <td>${doc.data().status}</td>
       <td>
         <a class='btn-link text-secondary' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
@@ -838,6 +847,38 @@
       });
     }
 
+    // Sorting Member by Status
+    document.getElementById('sort-regular').onchange = () => {
+      let sort = document.getElementById('sort-regular');
+      let tbody = document.getElementById('tbody');
+
+      if(sort.value == 'Paid') {
+        db.collection('members').where('memberType', '==', 'Regular').where('status', '==', 'Paid').orderBy('dateAdded', 'desc').get().then((snapshot) => {
+          tbody.innerHTML = '';
+
+          snapshot.forEach((doc) => {
+            renderData(doc);
+          });
+        });
+      } else if(sort.value == 'Expired') {
+        db.collection('members').where('memberType', '==', 'Regular').where('status', '==', 'Expired').orderBy('dateAdded', 'desc').get().then((snapshot) => {
+          tbody.innerHTML = '';
+
+          snapshot.forEach((doc) => {
+            renderData(doc);
+          });
+        });
+      } else if(sort.value == 'Both') {
+        db.collection('members').where('memberType', '==', 'Regular').orderBy('dateAdded', 'desc').get().then((snapshot) => {
+          tbody.innerHTML = '';
+
+          snapshot.forEach((doc) => {
+            renderData(doc);
+          });
+        });
+      }
+    }
+
     renderWalkin = (doc) => {
       let tbody = document.getElementById('tbody-walk-in');
       let tr = document.createElement('tr');
@@ -847,7 +888,6 @@
       tr.innerHTML = 
       `<td>${doc.data().fname}</td>
       <td>${doc.data().lname}</td>
-      <td>${doc.id}</td>
       <td>
         <a class='btn-link text-secondary' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px' style='color: #DF3A01'></i></a>
         <a class="btn-link text-warning mx-1" onclick='updateMember(this.parentNode.parentNode)'>
@@ -863,12 +903,14 @@
       });
     }
 
+    // Render Regular Members
     db.collection('members').where('memberType', '==', 'Regular').orderBy('dateAdded', 'desc').get().then((snapshot) => {
       snapshot.forEach((doc) => {
         renderData(doc);
       });
     });
 
+    // Render Walk-in Members
     db.collection('members').where('memberType', '==', 'Walk-in').orderBy('dateAdded', 'desc').get().then((snapshot) => {
       snapshot.forEach((doc) => {
         renderWalkin(doc);
@@ -999,7 +1041,7 @@
 
      
       document.getElementById('add-payment-btn').addEventListener('click', () => {
-        let amount = document.getElementById('payment-amount');
+        let amount = document.getElementById('payment-amount').value;
         let paymentDesc = document.getElementById('payment-desc').value;
 
         let date = new Date();
@@ -1014,19 +1056,48 @@
         }
 
         let timeOfPayment = `${addZero(date.getHours())}:${addZero(date.getMinutes())}:${addZero(date.getSeconds())}`;
+        let name = document.getElementById('payment-name').value;
 
         db.collection('payments').add({
           memberId: id,
           amount: amount,
+          memberName: name,
           paymentDesc: paymentDesc,
           dateOfPayment: dateOfPayment,
           timeOfPayment: timeOfPayment
+        }).then(() => {
+          db.collection('members').doc(id).update({
+            status: 'Paid'
+          });
         }).then(() => {
           alert('Successfully added payment!');
           window.location.reload();
         });
       });
     }
+
+    renderPrograms = (doc) => {
+      let tbody = document.getElementById('program-tbody');
+      let tr = document.createElement('tr');
+
+      tr.innerHTML = 
+        `<td>${doc.data().programName}</td>
+        <td>
+          <a class='btn-link text-secondary' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px' style='color: #DF3A01'></i></a>
+          <a class="btn-link text-warning mx-1" onclick='updateMember(this.parentNode.parentNode)'>
+            <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.data().programName}" style="font-size: 20px"></i>
+          </a>
+        </td>`;
+
+      tbody.appendChild(tr);
+    }
+
+    // Render Programs
+    db.collection('programs').get().then((snapshot) => {
+      snapshot.forEach((doc) => {
+        renderPrograms(doc);
+      });
+    });
   </script>
 </body>
 </html>
