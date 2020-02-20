@@ -129,11 +129,11 @@
                 <div class="card-header flexHeader">
                   <h3 class="card-title">Payment Log</h3>
                   <select id="sortDate" class="form-control" style="width: 35%">
-                    <option value="">Today</option>
-                    <option value="">Yesterday</option>
-                    <option value="">Last 7 days</option>
-                    <option value="">Last 30 days</option>
-                    <option value="">All-time</option>
+                    <option value="Today">Today</option>
+                    <option value="Yesterday">Yesterday</option>
+                    <option value="Last 7 days">Last 7 days</option>
+                    <option value="Last 30 days">Last 30 days</option>
+                    <option value="All-time" selected>All-time</option>
                   </select>
                 </div>
                 <div class="card-body card-bodyzz table-responsive p-0" style="height: 325px">
@@ -190,12 +190,12 @@
         <div class="modal-content">
           <div class="modal-header flexHeader" style="background-color: #DF3A01">
             <h3 class="modal-title text-white"><span><b id="history-name"></b></span>'s Payment History</h3>
-            <select id="sortDate" class="form-control" style="width: 35%">
-              <option value="">Today</option>
-              <option value="">Yesterday</option>
-              <option value="">Last 7 days</option>
-              <option value="">Last 30 days</option>
-              <option value="">All-time</option>
+            <select id="" class="form-control" style="width: 35%">
+              <option value="Today">Today</option>
+              <option value="Yesterday">Yesterday</option>
+              <option value="Last 7 days">Last 7 days</option>
+              <option value="Last 30 days">Last 30 days</option>
+              <option value="All-time">All-time</option>
             </select>
           </div>
           <div class="modal-body table-responsive p-0">
@@ -282,23 +282,44 @@
         tbody.appendChild(tr);
       }
 
-      // // Render payments
-      // renderPayment = (doc) => {
-      //   let name;
-        
-      //   db.collection('members').doc(`${doc.data().memberId}`).get().then((snap) => {
-      //     name = `${snap.data().fname} ${snap.data().lname}`;
-      //   }).then(() => {
-      //     displayPayment(doc, name);
-      //   });
-      // }
-
       // Get payments
       db.collection('payments').orderBy('dateOfPayment', 'desc').orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
         snapshot.forEach((doc) => {
           displayPayment(doc);
         });
       });
+
+      document.getElementById('sortDate').onchange = () => {
+        // Date
+        let d = new Date();
+        let given = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+
+        let sortDate = document.getElementById('sortDate');
+
+        if(sortDate.value == 'Yesterday') {
+          given = `${d.getMonth()+1}/${d.getDate()-1}/${d.getFullYear()}`;
+
+          db.collection('payments').where('dateOfPayment', '==', given).orderBy('dateOfPayment').get().then((snapshot) => {
+            document.getElementsByTagName('tbody')[0].innerHTML = '';
+
+            snapshot.forEach((doc) => {
+              displayPayment(doc);
+            });
+          });
+
+          console.log(given)
+        } else if(sortDate.value == 'Today') {
+          given = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+
+          db.collection('payments').where('dateOfPayment', '==', given).orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
+            document.getElementsByTagName('tbody')[0].innerHTML = '';
+
+            snapshot.forEach((doc) => {
+              displayPayment(doc);
+            });
+          });
+        }
+      }
 
       // Render Payment History
       renderHistory = (doc) => {
