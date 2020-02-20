@@ -88,6 +88,13 @@
       align-items: center;
       justify-content: center;
     }
+
+    .flexLa {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
   </style>
 </head>
 
@@ -113,10 +120,6 @@
             <i class="fas fa-percent mr-3"></i>Promos</a>
           <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
             <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
-            <a href="reports.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-              <i class="fas fa-flag-checkered mr-3"></i>Reports</a>
-              <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-                <i class="fas fa-history mr-3"></i>Logtrail</a>
         </div>
     </div>
 
@@ -125,7 +128,7 @@
   <main class='pt-5 mx-lg-5' >
     <div class="flex mx-4">
       <h4>Welcome, <span id="username"></span>!</h4>
-      <button id="logoutBtn" type="button" class="btn btn-outline-danger">LOGOUT</button>
+      <button class="btn btn-outline-danger">Logout</button>
     </div>
     <div class='container-fluid mt-3'>
       <div class='card'>
@@ -417,7 +420,6 @@
     </div>
   </div>
 
-  <!-- View Member Modal -->
   <div class="modal fade" id="view-member-modal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -426,14 +428,13 @@
           <button type='button' class='close' id='close-view-modal' data-dismiss='modal'>&times;</button>
         </div>
         <div class="modal-body">
-<<<<<<< HEAD
-          <div class="qrcode-container mt-2 mb-4" id="view-qrcode">
-=======
           <div class="flexLa" id="flexLa">
             <div class="qrcode-container mt-2 mb-1" id="view-qrcode">
->>>>>>> 8ec472cd9d05c02398960a39a9852b5a9201e6a8
 
+            </div>
+            <small>QR Code</small>
           </div>
+
           <div class="form-group">
             <div class="form-row">
               <div class="col-sm-12">
@@ -535,6 +536,7 @@
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });
+
   </script>
 
   <!-- Firebase CDNs -->
@@ -543,7 +545,6 @@
   <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js'></script>
   <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js'></script>
   <script src="js/qrcode.js"></script>
-
   <!-- Local script -->
   <script src='FIREBASE/init.js'></script>
 
@@ -722,6 +723,11 @@
       }
     }
 
+    var qrcode = new QRCode("view-qrcode", {
+      height: 120,
+      width: 120
+    });
+
     viewMember = (tr) => {
       let id = tr.getAttribute('data-id');
      
@@ -766,8 +772,10 @@
           status.value = doc.data().status;
           rate.value = doc.data().monthlyRate;
         }
-
+        
         address.value = doc.data().address;
+ 
+        qrcode.makeCode(id);
       }).then(() => {
         document.getElementById('viewMemberModal').click();
       });
@@ -795,7 +803,7 @@
       <td>
         <a class='btn-link text-secondary' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
         <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data().fname}" data-placement="top"></i></a>
-        <a class='btn-link text-success' onclick='addPayment("${doc.id}")'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
+        <a class='btn-link text-success' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
       </td>`;
       tbody.appendChild(tr);
 
@@ -820,7 +828,7 @@
         <a class="btn-link text-warning mx-1" onclick='updateMember(this.parentNode.parentNode)'>
           <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.data().fname}" style="font-size: 20px"></i>
         </a>
-        <a class='btn-link text-success' onclick='addPayment("${doc.id}")'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
+        <a class='btn-link text-success' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
       </td>`;
       tbody.appendChild(tr);
 
@@ -934,73 +942,66 @@
     });
 
     // Add payment
-    addPayment = (id) => {
-      db.collection('members').doc(id).get().then((doc) => {
-        let uid = document.getElementById('payment-uid');
-        let name = document.getElementById('payment-name');
-        let paymentDesc = document.getElementById('payment-desc');
-        let amount = document.getElementById('payment-amount');
-        let span = document.getElementById('payment-fname-span');
+    addPayment = (tr) => {
+      let id = tr.getAttribute('data-id');
+      let uid = document.getElementById('payment-uid');
+      uid.value = id;
+      let name = document.getElementById('payment-name');
+      let span = document.getElementById('payment-fname-span');
 
-        uid.value = id;
-        name.value = `${doc.data().fname} ${doc.data().lname}`;
-        span.textContent = doc.data().fname;
-        if(doc.data().memberType == 'Regular') {
-          paymentDesc.innerHTML =
-            `<option value="Monthly Subscription" selected>Monthly Subscription</option>
-            <option value="Annual Subscription">Annual Subscription</option>`;
-          amount.value = 750;
-        } else {
-          paymentDesc.setAttribute('disabled', 'disabled');
-          paymentDesc.innerHTML = 
-            `<option value="Walk-in Fee" selected>Walk-in Fee</option>`;
+      db.collection('members').doc(id).get().then((snapshot) => {
+        let fullName = `${snapshot.data().fname} ${snapshot.data().lname}`;
+        let select = document.getElementById('payment-desc');
+        let amount = document.getElementById('payment-amount');
+
+        span.textContent = snapshot.data().fname 
+        name.value = fullName;
+
+        if(snapshot.data().memberType == 'Walk-in') {
+          select.innerHTML = '<option>Walk-in</option>';
+          select.setAttribute('disabled', 'disabled');
+          amount.removeAttribute('value');
           amount.value = 50;
+        } else {
+          select.innerHTML = `<option value="Monthly Subscription">Monthly Subscription</option>
+                              <option value="Annual Subscription">Annual Subscription</option>`;
+          select.removeAttribute('disabled');
+          amount.value = 750;
         }
-
-        document.getElementById('showPaymentModal').click();
       }).then(() => {
-        let payBtn = document.getElementById('add-payment-btn');
-        let uid = document.getElementById('payment-uid');
-        let amount = document.getElementById('payment-amount');
-        let paymentDesc = document.getElementById('payment-desc');
-        let name = document.getElementById('payment-name');
+        document.getElementById('showPaymentModal').click();
+      });
 
-        // Date
+     
+      document.getElementById('add-payment-btn').addEventListener('click', () => {
+        let amount = document.getElementById('payment-amount');
+        let paymentDesc = document.getElementById('payment-desc').value;
+
         let date = new Date();
         let dateOfPayment = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+        
+        addZero = (i) => {
+          if (i < 10) {
+            i = "0" + i;
+          }
 
-        // Time
-        let timeOfPayment = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-        payBtn.onclick = () => {
-          db.collection('payments').add({
-            amount: amount.value,
-            dateOfPayment: dateOfPayment,
-            memberId: uid.value,
-            paymentDesc: paymentDesc.value,
-            timeOfPayment: timeOfPayment,
-            memberName: name.value
-          }).then(() => {
-            alert('Successfully added payment!');
-            window.location.reload();
-          }).catch((err) => {
-            alert(`ERROR: ${err.message}`);
-          });
+          return i;
         }
+
+        let timeOfPayment = `${addZero(date.getHours())}:${addZero(date.getMinutes())}:${addZero(date.getSeconds())}`;
+
+        db.collection('payments').add({
+          memberId: id,
+          amount: amount,
+          paymentDesc: paymentDesc,
+          dateOfPayment: dateOfPayment,
+          timeOfPayment: timeOfPayment
+        }).then(() => {
+          alert('Successfully added payment!');
+          window.location.reload();
+        });
       });
     }
-
-    // logout script
-    document.getElementById("logoutBtn").addEventListener("click", function() {
-      var x = confirm("Are you sure?");
-      if(x === true){
-        firebase.auth().signOut().then(function() {
-          alert("Logout successful!");
-          window.location.href = "index.html";
-        }).catch(function() {
-          alert("Failed to log out!");
-        })
-      }
-    });
   </script>
 </body>
 </html>
