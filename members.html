@@ -417,6 +417,7 @@
     </div>
   </div>
 
+  <!-- View Member Modal -->
   <div class="modal fade" id="view-member-modal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -425,7 +426,12 @@
           <button type='button' class='close' id='close-view-modal' data-dismiss='modal'>&times;</button>
         </div>
         <div class="modal-body">
+<<<<<<< HEAD
           <div class="qrcode-container mt-2 mb-4" id="view-qrcode">
+=======
+          <div class="flexLa" id="flexLa">
+            <div class="qrcode-container mt-2 mb-1" id="view-qrcode">
+>>>>>>> 8ec472cd9d05c02398960a39a9852b5a9201e6a8
 
           </div>
           <div class="form-group">
@@ -529,9 +535,6 @@
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });
-
- 
-
   </script>
 
   <!-- Firebase CDNs -->
@@ -540,6 +543,7 @@
   <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js'></script>
   <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js'></script>
   <script src="js/qrcode.js"></script>
+
   <!-- Local script -->
   <script src='FIREBASE/init.js'></script>
 
@@ -612,7 +616,7 @@
             fname: fname,
             lname: lname,
             memberType: memberType,
-            status: 'Paid',
+            status: 'N/A',
             sex: sex,
             dateAdded: dateAdded,
             phone: phone,
@@ -746,11 +750,23 @@
         phone.value = doc.data().phone;
         sex.value = doc.data().sex;
         memberType.value = doc.data().memberType;
-        annualStart.value = doc.data().annualStart;
-        rate.value = doc.data().monthlyRate;
-        monthlyStart.value = doc.data().monthlyStart;
-        monthlyEnd.value = doc.data().monthlyEnd;
-        status.value = doc.data().status;
+        
+        if(doc.data().memberType == 'Walk-in') {
+          document.getElementById('flexLa').style.display = 'none';
+          monthlyStart.value = 'N/A';
+          annualStart.value = 'N/A';
+          monthlyEnd.value = 'N/A';
+          status.value = 'N/A';
+          rate.value = 'N/A';
+        } else {
+          document.getElementById('flexLa').style.display = 'flex';
+          monthlyStart.value = doc.data().monthlyStart;
+          annualStart.value = doc.data().annualStart;
+          monthlyEnd.value = doc.data().monthlyEnd;
+          status.value = doc.data().status;
+          rate.value = doc.data().monthlyRate;
+        }
+
         address.value = doc.data().address;
       }).then(() => {
         document.getElementById('viewMemberModal').click();
@@ -779,7 +795,7 @@
       <td>
         <a class='btn-link text-secondary' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
         <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data().fname}" data-placement="top"></i></a>
-        <a class='btn-link text-success' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
+        <a class='btn-link text-success' onclick='addPayment("${doc.id}")'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
       </td>`;
       tbody.appendChild(tr);
 
@@ -804,7 +820,7 @@
         <a class="btn-link text-warning mx-1" onclick='updateMember(this.parentNode.parentNode)'>
           <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.data().fname}" style="font-size: 20px"></i>
         </a>
-        <a class='btn-link text-success' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
+        <a class='btn-link text-success' onclick='addPayment("${doc.id}")'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
       </td>`;
       tbody.appendChild(tr);
 
@@ -848,13 +864,21 @@
         document.getElementById('updateBtn').addEventListener('click', () => {
           let memberType = document.getElementById('updateType').value;
           let status = document.getElementById('updateStatus').value;
+
+          if(memberType == 'Regular') {
+            rate = 750;
+          } else {
+            rate = '';
+          }
+
           let id = document.getElementById('updateUID').value;
           db.collection('members').doc(id).update({
             memberType: memberType,
-            status: status
+            status: status,
+            monthlyRate: rate
           }).then(() => {
             alert('Successfully updated member!');
-            document.getElementById('showPaymentModal').click();
+            window.location.reload();
           }).catch((error) => {
             alert(`Error: ${error.message}`);
           });
@@ -910,64 +934,58 @@
     });
 
     // Add payment
-    addPayment = (tr) => {
-      let id = tr.getAttribute('data-id');
-      let uid = document.getElementById('payment-uid');
-      uid.value = id;
-      let name = document.getElementById('payment-name');
-      let span = document.getElementById('payment-fname-span');
-
-      db.collection('members').doc(id).get().then((snapshot) => {
-        let fullName = `${snapshot.data().fname} ${snapshot.data().lname}`;
-        let select = document.getElementById('payment-desc');
+    addPayment = (id) => {
+      db.collection('members').doc(id).get().then((doc) => {
+        let uid = document.getElementById('payment-uid');
+        let name = document.getElementById('payment-name');
+        let paymentDesc = document.getElementById('payment-desc');
         let amount = document.getElementById('payment-amount');
+        let span = document.getElementById('payment-fname-span');
 
-        span.textContent = snapshot.data().fname 
-        name.value = fullName;
-
-        if(snapshot.data().memberType == 'Walk-in') {
-          select.innerHTML = '<option>Walk-in</option>';
-          select.setAttribute('disabled', 'disabled');
-          amount.removeAttribute('value');
-          amount.value = 50;
-        } else {
-          select.innerHTML = `<option value="Monthly Subscription">Monthly Subscription</option>
-                              <option value="Annual Subscription">Annual Subscription</option>`;
-          select.removeAttribute('disabled');
+        uid.value = id;
+        name.value = `${doc.data().fname} ${doc.data().lname}`;
+        span.textContent = doc.data().fname;
+        if(doc.data().memberType == 'Regular') {
+          paymentDesc.innerHTML =
+            `<option value="Monthly Subscription" selected>Monthly Subscription</option>
+            <option value="Annual Subscription">Annual Subscription</option>`;
           amount.value = 750;
+        } else {
+          paymentDesc.setAttribute('disabled', 'disabled');
+          paymentDesc.innerHTML = 
+            `<option value="Walk-in Fee" selected>Walk-in Fee</option>`;
+          amount.value = 50;
         }
-      }).then(() => {
+
         document.getElementById('showPaymentModal').click();
-      });
-
-     
-      document.getElementById('add-payment-btn').addEventListener('click', () => {
+      }).then(() => {
+        let payBtn = document.getElementById('add-payment-btn');
+        let uid = document.getElementById('payment-uid');
         let amount = document.getElementById('payment-amount');
-        let paymentDesc = document.getElementById('payment-desc').value;
+        let paymentDesc = document.getElementById('payment-desc');
+        let name = document.getElementById('payment-name');
 
+        // Date
         let date = new Date();
         let dateOfPayment = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
-        
-        addZero = (i) => {
-          if (i < 10) {
-            i = "0" + i;
-          }
 
-          return i;
+        // Time
+        let timeOfPayment = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        payBtn.onclick = () => {
+          db.collection('payments').add({
+            amount: amount.value,
+            dateOfPayment: dateOfPayment,
+            memberId: uid.value,
+            paymentDesc: paymentDesc.value,
+            timeOfPayment: timeOfPayment,
+            memberName: name.value
+          }).then(() => {
+            alert('Successfully added payment!');
+            window.location.reload();
+          }).catch((err) => {
+            alert(`ERROR: ${err.message}`);
+          });
         }
-
-        let timeOfPayment = `${addZero(date.getHours())}:${addZero(date.getMinutes())}:${addZero(date.getSeconds())}`;
-
-        db.collection('payments').add({
-          memberId: id,
-          amount: amount,
-          paymentDesc: paymentDesc,
-          dateOfPayment: dateOfPayment,
-          timeOfPayment: timeOfPayment
-        }).then(() => {
-          alert('Successfully added payment!');
-          window.location.reload();
-        });
       });
     }
 
