@@ -1,14 +1,12 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>PROMOS</title>
+  <title>PROMO</title>
+
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
   <!-- Bootstrap core CSS -->
@@ -18,61 +16,30 @@
   <!-- Your custom styles (optional) -->
   <link href="css/style.min.css" rel="stylesheet">
   <link rel="icon" href="images/gym_logo.png">
-   
-
 <style>
-
-input[type=text], input[type=date] {
   
-  height: 45px;
-} 
 
-
-  .card-bodyzz {
-      max-height: 325px;
-      overflow-y: auto;
-    }
-    .flexHeader {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .flex {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    table > thead > tr > th {
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-    table > thead > tr > th {
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-    
 </style>
 </head>
 
-<body class="grey lighten-3" >
+<body  class="grey lighten-3">
 
   <!--Main Navigation-->
   <header>
 
-    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar" >
-      <div class="container-fluid" >
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+      <div  class="container-fluid">
 
         <!-- Brand -->
-        <a class="navbar-brand waves-effect"  style="position: relative;left:50px;">
+        <a class="navbar-brand waves-effect" href="#" style="position: relative;left:50px;">
           <h4>ADMIN: <b><span class="text-primary" id="username"></span></b></h4>
-         
+          
         </a>
 
         <!-- Collapse -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" >
-          <span class="navbar-toggler-icon" ></span>
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
         </button>
 
         <!-- Links -->
@@ -87,9 +54,12 @@ input[type=text], input[type=date] {
           <ul class="navbar-nav nav-flex-icons">
            
             <li class="nav-item">
-              <div class="logout">
-                <button id="logoutBtn" type="button" class="btn btn-outline-danger">LOGOUT</button>
-              </div>
+               
+              
+                <div class="logout">
+                    <button id="logoutBtn" type="button" class="btn btn-outline-danger">LOGOUT</button>
+                
+                  </div>
             </li>
           </ul>
 
@@ -99,34 +69,36 @@ input[type=text], input[type=date] {
     </nav>
    
 
+
     <!-- Sidebar -->
-     <div class="sidebar-fixed position-fixed" style="background-color:#DF3A01;" >
+    <div class="sidebar-fixed position-fixed" style="background-color:#DF3A01;" >
       <br>
+
+      <center><img src="logo.png" class="img-fluid" alt="" style="width: 200px; height: 180px;"></center>
      
-        <center><img src="logo.png" class="img-fluid" alt="" style="width: 200px; height: 180px;"></center>
 
-        <br>
+      <br>
+      <div class="list-group list-group-flush" >
+        <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-chart-pie mr-3"></i>Dashboard
+        </a>
+        <a href="members.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-user mr-3"></i>Members</a>
+        <a href="trainers.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01; color:white;">
+          <i class="fas fa-user-shield mr-3"></i>Trainers</a>
+        
+        <a href="inventory.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-dumbbell  mr-3"></i>Inventory</a>
+        <a href="#.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-percent mr-3"></i>Promos</a>
+        <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
+        <a href="reports.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-flag-checkered mr-3"></i>Reports</a>
+          <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-history mr-3"></i>Logtrail</a>
+      </div>  
 
-        <div class="list-group list-group-flush" >
-          <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-            <i class="fas fa-chart-pie mr-3"></i>Dashboard
-          </a>
-          <a href="members.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-            <i class="fas fa-user mr-3"></i>Members</a>
-          <a href="trainers.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01; color:white;">
-            <i class="fas fa-user-shield mr-3"></i>Trainers</a>
-          
-          <a href="inventory.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-            <i class="fas fa-dumbbell  mr-3"></i>Inventory</a>
-          <a href="#" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-            <i class="fas fa-percent mr-3"></i>Promos</a>
-          <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-            <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
-            <a href="reports.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-              <i class="fas fa-flag-checkered mr-3"></i>Reports</a>
-              <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-                <i class="fas fa-history mr-3"></i>Logtrail</a>
-        </div>
 
     </div>
     <!-- Sidebar -->
@@ -134,489 +106,222 @@ input[type=text], input[type=date] {
   </header>
   <!--Main Navigation-->
 
-  <!--Main layout-->
-  <main class="pt-5 mx-lg-5" >
+  <main class="pt-5 mx-lg-5">
     <div class="container-fluid mt-5">
-<br>
-      <div class='card'>
-        <div class='card-content'>
-          <div class='card-header flexHeader'>
-            <h3 class='card-title'>
-              <span class="add-trainer" data-toggle="tooltip" data-placement="top" title="Add new Promo">
-                <i style="color:#DF3A01;" data-toggle="modal" data-target="#add" class="fas fa-plus mr-2"></i></span>
-             Promos
-            </h3>
-            <div>
-            <div class="d-flex justify-content-center">
-              <input type="search"  placeholder="Search Promo here..." aria-label="Search" class="form-control">
-              <button class="btn  btn-sm my-0 p" style="background-color:#DF3A01; color:white; height: 38px;" type="submit">
-                <i class="fas fa-search" ></i>
-              </button>
-            </div>
-            </div>
-          </div>
-          
-          <div id='card-body' class='card-body table-responsive p-0 card-bodyzz'>  
-            <table class='table table-hover'>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>NAME</th>
-                  <th>AMOUNT</th>
-                  <th>DATE STARTED</th>
-                  <th>DATE END</th>      
-                  <th>ACTION</th>
-                  <th>DELETE</th>
-                  
 
-                </tr>
-              </thead>
-              <tbody id='tbody'>
-
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
       <!-- Heading -->
-
-
-    
-
-      
-
-      <div class="modal fade" id="update">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header"style="background-color:#DF3A01;">
-              <h3 class="modal-title" style="color:white;"> <span id="fname-span"></span></h3>
-             
-              <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
-            </div>
-            <div class="modal-body">
-              <div class="form-group">
-                <div class="form-row">
-                  <div class="col-sm-6">
-                    <label>Promo Name</label>
-                    <input type="text" class="form-control" id="updatepromoname" disabled>
-                  </div>
-                  <div class="col-sm-6"></div>
-                  <div class="col-sm-6">
-                    <label>Amount</label>
-                    <input type="text" class="form-control" id="updateamount" >
-                  </div>
-                  <div class="col-sm-6">
-                    <label>Date Started</label>
-                    <input type="date" class="form-control" id="updatestart" >
-                  </div>
-                  <div class="col-sm-6">
-                    <label>Date Ended</label>
-                    <input type="date" class="form-control" id="updateend" >
-                  </div>
-                  
-                  <div class="col-sm-6">
-                    <label>Status</label>
-                    <select id="updatestat" class="form-control" style="height:45px; background-color:honeydew">
-                      <option value="permanent" selected>permanent</option>
-                      <option value="temporary">temporary</option>
-                    </select>
-      
-                  </div>
-                  
-                </div>
-              </div>
-            
-             
-            </div>
-            <div class="modal-footer"  style="height: 70px;">
-              <button class="btn" style="background-color:#DF3A01; color:white;" id="updateBtn">Update</button>
-            </div>
-          </div>
+      <div class="card mb-4 wow fadeIn">
+        <!--Card content-->
+        <div class="card-body d-sm-flex justify-content-between">
+          <h4 class="mb-1 mb-sm-1 pt-1">
+            <i style="color:#DF3A01; font-size: 25px;" data-toggle="modal" data-target="#add" class="fas fa-plus mr-4"></i>
+            <b><span style=" color: #ff6c6c">PROMO</span></b>
+          </h4>
+          <form class="d-flex justify-content-center">
+           <input type="search"  placeholder="Type your query" aria-label="Search" class="form-control">
+            <button class="btn btn-primary btn-sm my-0 p" type="submit">
+              <i class="fas fa-search" ></i>
+            </button>
+          </form>
         </div>
       </div>
 
+    <div class="row">
+      <div class="col-sm-3">
+        <div class="card h-100">
+          <h4 class="card-header">Christmas Promo</h4>
+          <div class="card-body">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+               sed do eiusmod tempor incididunt .
+            </p>              
+         </div>
+         <div class="card-footer">
+          <center><a href="#" class="btn btn-success">View members</a></center>
+        </div>
+        </div>
+      </div>
+
+      <div class="col-sm-3">
+        <div class="card h-100">
+          <h4 class="card-header">Christmas Promo</h4>
+          <div class="card-body">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+               sed do eiusmod tempor incididunt .
+            </p>              
+         </div>
+         <div class="card-footer">
+          <center><a href="#" class="btn btn-success">View members</a></center>
+        </div>
+        </div>
+      </div>
+
+      <div class="col-sm-3">
+        <div class="card h-100">
+          <h4 class="card-header">Christmas Promo</h4>
+          <div class="card-body">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+               sed do eiusmod tempor incididunt .
+            </p>              
+         </div>
+         <div class="card-footer">
+          <center><a href="#" class="btn btn-success">View members</a></center>
+        </div>
+        </div>
+      </div>
+      
+      
+      <div class="col-sm-3">
+        <div class="card h-100">
+          <h4 class="card-header">Christmas Promo</h4>
+          <div class="card-body">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+               sed do eiusmod tempor incididunt .
+            </p>              
+         </div>
+         <div class="card-footer">
+          <center><a href="#" class="btn btn-success">View members</a></center>
+        </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-sm-3">
+        <div class="card h-100">
+          <h4 class="card-header">Christmas Promo</h4>
+          <div class="card-body">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+               sed do eiusmod tempor incididunt .
+            </p>              
+         </div>
+         <div class="card-footer">
+          <center><a href="#" class="btn btn-success">View members</a></center>
+        </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="card h-100">
+          <h4 class="card-header">Christmas Promo</h4>
+          <div class="card-body">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+               sed do eiusmod tempor incididunt .
+            </p>              
+         </div>
+         <div class="card-footer">
+          <center><a href="#" class="btn btn-success">View members</a></center>
+        </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="card h-100">
+          <h4 class="card-header">Christmas Promo</h4>
+          <div class="card-body">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+               sed do eiusmod tempor incididunt .
+            </p>              
+         </div>
+         <div class="card-footer">
+          <center><a href="#" class="btn btn-success">View members</a></center>
+        </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="card h-100">
+          <h4 class="card-header">Christmas Promo</h4>
+          <div class="card-body">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+               sed do eiusmod tempor incididunt .
+            </p>              
+         </div>
+         <div class="card-footer">
+          <center><a href="#" class="btn btn-success">View members</a></center>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </main>
 
 
-
-
-
-      <div class="modal fade" id="add" >
-        <div class="modal-dialog">
-          <div class="modal-content" >
-            <div class="modal-header" style="background-color:#DF3A01;">
-              <h3 class="modal-title" style="color:white;">Add Promo </h3>  
-           
-              <button type='button' class='close' id='close-modal' data-dismiss='modal'>&times;</button>
-            </div>  
-            <div class="modal-body">
-              <div class="form-group">
-                <div class="form-row">
-
-                  <div class="col-sm-6">
-                    <label>Promo Name</label>
-                    <input type="text" id="promoname" class="form-control" required placeholder="promo name">
-                  </div>
-                  <div class="col-sm-6">
-                    <label>Status</label>
-                    <select id="stat" required class="form-control" style="height:45px; background-color:honeydew">
-                      <option value="permanent" selected>permanent</option>
-                      <option value="temporary">temporary</option>
-                    </select>
-                  </div>  
-                
-                  <div class="col-sm-6">
-                    <label>Amount</label>
-                    <input type="text" class="form-control" required id="amount" required="" placeholder="Amount"  >
-                </div>
-                <div class="col-sm-6 ">
-                  <label>Start Date</label><br>
-                  <input type="date" class="form-control" id="start" required  >
-                </div>
-                <div class="col-sm-6 ">
-                  <label>End Date</label><br>
-                  <input type="date" class="form-control" id="end" required  >
+  <div class="modal fade" id="add" >
+    <div class="modal-dialog">
+      <div class="modal-content" >
+        <div class="modal-header" style="background-color:#DF3A01;">
+          <h3 class="modal-title" style="color:white;">Add Promo </h3>  
+       
+          <button type='button' class='close' id='close-modal' data-dismiss='modal'>&times;</button>
+        </div>  
+        <div class="modal-body">
+          
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-6">
+                <label>Promo Name</label>
+                  <input type="text" id="promoname"  class="form-control" required="" placeholder="Enter promo name..">
               </div>
-              <div class="col-sm-6 "> </div>
-              
-              <div class="col-sm-6 ">
-                <label>Description</label><br>
+              <div class="col-sm-6"></div>
+              <div class="col-sm-6">
+                <label>Amount</label>
+                  <input type="text" id="amount"  class="form-control" required="" placeholder="Enter Amount..">
+              </div>
+
+              <div class="col-sm-6">
+                <label>Status </label>
+                  <input type="text" id="stat"  class="form-control" required="" placeholder="Enter status..">
+              </div>
+
+              <div class="col-sm-6">
+                <label>Start Date </label>
+                  <input type="date" id="stat"  class="form-control" required>
+              </div>
+
+              <div class="col-sm-6">
+                <label>End Date</label>
+                  <input type="date" id="stat"  class="form-control" required>
+              </div>
+
+            
+            <div class="col-sm-6 ">
+              <label>Description</label><br>
+               
+  
                 <textarea rows="5" class="form-control" 
-                cols="100" class="form-control" required id="description"
+                cols="100" class="form-control" id="description"
                  required data-validation-required-message="Please enter description" 
                  placeholder="Enter description" maxlength="999" style="height: 100px; width: 465px;"
                  ></textarea>
-              </div>
-
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer bot">
-              <button type="submit"  id="addBtn"  class="btn" style="color: white;background-color:#DF3A01;">ADD PROMO</button>
+          </div>
             </div>
           </div>
         </div>
-      </div>
-
-<div class="modal fade" id="displayallrecords">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header"style="background-color:#DF3A01;">
-        <h3 class="modal-title" style="color:white;"><span id="viewfname-span"></span></h3>
-       
-        <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <div class="form-row">
-            <div class="col-sm-6">
-              <label>ID</label>
-              <input type="text" class="form-control" id="view-id" disabled>
-            </div>
-            <div class="col-sm-6">
-              <label>Promo name</label>
-              <input type="text" class="form-control" id="view-promoname" disabled>
-            </div>
-            <div class="col-sm-6">
-              <label>Amount</label>
-              <input type="text" class="form-control" id="view-amount" disabled>
-            </div>
-            <div class="col-sm-6">
-              <label>Date Started</label>
-              <input type="text" class="form-control" id="view-start" disabled>
-            </div>
-            <div class="col-sm-6">
-              <label>Date Ended</label>
-              <input type="text" class="form-control" id="view-end" disabled>
-            </div>
-            <div class="col-sm-6">
-              <label>Status</label>
-              <input type="text" class="form-control" id="view-stat" disabled>
-            </div>
-            <div class="col-sm-6">
-              <label>Description</label>
-              <textarea id="view-description" style="height: 100px; width: 465px;" class="form-control" disabled></textarea>
-            </div>
-           
-           
-          </div>
-          </div>
+  
+        <div class="modal-footer bot">
+          <button type="submit"  id="addpromo"  class="btn btn-primary" >ADD ITEM</button>
         </div>
-      
-       
       </div>
-      
     </div>
   </div>
-
-
-
-             
-
-              </div>
-              <!-- /.First row-->
-
-            </div>
-
-          </div>
-          <!--/.Card-->
-
-        </div>
-        <!--Grid column-->
-
-      </div>
-      <!--Grid row-->
-
-    </div>
-  </main>
-  <!--Main layout-->
-
   
+  
+  <script type="text/javascript">
+    new WOW().init();
+  </script>
 
-  <!-- SCRIPTS -->
-  <!-- JQuery -->
   <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-  <!-- Bootstrap tooltips -->
   <script type="text/javascript" src="js/popper.min.js"></script>
-  <!-- Bootstrap core JavaScript -->
   <script type="text/javascript" src="js/bootstrap.min.js"></script>
-  <!-- MDB core JavaScript -->
   <script type="text/javascript" src="js/mdb.min.js"></script>
-  <!-- Initializations -->
 
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script> 
-  <script src="jquery-3.4.1.min.js"></script>
+  <!-- Firebase CDNs -->
+  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
+  <!-- Local script -->
+  <script src="FIREBASE/init.js"></script>
 
-  
-   <!-- Firebase CDNs -->
-   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
-   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
-   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
-   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
-   <!-- Local script -->
-   <script src="FIREBASE/init.js"></script>
-
-
-   <script>
-    var button = document.getElementById('addBtn');
-
-    button.addEventListener('click', function() {
-      var promoname = document.getElementById('promoname').value;
-      var amount = document.getElementById('amount').value;
-      var stat = document.getElementById('stat').value;
-      var start = document.getElementById('start').value;
-      var end = document.getElementById('end').value;
-      var description = document.getElementById('description').value;
-      
-    
-
-      var promos = db.collection('promos');
-      var discount = promos.where('start', '==', start).where('end', '==', end);
-
-      if(promoname === '') {
-        alert('ERROR: promo name is required!');
-      } else if(amount === '') {
-        alert('ERROR: amount is required!');
-      } else if(stat === '') {
-        alert('ERROR: status is required!');
-      } else if(start === '') {
-        alert('ERROR: starting date is required!');
-      } else if(end === '') {
-        alert('ERROR: expiry date is required!');
-      }else if(description === '') {
-        alert('ERROR: description is required!');
-      } else {
-
-      discount.get().then(function(snapshot) {
-        if(snapshot.docs.length > 0) {
-          alert('Error: promo date already exists!');
-        } else {
-          promos.add({
-            promoname: promoname,
-            amount: amount,
-            stat: stat,
-            start: start,
-            end: end,
-            description: description
-            
-          }).then(function() {
-            alert('Successfully added new Promos!');
-            window.location.reload();
-          }).catch(function(error) {
-            alert(error.message);
-          });
-        }
-      });
-      }
-    });
-
-    auth.onAuthStateChanged(function(user) {
-      let span = document.getElementById('username');
-
-      if(user) {
-        span.textContent = user.email;
-      }
-    })
-
-    
-
-    function renderData(doc) {
-      let tbody = document.getElementById('tbody');
-      let tr = document.createElement('tr');
-
-      tr.setAttribute('data-id', doc.id);
-      tr.innerHTML = 
-      `<td><span class="hidden" id="${doc.id}-span"></span><a>
-      <small id='${doc.id}-small' onclick='showID("${doc.id}")'>
-      <i data-toggle="tooltip" data-placement="top" title="show ${doc.data().promoname}"
-      style="font-size: 20px;" class="fas fa-eye text-success"></i></small></a></td>
-      <td><b>${doc.data().promoname}</b></td>
-      <td><b>${doc.data().amount}<b></td>
-      
-      <td><b>${doc.data().start}<b></td>
-      <td><b>${doc.data().end}<b></td>
-          
-       
-
-      <td>
-        <a class='btn-link text-primary' onclick='updatefunction(this.parentNode.parentNode)' 
-        data-toggle='modal' data-target='#update'>
-        <i data-toggle="tooltip" data-placement="top" title="update ${doc.data().promoname}"
-        class="fas fa-edit" style="font-size: 20px;"></i></a>
-
-        <a class='btn-link text-success' onclick='viewPromos(this.parentNode.parentNode)'
-        data-toggle='modal' data-target='#displayallrecords'>
-        <i data-toggle="tooltip" data-placement="top" title="view ${doc.data().promoname}" 
-        class="fas fa-eye" style="font-size: 20px;"></i></a>
-      </td>
-
-      <td>
-        <a class='btn-link text-danger' onclick='deleteDoc(this.parentNode.parentNode)' >
-        <i data-toggle="tooltip" data-placement="top" title="Delete ${doc.data().promoname}"
-        class="fas fa-trash-alt" style="font-size: 20px;"></i></a>
-      </td>`;
-
-      
-      tbody.appendChild(tr);
-      
-      let tt = $('[data-toggle="tooltip"]').tooltip();
-      tt.click(function() {
-        tt.tooltip("hide");
-      });
-    
-    }
-  
-    db.collection('promos').orderBy('start', 'desc').get().then(function(snapshot) {
-      snapshot.forEach((doc) => {
-       
-        renderData(doc);
-      });
-    });
-
-
-
-    function updatefunction(tr) {
-      let updatepromoname = document.getElementById('updatepromoname');
-      let updateamount = document.getElementById('updateamount');
-      let updatestart = document.getElementById('updatestart');
-      let updateend = document.getElementById('updateend');
-      let updatestat = document.getElementById('updatestat');
-
-      let span = document.getElementById('fname-span');
-      let dataId = tr.getAttribute('data-id');
-
-      db.collection('promos').doc(dataId).get().then(function(doc) {
-        span.textContent = doc.data().promoname; // firstname na mo display sa update modal
-        updatepromoname.value = doc.data().promoname;
-        updateamount.value = doc.data().amount;
-        updatestart.value = doc.data().start;
-        updateend.value = doc.data().end;
-        updatestat.value = doc.data().stat;
-
-        document.getElementById('updateBtn').addEventListener('click', () => {
-          let amount = document.getElementById('updateamount').value;
-          let start = document.getElementById('updatestart').value;
-          let end = document.getElementById('updateend').value;
-          let stat = document.getElementById('updatestat').value;
-          db.collection('promos').doc(doc.id).update({
-            amount: amount,
-            start: start,
-            end: end,
-            stat: stat
-              
-          }).then(() => {
-            alert('Successfully updated Inventory!');
-            window.location.reload();
-          }).catch((error) => {
-            alert(`Error: ${error.message}`);
-          });
-        });
-      });
-    }
-    
-    
-
-function deleteDoc(tr){
-
-    var id = tr.getAttribute('data-id');
-    var x = confirm("Are you sure?");
-    if(x === true){
-    db.collection("promos").doc(id).delete()
-    .then(function() {
-    console.log("Document successfully deleted!");
-    window.location.reload();
-}).catch(function(error) {
-    console.error("Error removing document: ", error);
-});
-}
-}
-
-    function showID(id) {
-      let span = document.getElementById(`${id}-span`);
-      let small = document.getElementById(`${id}-small`);
-
-      if(span.classList.contains('hidden')) {
-        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye-slash text-primary"></i>';
-        span.textContent = id;
-        span.classList.remove('hidden');
-      } else {
-        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye text-danger"></i>';
-        span.classList.add('hidden');
-        span.textContent = '';
-      } 
-    }
-
-
-    function viewPromos(x) {
-      let span = document.getElementById('viewfname-span');
-      let dataid = x.getAttribute("data-id");
-      let viewId = document.getElementById("view-id");
-      let promoname = document.getElementById("view-promoname");
-      let amount = document.getElementById("view-amount");
-      let start = document.getElementById("view-start");
-      let end = document.getElementById("view-end");
-      let stat = document.getElementById("view-stat");
-      let description = document.getElementById("view-description");
-      
-      
-  
-      db.collection("promos").doc(dataid).get().then(function(doc) {
-        span.textContent = doc.data().promoname;
-        viewId.value = dataid;
-        promoname.value = doc.data().promoname;
-        amount.value = doc.data().amount;
-        start.value = doc.data().start;
-        end.value = doc.data().end;
-        stat.value = doc.data().stat;
-        description.value = doc.data().description;
-        
-        
-      });
-    }
-
-
-// logout script
-document.getElementById("logoutBtn").addEventListener("click", function() {
+  <script>
+    document.getElementById("logoutBtn").addEventListener("click", function() {
       var x = confirm("Are you sure?");
       if(x === true){
         firebase.auth().signOut().then(function() {
@@ -636,12 +341,20 @@ document.getElementById("logoutBtn").addEventListener("click", function() {
       }
     })
 
-     // tool tip sa plus button
-     $(function () {
-      $('[data-toggle="tooltip"]').tooltip();
-    });
+    auth.onAuthStateChanged(function(user) {
+      let span = document.getElementById('username');
+
+      if(user) {
+        span.textContent = user.email;
+      }
+    })
+
+
+
   </script>
-  
+
+  <!--Google Maps-->
+  <script src="https://maps.google.com/maps/api/js"></script>
 </body>
 
 </html>
