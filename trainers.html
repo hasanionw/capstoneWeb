@@ -27,13 +27,13 @@
  
 
 input[type=text], input[type=date] {
-  background-color:honeydew;
+ 
   height: 45px;
 } 
 
 .train select{
   height: 45px;
-  background-color:honeydew;
+ 
 }
 
 .bot button{
@@ -109,7 +109,7 @@ input[type=text], input[type=date] {
             <li class="nav-item">
               
               <div class="logout">
-                <button id="logoutBtn" type="button" style="background-color:#DF3A01; color: white" class="btn">LOGOUT</button>
+                <button id="logoutBtn" type="button" class="btn btn-outline-danger">LOGOUT</button>
             
               </div>
             </li>
@@ -144,6 +144,10 @@ input[type=text], input[type=date] {
           <i class="fas fa-percent mr-3"></i>Promos</a>
         <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
           <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
+          <a href="reports.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+            <i class="fas fa-flag-checkered mr-3"></i>Reports</a>
+            <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+              <i class="fas fa-history mr-3"></i>Logtrail</a>
       </div>
 
     </div>
@@ -480,6 +484,22 @@ input[type=text], input[type=date] {
       var trainers = db.collection('trainers');
       var trainer = trainers.where('fname', '==', fname).where('lname', '==', lname).where('email', '==', email);
 
+      if(fname === '') {
+        alert('ERROR: First name is required!');
+      } else if(lname === '') {
+        alert('ERROR: Last name is required!');
+      } else if(email === '') {
+        alert('ERROR: Email is required!');
+      } else if(cellphoneNo === '') {
+        alert('ERROR: cellphone number is required!');
+      } else if(birthdate === '') {
+        alert('ERROR: birthdate is required!');
+      }else if(sex === '') {
+        alert('ERROR: sex  is required!');
+      } else if(address === '') {
+        alert('ERROR: Address is required!');
+      } else {
+
       trainer.get().then(function(snapshot) {
         if(snapshot.docs.length > 0) {
           alert('Error: Member already exists!');
@@ -502,6 +522,7 @@ input[type=text], input[type=date] {
           });
         }
       });
+      }
     });
 
     // para mo upload kag picture

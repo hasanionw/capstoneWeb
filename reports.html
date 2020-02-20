@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>DASHBOARD</title>
+  <title>REPORTS</title>
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
@@ -55,8 +55,11 @@
            
             <li class="nav-item">
                
-              <button id="logoutBtn" type="button" style="background-color:#DF3A01; color: white" class="btn">LOGOUT</button>
-            
+              
+                <div class="logout">
+                    <button id="logoutBtn" type="button" class="btn btn-outline-danger">LOGOUT</button>
+                
+                  </div>
             </li>
           </ul>
 
@@ -76,7 +79,7 @@
 
       <br>
       <div class="list-group list-group-flush" >
-        <a href="#" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+        <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
           <i class="fas fa-chart-pie mr-3"></i>Dashboard
         </a>
         <a href="members.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
@@ -90,10 +93,10 @@
           <i class="fas fa-percent mr-3"></i>Promos</a>
         <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
           <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
-        <a href="reports.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-          <i class="fas fa-user-lock mr-3"></i>Reports</a>
+        <a href="#.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <i class="fas fa-flag-checkered mr-3"></i>Reports</a>
           <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-            <i class="fas fa-user-lock mr-3"></i></i>Logtrail</a>
+            <i class="fas fa-history mr-3"></i>Logtrail</a>
       </div>  
 
 
@@ -102,187 +105,88 @@
 
   </header>
   <!--Main Navigation-->
-
-  <!--Main layout-->
-  <main class="pt-5 mx-lg-5">
+  <main class="pt-5 mx-lg-5" >
     <div class="container-fluid mt-5">
+      <br>
 
-      <!-- Heading -->
-      <div class="card mb-4 wow fadeIn">
-
-        <!--Card content-->
-        <div class="card-body d-sm-flex justify-content-between">
-
-          <h4 class="mb-1 mb-sm-1 pt-1">
-            <b><span style=" color: #ff6c6c">DASHBOARD</span></b>
-          </h4>
-
-          <form class="d-flex justify-content-center">
-           <input type="search"  placeholder="Type your query" aria-label="Search" class="form-control">
-            <button class="btn btn-primary btn-sm my-0 p" type="submit">
-              <i class="fas fa-search" ></i>
-            </button>
-          </form>
-
-        </div>
-
-      </div>
-      <!-- Heading -->
-
-      <!--Grid row-->
-      <div class="row wow fadeIn">
-
-        <!--Grid column-->
-        <div class="col-md-9 mb-4">
-
-          <!--Card-->
-          <div class="card">
-
-            <!--Card content-->
-            <div class="card-body">
-
-              <canvas id="myChart"></canvas>
-
-            </div>
-
-          </div>
-          <!--/.Card-->
-
-        </div>
-        <!--Grid column-->
-
-        <!--Grid column-->
-        <div class="col-md-3 mb-4">
-
-          <!--Card-->
-          <div class="card mb-4">
-
-            <!-- Card header -->
-            <div class="card-header text-center">
-              Pie chart
-            </div>
-
-            <!--Card content-->
-            <div class="card-body">
-
-              <canvas id="pieChart"></canvas>
-
-            </div>
-
-          </div>
-          <!--/.Card-->
-
-          <!--Card-->
-          <div class="card mb-4">
-
-            <!--Card content-->
-            <div class="card-body">
-
-              <!-- List group links -->
-              <div class="list-group list-group-flush">
-                <a class="list-group-item list-group-item-action waves-effect">Sales
-                  <span class="badge badge-success badge-pill pull-right">22%
-                    <i class="fas fa-arrow-up ml-1"></i>
-                  </span>
-                </a>
-                <a class="list-group-item list-group-item-action waves-effect">Traffic
-                  <span class="badge badge-danger badge-pill pull-right">5%
-                    <i class="fas fa-arrow-down ml-1"></i>
-                  </span>
-                </a>
-                <a class="list-group-item list-group-item-action waves-effect">Orders
-                  <span class="badge badge-primary badge-pill pull-right">14</span>
-                </a>
-                <a class="list-group-item list-group-item-action waves-effect">Issues
-                  <span class="badge badge-primary badge-pill pull-right">123</span>
-                </a>
-                <a class="list-group-item list-group-item-action waves-effect">Messages
-                  <span class="badge badge-primary badge-pill pull-right">8</span>
-                </a>
-              </div>
-              <!-- List group links -->
-
-            </div>
-
-          </div>
-          <!--/.Card-->
-
-        </div>
-        <!--Grid column-->
-
-      </div>
-      <!--Grid row-->
-
+      <ol class="breadcrumb" style="background-color:white;">
+        <li class="breadcrumb-item">
+          <a href="#">Reports</a>
+        </li>
+        <li class="breadcrumb-item active">Total</li>
+      </ol>
       
-
-             
-
-              </div>
-              <!-- /.First row-->
-
+      <div class="row">
+        <div class="col-lg-2 mb-4">
+          <div class="card h-100">
+            <h4 class="card-header">Total Regular Member</h4>
+            <div class="card-body">
+              <h1>100</h1>
             </div>
-
           </div>
-          <!--/.Card-->
-
         </div>
-        <!--Grid column-->
+        <div class="col-lg-2 mb-4">
+          <div class="card h-100">
+            <h4 class="card-header">Total Walk-In Member</h4>
+            <div class="card-body">
+              <h1>150</h1>
+            </div>
+          </div>
+        </div>
+       
+        <div class="col-lg-2 mb-4">
+          <div class="card h-100">
+            <h4 class="card-header">Total Walk-In Today</h4>
+            <div class="card-body">
+              <h1>20</h1>
+           </div>
+          </div>
+       </div>
 
-      </div>
-      <!--Grid row-->
+       <div class="col-lg-2 mb-4">
+        <div class="card h-100">
+          <h4 class="card-header">Total Regular Today</h4>
+          <div class="card-body">
+            <h1>0</h1>
+         </div>
+        </div>
+     </div>
+
+        <div class="col-lg-2 mb-4">
+          <div class="card h-100">
+            <h4 class="card-header">Total Damage Items</h4>
+            <div class="card-body">
+              <h1>15</h1>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-2 mb-4">
+          <div class="card h-100">
+            <h4 class="card-header">Total Promo Created</h4>
+            <div class="card-body">
+              <h1>10</h1>
+            </div>
+          </div>
+        </div>
+
+         <div class="col-lg-2 mb-4">
+          <div class="card h-100">
+            <h4 class="card-header">Total admins created</h4>
+            <div class="card-body">
+              <h1>4</h1>
+           </div>
+          </div>
+       </div>
+
+</div>
+
+
 
     </div>
   </main>
   <!--Main layout-->
-
-  <!--Footer-->
-  <footer class="page-footer text-center font-small primary-color-dark darken-2 mt-4 wow fadeIn">
-    <hr class="my-4">
-
-    <!-- Social icons -->
-    <div class="pb-4">
-      <a href="#" >
-        <i class="fab fa-facebook-f mr-3"></i>
-      </a>
-
-      <a href="#" >
-        <i class="fab fa-twitter mr-3"></i>
-      </a>
-
-      <a href="#" >
-        <i class="fab fa-youtube mr-3"></i>
-      </a>
-
-      <a href="#" >
-        <i class="fab fa-google-plus mr-3"></i>
-      </a>
-
-      <a href="#" >
-        <i class="fab fa-dribbble mr-3"></i>
-      </a>
-
-      <a href="#" >
-        <i class="fab fa-pinterest mr-3"></i>
-      </a>
-
-      <a href="#" >
-        <i class="fab fa-github mr-3"></i>
-      </a>
-
-      <a href="#" >
-        <i class="fab fa-codepen mr-3"></i>
-      </a>
-    </div>
-    <!-- Social icons -->
-
-    <!--Copyright-->
-    <div class="footer-copyright py-3">
-      © 2019 Copyright:
-      <a href="#" > MDBootstrap.com </a>
-    </div>
-    <!--/.Copyright-->
-
-  </footer>
+  
   
   <script type="text/javascript">
     new WOW().init();
@@ -316,7 +220,7 @@
 
     firebase.auth().onAuthStateChanged(function(user){
       if(user) {
-        alert(user.email);
+        
       } else {
         window.location.href = "index.html";
       }

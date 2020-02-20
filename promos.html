@@ -23,7 +23,7 @@
 <style>
 
 input[type=text], input[type=date] {
-  background-color:honeydew;
+  
   height: 45px;
 } 
 
@@ -88,8 +88,7 @@ input[type=text], input[type=date] {
            
             <li class="nav-item">
               <div class="logout">
-                <button id="logoutBtn" type="button" style="background-color:#DF3A01; color: white" class="btn">LOGOUT</button>
-            
+                <button id="logoutBtn" type="button" class="btn btn-outline-danger">LOGOUT</button>
               </div>
             </li>
           </ul>
@@ -123,6 +122,10 @@ input[type=text], input[type=date] {
             <i class="fas fa-percent mr-3"></i>Promos</a>
           <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
             <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
+            <a href="reports.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+              <i class="fas fa-flag-checkered mr-3"></i>Reports</a>
+              <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+                <i class="fas fa-history mr-3"></i>Logtrail</a>
         </div>
 
     </div>
@@ -410,6 +413,20 @@ input[type=text], input[type=date] {
       var promos = db.collection('promos');
       var discount = promos.where('start', '==', start).where('end', '==', end);
 
+      if(promoname === '') {
+        alert('ERROR: promo name is required!');
+      } else if(amount === '') {
+        alert('ERROR: amount is required!');
+      } else if(stat === '') {
+        alert('ERROR: status is required!');
+      } else if(start === '') {
+        alert('ERROR: starting date is required!');
+      } else if(end === '') {
+        alert('ERROR: expiry date is required!');
+      }else if(description === '') {
+        alert('ERROR: description is required!');
+      } else {
+
       discount.get().then(function(snapshot) {
         if(snapshot.docs.length > 0) {
           alert('Error: promo date already exists!');
@@ -430,6 +447,7 @@ input[type=text], input[type=date] {
           });
         }
       });
+      }
     });
 
     auth.onAuthStateChanged(function(user) {

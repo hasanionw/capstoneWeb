@@ -88,13 +88,6 @@
       align-items: center;
       justify-content: center;
     }
-
-    .flexLa {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-    }
   </style>
 </head>
 
@@ -120,6 +113,10 @@
             <i class="fas fa-percent mr-3"></i>Promos</a>
           <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
             <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
+            <a href="reports.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+              <i class="fas fa-flag-checkered mr-3"></i>Reports</a>
+              <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+                <i class="fas fa-history mr-3"></i>Logtrail</a>
         </div>
     </div>
 
@@ -128,7 +125,7 @@
   <main class='pt-5 mx-lg-5' >
     <div class="flex mx-4">
       <h4>Welcome, <span id="username"></span>!</h4>
-      <button class="btn btn-outline-danger">Logout</button>
+      <button id="logoutBtn" type="button" class="btn btn-outline-danger">LOGOUT</button>
     </div>
     <div class='container-fluid mt-3'>
       <div class='card'>
@@ -428,13 +425,9 @@
           <button type='button' class='close' id='close-view-modal' data-dismiss='modal'>&times;</button>
         </div>
         <div class="modal-body">
-          <div class="flexLa">
-            <div class="qrcode-container mt-2 mb-1" id="view-qrcode">
+          <div class="qrcode-container mt-2 mb-4" id="view-qrcode">
 
-            </div>
-            <small>QR Code</small>
           </div>
-
           <div class="form-group">
             <div class="form-row">
               <div class="col-sm-12">
@@ -725,11 +718,6 @@
       }
     }
 
-    var qrcode = new QRCode("view-qrcode", {
-      height: 120,
-      width: 120
-    });
-
     viewMember = (tr) => {
       let id = tr.getAttribute('data-id');
      
@@ -764,9 +752,6 @@
         monthlyEnd.value = doc.data().monthlyEnd;
         status.value = doc.data().status;
         address.value = doc.data().address;
- 
-        qrcode.makeCode(id);
-
       }).then(() => {
         document.getElementById('viewMemberModal').click();
       });
@@ -985,6 +970,19 @@
         });
       });
     }
+
+    // logout script
+    document.getElementById("logoutBtn").addEventListener("click", function() {
+      var x = confirm("Are you sure?");
+      if(x === true){
+        firebase.auth().signOut().then(function() {
+          alert("Logout successful!");
+          window.location.href = "index.html";
+        }).catch(function() {
+          alert("Failed to log out!");
+        })
+      }
+    });
   </script>
 </body>
 </html>

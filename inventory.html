@@ -22,13 +22,13 @@
 
 <style>
   input[type=text], input[type=date] {
-  background-color:honeydew;
+  
   height: 45px;
 } 
 
 .train select{
   height: 45px;
-  background-color:honeydew;
+  
 }
 
 .bot button{
@@ -96,8 +96,7 @@
            
             <li class="nav-item">
               <div class="logout">
-                <button id="logoutBtn" type="button" style="background-color:#DF3A01; color: white" class="btn">LOGOUT</button>
-            
+                <button id="logoutBtn" type="button" class="btn btn-outline-danger">LOGOUT</button>
               </div>
             </li>
           </ul>
@@ -131,6 +130,10 @@
             <i class="fas fa-percent mr-3"></i>Promos</a>
           <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
             <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
+            <a href="reports.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+              <i class="fas fa-flag-checkered mr-3"></i>Reports</a>
+              <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+                <i class="fas fa-history mr-3"></i>Logtrail</a>
         </div>
 
     </div>
@@ -225,11 +228,11 @@
                     <input type="text" class="form-control" id="view-quantity" disabled>
                   </div>
                   <div class="col-sm-6">
-                    <label>No. of Working</label>
+                    <label>No. of Working item</label>
                     <input type="text" class="form-control" id="view-working" disabled>
                   </div>
                   <div class="col-sm-6">
-                    <label>No. of Damage</label>
+                    <label>No. of Damage item</label>
                     <input type="text" class="form-control" id="view-damage" disabled>
                   </div>
                   <div class="col-sm-6">
@@ -267,14 +270,7 @@
               <label>Quantity</label>
               <input type="text" class="form-control" id="updatequantity" >
             </div>
-            <div class="col-sm-6">
-              <label>No. of Working</label>
-              <input type="text" class="form-control" id="updateworking" >
-            </div>
-            <div class="col-sm-6">
-              <label>No. of Damage</label>
-              <input type="text" class="form-control" id="updatedamage" >
-            </div>
+        
             
             <div class="col-sm-6">
               <label>Category</label>
@@ -282,8 +278,30 @@
                 <option value="Free Weights" selected>Free Weights</option>
                 <option value="Cardio Machines">Cardio Machines</option>
               </select>
-
             </div>
+
+            <div class="col-sm-6"></div>
+
+            <div class="col-sm-6">
+              <label></label>
+  
+              <h5 style="text-align: center;">Number of item</h5>
+              <div class="form-row">
+                <div class="col-sm-5">
+                  <label>Damage</label>
+                  <input type="text" placeholder="number" class="form-control" id="updatedamage">
+                </div>
+                <div class="col-sm-4">
+                  <label>Working</label>
+                  <input type="text" class="form-control" id="updateworking" disabled>
+                </div>
+                <div class="col-sm-2">
+                  <label></label>
+                  <button class="btn btn-success btn-sm" id="enterCalc">Enter</button>
+                </div>
+              </div>
+            </div>
+            
             
           </div>
         </div>
@@ -328,15 +346,7 @@
               <label>Quantity</label>
                 <input type="text" id="quantity"  class="form-control" required="" placeholder="Quantity">
             </div>
-            <div class="col-sm-6">
-              <label>No. of working</label>
-              <input type="text" id="working"  class="form-control" required="" placeholder="number of working" >
-            </div>  
-          
-            <div class="col-sm-6">
-              <label>No. of Damage</label>
-                <input type="text" id="damage"  class="form-control" required="" placeholder="number of damage"  >
-          </div>
+            
           <div class="col-sm-6 train">
             <label>Category</label><br>
             <select id="category"  class="form-control" name="category"  required="" style="left:60px;">
@@ -421,13 +431,23 @@
       var name = document.getElementById('name').value;
       var category = document.getElementById('category').value;
       var quantity = document.getElementById('quantity').value;
-      var working = document.getElementById('working').value;
-      var damage = document.getElementById('damage').value;
+     
       var description = document.getElementById('description').value;
 
 // checking if there is a duplicate data
       var inventory = db.collection('inventory');
       var storage = inventory.where('name', '==', name);
+
+      if(name === '') {
+        alert('ERROR: Item name is required!');
+      } else if(category === '') {
+        alert('ERROR: Category is required!');
+      } else if(quantity === '') {
+        alert('ERROR: quantity is required!');
+      
+      }else if(description === '') {
+        alert('ERROR: description  is required!');
+      } else {
 
       storage.get().then(function(snapshot) {
         if(snapshot.docs.length > 0) {
@@ -437,8 +457,8 @@
             name: name,
             category: category,
             quantity: quantity,
-            working: working,
-            damage: damage,
+            working: "N/A",
+            damage: "N/A",
             description: description
             
           }).then(function() {
@@ -449,6 +469,7 @@
           });
         }
       });
+      }
     });
 
      // para mo upload kag picture    
@@ -608,7 +629,7 @@ var loadFile = function(event) {
         })
       }
     });
-
+  
     // security, must login
     firebase.auth().onAuthStateChanged(function(user){
       if(user) {
@@ -622,6 +643,24 @@ var loadFile = function(event) {
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });
+
+
+
+
+   
+// mo calculate sha
+    document.getElementById('enterCalc').addEventListener('click', () => {
+      let damage = document.getElementById('updatedamage');
+      let working = document.getElementById('updateworking');
+      let quantity = document.getElementById('updatequantity');
+
+      let x = parseInt(damage.value);
+      let y = parseInt(quantity.value);
+
+      working.value = y-x;
+    });
+
+    
   </script>
   
 </body>
