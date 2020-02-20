@@ -292,14 +292,49 @@
       document.getElementById('sortDate').onchange = () => {
         // Date
         let d = new Date();
-        let given = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+        let given;
+        let today = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
 
         let sortDate = document.getElementById('sortDate');
 
         if(sortDate.value == 'Yesterday') {
           given = `${d.getMonth()+1}/${d.getDate()-1}/${d.getFullYear()}`;
 
-          db.collection('payments').where('dateOfPayment', '==', given).orderBy('dateOfPayment').get().then((snapshot) => {
+          db.collection('payments').where('dateOfPayment', '==', given).orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
+            document.getElementsByTagName('tbody')[0].innerHTML = '';
+
+            snapshot.forEach((doc) => {
+              displayPayment(doc);
+            });
+          });
+        } else if(sortDate.value == 'Today') {
+          given = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+
+          db.collection('payments').where('dateOfPayment', '==', given).orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
+            document.getElementsByTagName('tbody')[0].innerHTML = '';
+
+            snapshot.forEach((doc) => {
+              displayPayment(doc);
+            });
+          });
+        } else if(sortDate.value == 'Last 7 days') {
+          given = `${d.getMonth()+1}/${d.getDate()-7}/${d.getFullYear()}`;
+
+          db.collection('payments').where('dateOfPayment', '<=', today).where('dateOfPayment', '>=', given).orderBy('dateOfPayment', 'desc').orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
+            document.getElementsByTagName('tbody')[0].innerHTML = '';
+
+            snapshot.forEach((doc) => {
+              displayPayment(doc);
+            });
+          });
+        } else if(sortDate.value == 'Last 30 days') {
+          if(d.getMonth()+1 == 1){
+            given = `12/${d.getDate()}/${d.getFullYear()-1}`;
+          } else {
+            given = `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}`;
+          }
+
+          db.collection('payments').where('dateOfPayment', '<=', today).where('dateOfPayment', '>=', given).orderBy('dateOfPayment', 'desc').orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
             document.getElementsByTagName('tbody')[0].innerHTML = '';
 
             snapshot.forEach((doc) => {
@@ -307,11 +342,9 @@
             });
           });
 
-          console.log(given)
-        } else if(sortDate.value == 'Today') {
-          given = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
-
-          db.collection('payments').where('dateOfPayment', '==', given).orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
+          console.log(given);
+        } else if(sortDate.value == 'All-time') {
+          db.collection('payments').orderBy('dateOfPayment', 'desc').orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
             document.getElementsByTagName('tbody')[0].innerHTML = '';
 
             snapshot.forEach((doc) => {
