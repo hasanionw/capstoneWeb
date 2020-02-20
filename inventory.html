@@ -457,8 +457,8 @@
             name: name,
             category: category,
             quantity: quantity,
-            working: "N/A",
-            damage: "N/A",
+            working: quantity,
+            damage: "0",
             description: description
             
           }).then(function() {
@@ -488,7 +488,7 @@ var loadFile = function(event) {
       `<td><span class="hidden" id="${doc.id}-span"></span><a>
       <small id='${doc.id}-small' onclick='showID("${doc.id}")'>
       <i data-toggle="tooltip" data-placement="top" title="Show ${doc.data().name}"
-       style="font-size: 20px;" class="fas fa-eye text-success"></i></small></a></td>
+       style="font-size: 20px;" class="fas fa-eye"></i></small></a></td>
       <td><b>${doc.data().name}</b></td>
       <td><b>${doc.data().category}<b></td>
         <td><b>${doc.data().quantity}<b></td>
@@ -497,12 +497,12 @@ var loadFile = function(event) {
      
       
       <td>
-        <a class='btn-link text-primary' onclick='updatefunction(this.parentNode.parentNode)'
+        <a class='btn-link' onclick='updatefunction(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#update'>
          <i data-toggle="tooltip" data-placement="top" title="Update ${doc.data().name}"
-         class="fas fa-edit" style="font-size: 20px"></i></a>
+         class="fas fa-pen mx-1 text-warning"style="font-size: 20px"></i></a>
 
-        <a class='btn-link text-success' onclick='viewInventory(this.parentNode.parentNode)'
+        <a class='btn-link text-secondary' onclick='viewInventory(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#displayallrecords'>
          <i data-toggle="tooltip" data-placement="top" title="view ${doc.data().name}" class="fas fa-eye" style="font-size: 20px;"></i></a>
       </td> `;
@@ -530,11 +530,11 @@ var loadFile = function(event) {
       let small = document.getElementById(`${id}-small`);
 
       if(span.classList.contains('hidden')) {
-        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye-slash text-primary"></i>';
+        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye-slash"></i>';
         span.textContent = id;
         span.classList.remove('hidden');
       } else {
-        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye text-danger"></i>';
+        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye"></i>';
         span.classList.add('hidden');
         span.textContent = '';
       } 

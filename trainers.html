@@ -67,7 +67,13 @@ input[type=text], input[type=date] {
     table > thead > tr > th {
       font-weight: bold;
       text-transform: uppercase;
+      text-align: center;
+     
       
+    }
+    
+    th, td, tr{
+      text-align: center;
     }
     
 
@@ -159,8 +165,6 @@ input[type=text], input[type=date] {
   <!--Main layout-->
   <main class="pt-5 mx-lg-5" >
     <div class="container-fluid mt-5">
-
-     
 
       <br>
       <div class='card'>
@@ -540,7 +544,7 @@ input[type=text], input[type=date] {
       tr.innerHTML = 
       `<td><span class="hidden" id="${doc.id}-span"></span><a>
       <small id='${doc.id}-small' onclick='showID("${doc.id}")'>
-      <i data-toggle="tooltip" data-placement="top" title="Show ${doc.data().fname}" style="font-size: 20px;" class="fas fa-eye text-success"></i></small></a></td>
+      <i data-toggle="tooltip" data-placement="top" title="Show ${doc.data().fname}" style="font-size: 20px;" class="fas fa-eye"></i></small></a></td>
       <td><b>${doc.data().fname}</b></td>
       <td><b>${doc.data().lname}<b></td>
       <td><b>${doc.data().status}<b></td>
@@ -550,11 +554,10 @@ input[type=text], input[type=date] {
       <td>
         <a id="usc" class='btn-link text-primary edit' onclick='updatestat(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#update'>
-         <i  data-toggle="tooltip" data-placement="top" title="Update ${doc.data().fname}"
-         class="fas fa-user-edit" style="font-size: 20px"></i></a>
+         <i class="fas fa-pen mx-1 text-warning" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data().fname}" data-placement="top"></i></a>
          
 
-        <a class='btn-link text-success' onclick='viewTrainers(this.parentNode.parentNode)'
+        <a class='btn-link text-secondary' onclick='viewTrainers(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#displayallrecords'>
          <i data-toggle="tooltip" data-placement="top" title="view ${doc.data().fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
       </td>`;
@@ -624,11 +627,11 @@ input[type=text], input[type=date] {
       let small = document.getElementById(`${id}-small`);
 
       if(span.classList.contains('hidden')) {
-        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye-slash text-primary"></i>';
+        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye-slash"></i>';
         span.textContent = id;
         span.classList.remove('hidden');
       } else {
-        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye text-danger"></i>';
+        small.innerHTML = ' <i style="font-size: 20px;" class="fas fa-eye"></i>';
         span.classList.add('hidden');
         span.textContent = '';
       } 
