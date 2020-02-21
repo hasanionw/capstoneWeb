@@ -131,11 +131,11 @@
                 <div class="card-header flexHeader">
                   <h3 class="card-title">Payment Log</h3>
                   <select id="sortDate" class="form-control" style="width: 35%">
-                    <option value="Today">Today</option>
+                    <option value="Today" selected>Today</option>
                     <option value="Yesterday">Yesterday</option>
                     <option value="Last 7 days">Last 7 days</option>
                     <option value="Last 30 days">Last 30 days</option>
-                    <option value="All-time" selected>All-time</option>
+                    <option value="All-time">All-time</option>
                   </select>
                 </div>
                 <div class="card-body card-bodyzz table-responsive p-0" style="height: 375px">
@@ -192,7 +192,7 @@
         <div class="modal-content">
           <div class="modal-header flexHeader" style="background-color: #DF3A01">
             <h3 class="modal-title text-white"><span><b id="history-name"></b></span>'s Payment History</h3>
-            <select id="" class="form-control" style="width: 35%">
+            <select id="sortMemberHistory" class="form-control" style="width: 35%">
               <option value="Today">Today</option>
               <option value="Yesterday">Yesterday</option>
               <option value="Last 7 days">Last 7 days</option>
@@ -251,6 +251,9 @@
         }
       });
 
+      const date = new Date();
+      const today = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+
       // Render Information
       renderInformation = (elem) => {
         id = elem.getAttribute('data-id');
@@ -268,7 +271,7 @@
         });
       }
 
-      displayPayment = (doc, name) => {
+      displayPayment = (doc) => {
         let tbody = document.getElementsByTagName('tbody')[0];
         let tr = document.createElement('tr');
 
@@ -285,7 +288,7 @@
       }
 
       // Get payments
-      db.collection('payments').orderBy('dateOfPayment', 'desc').orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
+      db.collection('payments').where('dateOfPayment', '==', today).orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
         snapshot.forEach((doc) => {
           displayPayment(doc);
         });
@@ -382,7 +385,7 @@
         }).then(() => {
           db.collection('payments')
             .where('memberId', '==', id)
-            .orderBy('dateOfPayment', 'desc')
+            .where('dateOfPayment', '==', today)
             .orderBy('timeOfPayment', 'desc')
             .get().then((snapshot) => {
               snapshot.forEach((doc) => {
@@ -394,6 +397,88 @@
         }).finally(() => {
           document.getElementById('history-tbody').innerHTML = '';
         });
+      }
+
+      // Sort Member Payment History
+      let sortMember = document.getElementById('sortMemberHistory');
+      sortMember.onchange = () => {
+        let d = new Date();
+        let given;
+        let today = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+        let history = document.getElementById('history-tbody');
+
+        if(sortMember.value == 'Today') {
+          history.innerHTML = '';
+
+          db.collection('payments')
+            .where('memberId', '==', id)
+            .where('dateOfPayment', '==', today)
+            .orderBy('timeOfPayment', 'desc')
+            .get().then((snapshot) => {
+              snapshot.forEach((doc) => {
+                renderHistory(doc);
+              });
+            });
+        } else if(sortMember.value == 'Yesterday') {
+          history.innerHTML = '';
+          given = `${d.getMonth()+1}/${d.getDate()-1}/${d.getFullYear()}`;
+
+          db.collection('payments')
+            .where('memberId', '==', id)
+            .where('dateOfPayment', '==', given)
+            .orderBy('timeOfPayment', 'desc')
+            .get().then((snapshot) => {
+              snapshot.forEach((doc) => {
+                renderHistory(doc);
+              });
+            });
+        } else if(sortMember.value == 'Last 7 days') {
+          history.innerHTML = '';
+          given = `${d.getMonth()+1}/${d.getDate()-7}/${d.getFullYear()}`;
+
+          db.collection('payments')
+            .where('memberId', '==', id)
+            .where('dateOfPayment', '>=', given)
+            .where('dateOfPayment', '<=', today)
+            .orderBy('dateOfPayment', 'desc')
+            .orderBy('timeOfPayment', 'desc')
+            .get().then((snapshot) => {
+              snapshot.forEach((doc) => {
+                renderHistory(doc);
+              });
+            });
+        } else if(sortMember.value == 'Last 30 days') {
+          history.innerHTML = '';
+          if(d.getMonth()+1 == 1){
+            given = `12/${d.getDate()}/${d.getFullYear()-1}`;
+          } else {
+            given = `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}`;
+          }
+
+          db.collection('payments')
+            .where('memberId', '==', id)
+            .where('dateOfPayment', '>=', given)
+            .where('dateOfPayment', '<=', today)
+            .orderBy('dateOfPayment', 'desc')
+            .orderBy('timeOfPayment', 'desc')
+            .get().then((snapshot) => {
+              snapshot.forEach((doc) => {
+                renderHistory(doc);
+              });
+            });
+        } else if(sortMember.value == 'All-time') {
+          history.innerHTML = '';
+
+          db.collection('payments')
+            .where('memberId', '==', id)
+            .orderBy('dateOfPayment', 'desc')
+            .orderBy('timeOfPayment', 'desc')
+            .get().then((snapshot) => {
+              snapshot.forEach((doc) => {
+                renderHistory(doc);
+              });
+            });
+        }
       }
     </script>
   </body>

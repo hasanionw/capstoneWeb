@@ -177,6 +177,7 @@
               </tbody>
             </table>
           </div>
+          <div class="card-footer"></div>
         </div>
       </div>
 
@@ -958,8 +959,8 @@
       `<td>${doc.fname}</td>
       <td>${doc.lname}</td>
       <td>
-        <a class='btn-link text-secondary' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px' style='color: #DF3A01'></i></a>
-        <a class="btn-link text-warning mx-1" onclick='updateMember(this.parentNode.parentNode)'>
+        <a class='btn-link text-darkgrey' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px' style='color: #DF3A01'></i></a>
+        <a class="btn-link text-orange mx-1" onclick='updateMember(this.parentNode.parentNode)'>
           <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.fname}" style="font-size: 20px"></i>
         </a>
         <a class='btn-link text-success' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
@@ -1175,8 +1176,8 @@
         tr.innerHTML = 
           `<td>${doc.data().programName}</td>
           <td>
-            <a class='btn-link text-secondary' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px' style='color: #DF3A01'></i></a>
-            <a class="btn-link text-warning mx-1" onclick='updateMember(this.parentNode.parentNode)'>
+            <a class='btn-link text-darkgrey' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px' style='color: #DF3A01'></i></a>
+            <a class="btn-link text-orange mx-1" onclick='updateMember(this.parentNode.parentNode)'>
               <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.data().programName}" style="font-size: 20px"></i>
             </a>
           </td>`;
