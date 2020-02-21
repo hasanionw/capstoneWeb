@@ -12,6 +12,7 @@
   <link href='css/bootstrap.min.css' rel='stylesheet'>
   <link href='css/mdb.min.css' rel='stylesheet'>
   <link href='css/style.min.css' rel='stylesheet'>
+  <link href="css/theme-colors.css.css" rel="stylesheet">
 
   <style>
     .john label {
@@ -146,13 +147,10 @@
               <span class="add-members" data-toggle="tooltip" data-placement="top" title="Add new member"><i id="add-new-member-btn" class="fas fa-plus mr-2"></i></span>
               Regular Members
             </h3>
-            <div class="d-flex justify-content-start align-items-center">
-              Sort status:
-              <select id="sort-regular" class="form-control mx-5" style="flex: 1">
-                <option value="Both">Both</option>
-                <option value="Paid">Paid</option>
-                <option value="Expired">Expired</option>
-              </select>
+            <div class="btn-group" role="group" aria-label="Basic example">
+              <button type="button" id="sort-paid" class="btn btn-sm btn-outline-orange">Paid</button>
+              <button type="button" id="sort-both" class="btn btn-sm btn-orange">Both</button>
+              <button type="button" id="sort-expired" class="btn btn-sm btn-outline-orange">Expired</button>
             </div>
             <div>
               <div class="d-flex justify-content-center">
@@ -318,7 +316,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button class="btn btn-primary" id="updateBtn">Update</button>
+              <button class="btn btn-orange" id="updateBtn">Update</button>
             </div>
           </div>
         </div>
@@ -477,8 +475,8 @@
         </div>
         <div class="modal-body">
           <div class="container-fluid">
-            <div class="flexLa mb-1" id="flexLa">
-              <div class="qrcode-container mt-1" id="view-qrcode">
+            <div class="flexLa mb-2" id="flexLa">
+              <div class="qrcode-container my-1" id="view-qrcode">
   
               </div>
               <small>QR Code</small>
@@ -588,6 +586,73 @@
 
   <!-- Functions -->
   <script>
+    // Global Variables
+    const qrcode = new QRCode("view-qrcode", {
+      height: 90,
+      width: 90
+    });
+
+    let addBtn = document.getElementById('add-new-member-btn'); 
+    let updateFromView = document.getElementById('update-member-from-view-modal');
+    let button = document.getElementById('addMemberBtn');
+    let addMemberModal = document.getElementById('add-member');
+    let sortPaid = document.getElementById('sort-paid');
+    let sortBoth = document.getElementById('sort-both');
+    let sortExpired = document.getElementById('sort-expired');
+    let tbody = document.getElementById('tbody');
+
+    // Sorting by PAID
+    sortPaid.onclick = () => {
+      tbody.innerHTML = '';
+      sortBoth.classList.add('btn-outline-orange');
+      sortBoth.classList.remove('btn-orange');
+      sortExpired.classList.add('btn-outline-orange');
+      sortExpired.classList.remove('btn-orange');
+      sortPaid.classList.add('btn-orange');
+      sortPaid.classList.remove('btn-outline-orange');
+
+      db.collection('members').where('memberType', '==', 'Regular').where('status', '==', 'Paid').orderBy('dateAdded', 'desc').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          renderData({id: doc.id, doc: doc.data()});
+        });
+      });
+    }
+
+    // Sorting by BOTH
+    sortBoth.onclick = () => {
+      tbody.innerHTML = '';
+      sortBoth.classList.add('btn-orange');
+      sortBoth.classList.remove('btn-outline-orange');
+      sortExpired.classList.add('btn-outline-orange');
+      sortExpired.classList.remove('btn-orange');
+      sortPaid.classList.add('btn-outline-orange');
+      sortPaid.classList.remove('btn-orange');
+
+      db.collection('members').where('memberType', '==', 'Regular').orderBy('dateAdded', 'desc').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          renderData({id: doc.id, doc: doc.data()});
+        });
+      });
+    }
+
+    // Sorting by EXPIRED
+    sortExpired.onclick = () => {
+      tbody.innerHTML = '';
+      sortBoth.classList.add('btn-outline-orange');
+      sortBoth.classList.remove('btn-orange');
+      sortExpired.classList.add('btn-orange');
+      sortExpired.classList.remove('btn-outline-orange');
+      sortPaid.classList.add('btn-outline-orange');
+      sortPaid.classList.remove('btn-orange');
+
+      db.collection('members').where('memberType', '==', 'Regular').where('status', '==', 'Expired').orderBy('dateAdded', 'desc').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          renderData({id: doc.id, doc: doc.data()});
+        });
+      });
+    }
+
+    // User Token Checking
     auth.onAuthStateChanged(function(user) {
       let span = document.getElementById('username');
 
@@ -596,7 +661,7 @@
       }
     });
 
-    let addBtn = document.getElementById('add-new-member-btn');
+    // Add Member Modal
     addBtn.onclick = () => {
       document.getElementById('addMemberModal').click();
 
@@ -611,10 +676,7 @@
       }
     }
 
-    let updateFromView = document.getElementById('update-member-from-view-modal');
-    let button = document.getElementById('addMemberBtn');
-
-    let addMemberModal = document.getElementById('add-member');
+    // Submit by 'ENTER' button
     addMemberModal.addEventListener('keyup', (evt) => {
       if(evt.keyCode == 13) {
         button.click();
@@ -623,6 +685,7 @@
       }
     }); 
 
+    // Adding Members to Firebase
     button.addEventListener('click', () => {
       let fname = document.getElementById('fName').value;
       let lname = document.getElementById('lName').value;
@@ -634,6 +697,7 @@
       let dateAdded = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
       let phone = document.getElementById('phone').value;
       let address = document.getElementById('address').value;
+      let program = document.getElementById('program').value;
       let monthlyRate;
       if(memberType == 'Regular') {
         monthlyRate = 750;
@@ -680,7 +744,8 @@
             monthlyStart: monthlyStart,
             monthlyEnd: monthlyEnd,
             address: address,
-            email: email
+            email: email,
+            program: program
           }).then(function() {
             member.get().then((snapshot) => {
               snapshot.forEach((doc) => {
@@ -720,12 +785,14 @@
       }
     });
 
+    // Pressing 'UPDATE' on View Member Modal
     updateFromView.onclick = () => {
       let x = document.getElementById('close-view-modal').click();
       let uid = document.getElementById('view-uid');
       updateMember(uid);
     }
 
+    // Event Listener to #payment-desc in Payment Modal
     paymentDescChange = () => {
       let paymentDesc = document.getElementById('payment-desc').value;
       let amount = document.getElementById('payment-amount');
@@ -739,6 +806,7 @@
       }
     }
 
+    // Show/Hide Payment Calculator
     document.getElementById('showCalc').addEventListener('click', () => {
       let calc = document.getElementById('calculator');
       if(calc.style.display == 'none') {
@@ -750,6 +818,7 @@
       }
     });
 
+    // Calculating Change
     document.getElementById('enterCalc').addEventListener('click', () => {
       let cash = document.getElementById('payment-cash');
       let change = document.getElementById('payment-change');
@@ -761,6 +830,7 @@
       change.value = x-y;
     });
 
+    // Toggling Member UID visibility
     showID = (id) => {
       let span = document.getElementById(`${id}-span`);
       let small = document.getElementById(`${id}-small`);
@@ -776,11 +846,7 @@
       }
     }
 
-    let qrcode = new QRCode("view-qrcode", {
-      height: 90,
-      width: 90
-    });
-
+    // Rendering Data for View Member Modal 
     viewMember = (tr) => {
       let id = tr.getAttribute('data-id');
      
@@ -842,27 +908,28 @@
       });
     }
 
-    renderData = (doc) => {
+    // Rendering Data for Regular Member Card
+    renderData = ({id, doc}) => {
       let tbody = document.getElementById('tbody');
       let tr = document.createElement('tr');
       let td = document.createElement('td');
 
-      tr.setAttribute('data-id', doc.id);
+      tr.setAttribute('data-id', id);
       tr.innerHTML = 
-      `<td>${doc.data().fname}</td>
-      <td>${doc.data().lname}</td>
+      `<td>${doc.fname}</td>
+      <td>${doc.lname}</td>
       <td>
-        <span class="hidden" id="${doc.id}-span"></span>
+        <span class="hidden" id="${id}-span"></span>
         <a>
-          <small id='${doc.id}-small' onclick='showID("${doc.id}")'
-           data-toggle="tooltip" title="Show ${doc.data().fname}'s UID" data-placement="top">
+          <small id='${id}-small' onclick='showID("${id}")'
+           data-toggle="tooltip" title="Show ${doc.fname}'s UID" data-placement="top">
            <i class="fas fa-eye"></i></small>
         </a>
       </td>
-      <td>${doc.data().status}</td>
+      <td>${doc.status}</td>
       <td>
-        <a class='btn-link text-secondary' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
-        <a class='btn-link text-warning' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data().fname}" data-placement="top"></i></a>
+        <a class='btn-link text-darkgrey' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
+        <a class='btn-link text-orange' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.fname}" data-placement="top"></i></a>
         <a class='btn-link text-success' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
       </td>`;
       tbody.appendChild(tr);
@@ -873,51 +940,27 @@
       });
     }
 
-    // Sorting Member by Status
-    document.getElementById('sort-regular').onchange = () => {
-      let sort = document.getElementById('sort-regular');
-      let tbody = document.getElementById('tbody');
+    // Querying Regular Members
+    db.collection('members').where('memberType', '==', 'Regular').orderBy('dateAdded', 'desc').get().then((snapshot) => {
+      snapshot.forEach((doc) => {
+        renderData({id: doc.id, doc: doc.data()});
+      });
+    });
 
-      if(sort.value == 'Paid') {
-        db.collection('members').where('memberType', '==', 'Regular').where('status', '==', 'Paid').orderBy('dateAdded', 'desc').get().then((snapshot) => {
-          tbody.innerHTML = '';
-
-          snapshot.forEach((doc) => {
-            renderData(doc);
-          });
-        });
-      } else if(sort.value == 'Expired') {
-        db.collection('members').where('memberType', '==', 'Regular').where('status', '==', 'Expired').orderBy('dateAdded', 'desc').get().then((snapshot) => {
-          tbody.innerHTML = '';
-
-          snapshot.forEach((doc) => {
-            renderData(doc);
-          });
-        });
-      } else if(sort.value == 'Both') {
-        db.collection('members').where('memberType', '==', 'Regular').orderBy('dateAdded', 'desc').get().then((snapshot) => {
-          tbody.innerHTML = '';
-
-          snapshot.forEach((doc) => {
-            renderData(doc);
-          });
-        });
-      }
-    }
-
-    renderWalkin = (doc) => {
+    // Rendering Data for Walk-in Member Card
+    renderWalkin = ({id, doc}) => {
       let tbody = document.getElementById('tbody-walk-in');
       let tr = document.createElement('tr');
       let td = document.createElement('td');
 
-      tr.setAttribute('data-id', doc.id);
+      tr.setAttribute('data-id', id);
       tr.innerHTML = 
-      `<td>${doc.data().fname}</td>
-      <td>${doc.data().lname}</td>
+      `<td>${doc.fname}</td>
+      <td>${doc.lname}</td>
       <td>
         <a class='btn-link text-secondary' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px' style='color: #DF3A01'></i></a>
         <a class="btn-link text-warning mx-1" onclick='updateMember(this.parentNode.parentNode)'>
-          <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.data().fname}" style="font-size: 20px"></i>
+          <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.fname}" style="font-size: 20px"></i>
         </a>
         <a class='btn-link text-success' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
       </td>`;
@@ -929,20 +972,14 @@
       });
     }
 
-    // Render Regular Members
-    db.collection('members').where('memberType', '==', 'Regular').orderBy('dateAdded', 'desc').get().then((snapshot) => {
+    // Querying Walk-in Members
+    db.collection('members').where('memberType', '==', 'Walk-in').orderBy('dateAdded', 'desc').get().then((snapshot) => {
       snapshot.forEach((doc) => {
-        renderData(doc);
+        renderWalkin({id: doc.id, doc: doc.data()});
       });
     });
 
-    // Render Walk-in Members
-    db.collection('members').where('memberType', '==', 'Walk-in').orderBy('dateAdded', 'desc').get().then((snapshot) => {
-      snapshot.forEach((doc) => {
-        renderWalkin(doc);
-      })
-    });
-
+    // Rendering Data for Update Member Modal
     updateMember = (tr) => {
       let updateFname = document.getElementById('updateFname');
       let updateLname = document.getElementById('updateLname');
@@ -1075,7 +1112,7 @@
         name.value = fullName;
 
         if(doc.data().memberType == 'Walk-in') {
-          select.innerHTML = '<option>Walk-in</option>';
+          select.innerHTML = '<option value="Walk-in Fee">Walk-in</option>';
           select.setAttribute('disabled', 'disabled');
           amount.removeAttribute('value');
           amount.value = 50;
@@ -1126,8 +1163,8 @@
       });
     }
 
-    // PROGRAMS SECTION
-    let programs = [];
+    // Programs Section
+    const programs = [];
 
     renderPrograms = () => {
       programs.forEach((doc) => {
