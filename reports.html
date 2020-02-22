@@ -28,48 +28,16 @@
 
   <!--Main Navigation-->
   <header>
-
-    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
-      <div  class="container-fluid">
-
-        <!-- Brand -->
-        <a class="navbar-brand waves-effect" href="#" style="position: relative;left:50px;">
-          <h4>ADMIN: <b><span class="text-primary" id="username"></span></b></h4>
-          
-        </a>
-
-        <!-- Collapse -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Links -->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-          <!-- Left -->
-          <ul class="navbar-nav mr-auto">
-            
-          </ul>
-
-          <!-- Right -->
-          <ul class="navbar-nav nav-flex-icons">
-           
-            <li class="nav-item">
-               
-              
-                <div class="logout">
-                    <button id="logoutBtn" type="button" class="btn btn-outline-danger">LOGOUT</button>
-                
-                  </div>
-            </li>
-          </ul>
-
+    <nav class="navbar fixed-top navbar-light bg-darkgrey" >
+      <div class="container-fluid" >
+        <h6 style="margin-bottom: 0 !important;">
+          Welcome, <b><span id="username" class='text-orange font-weight-bold'></span></b>!
+        </h6>
+        <div class="logout">
+          <button id="logoutBtn" type="button" class="btn btn-sm btn-danger">LOGOUT</button>
         </div>
-
       </div>
     </nav>
-   
 
 
     <!-- Sidebar -->
@@ -205,7 +173,7 @@
   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
   <!-- Local script -->
-  <script src="FIREBASE/init.js"></script>
+  <script src='js/init.js'></script>
 
   <script>
     document.getElementById("logoutBtn").addEventListener("click", function() {

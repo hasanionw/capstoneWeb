@@ -90,7 +90,17 @@
   </head>
 
   <body class='grey lighten-3' >
-    <header>   
+    <header>  
+      <nav class="navbar fixed-top navbar-light bg-darkgrey" >
+        <div class="container-fluid" >
+          <h6 style="margin-bottom: 0 !important;">
+            Welcome, <b><span id="username" class='text-orange font-weight-bold'></span></b>!
+          </h6>
+          <div class="logout">
+            <button id="logoutBtn" type="button" class="btn btn-sm btn-danger">LOGOUT</button>
+          </div>
+        </div>
+      </nav> 
       <div class='sidebar-fixed position-fixed' style='background-color:#DF3A01;' >
         <br>
         <center><img src='logo.png' class='img-fluid' alt='' style='width: 200px; height: 180px;'></center>
@@ -119,17 +129,16 @@
     </header>
 
     <main class='pt-5 mx-lg-5' >
-      <div class="flex mx-4">
-        <h4>Welcome, <span id="username"></span>!</h4>
-        <button class="btn btn-outline-danger">Logout</button>
-      </div>
       <div class="container mt-5">
         <div class="row d-flex align-items-center">
           <div class="col-sm-6">
             <div class="card">
               <div class="card-content">
                 <div class="card-header flexHeader">
-                  <h3 class="card-title">Payment Log</h3>
+                  <h3 class="card-title">
+                    <a data-toggle="tooltip" data-placement="top" title="Search payment"><i id="search-payment-btn" class="fas fa-search mr-2 text-orange" data-toggle="modal" data-target="#search-payment-modal" id="searchPaymentModal"></i></a>
+                    Payment Log
+                  </h3>
                   <select id="sortDate" class="form-control" style="width: 35%">
                     <option value="Today" selected>Today</option>
                     <option value="Yesterday">Yesterday</option>
@@ -220,6 +229,22 @@
       </div>
     </div>
 
+    <div class="modal fade" id="search-payment-modal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="d-flex align-items-center" style="justify-content: space-between;">
+              <input type="text" placeholder="Search member here... (NOTE: SEARCH BY LAST NAME)" class="form-control" id="search-member">
+              <button class="btn btn-md btn-orange d-flex" id="search-member-btn">
+                <i class="fas fa-search"></i>
+              </button>
+              <button type='button' class='close' id='close-modal' data-dismiss='modal' style='display: none'>&times;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <button data-toggle="modal" data-target="#view-history-modal" id="viewHistoryModal" style="display: none"></button>
 
     <script type='text/javascript' src='js/jquery-3.4.1.min.js'></script>
@@ -239,10 +264,66 @@
     <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js'></script>
     <script src="js/qrcode.js"></script>
     <!-- Local script -->
-    <script src='FIREBASE/init.js'></script>
+    <script src='js/init.js'></script>
 
     <!-- Functions -->
     <script>
+      const uid = [];
+      let results = [];
+
+      renderNewPayments = () => {
+        let tbody = document.getElementsByTagName('tbody')[0];
+
+        tbody.innerHTML = '';
+
+        results.forEach((result) => {
+          let tr = document.createElement('tr');
+
+          tr.innerHTML = 
+            `<td>${result.data.dateOfPayment}</td>
+            <td>
+              <a href="#" class="name-anchor" style="color: #DF3A01" onclick="renderInformation(this)" data-id="${result.data.memberId}">${result.data.memberName}</a>  
+            </td>
+            <td>${result.data.paymentDesc}</td>
+            <td>${result.data.amount}</td>
+            <td>Cash</td>`;
+
+          tbody.appendChild(tr);
+        });
+
+        results = [];
+      }
+
+      searchQuery = (id) => {
+        db.collection('payments').where('memberId', '==', id).orderBy('dateOfPayment', 'desc').orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
+          snapshot.forEach((doc) => {
+            results.push({'id': doc.id, 'data': doc.data()});
+          });
+        }).then(() => {
+          renderNewPayments();
+        });
+      }
+
+      let search = document.getElementById('search-member-btn');
+      search.onclick = () => {
+        let searchValue = document.getElementById('search-member').value;
+        let letter = searchValue[0].toUpperCase();
+        let rest = searchValue.slice(1, searchValue.length);
+        let query = `${letter}${rest}`;
+
+        db.collection('members').where('lname', '==', query).get().then((snapshot) => {
+          snapshot.forEach((doc) => {
+            uid.push(doc.id);
+          });
+        }).then(() => {
+          uid.forEach((id) => {
+            searchQuery(id);
+          });
+        }).finally(() => {
+          document.getElementById('close-modal').click();
+        });
+      }
+
       auth.onAuthStateChanged(function(user) {
         let span = document.getElementById('username');
 
@@ -256,13 +337,14 @@
 
       // Render Information
       renderInformation = (elem) => {
+        let id;
         id = elem.getAttribute('data-id');
 
         db.collection('members').doc(id).get().then((doc) => {
           let name = document.getElementById('info-name');
           let uid = document.getElementById('info-uid');
           let memberType = document.getElementById('info-memberType');
-
+          console.log(doc.data())
           name.textContent = `${doc.data().fname} ${doc.data().lname}`;
           uid.textContent = doc.id;
           memberType.textContent = doc.data().memberType;

@@ -15,3 +15,13 @@
 .text-darkgrey {
     color: #565656 !important;
 }
+
+.bg-darkgrey {
+    background-color: #565656 !important;
+    color: white !important;
+}
+
+/* For navbar */
+.fixed-top {
+    position: absolute !important;
+}

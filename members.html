@@ -101,6 +101,15 @@
 
 <body class='grey lighten-3' >
   <header>   
+    <nav class="navbar fixed-top navbar-light bg-darkgrey" >
+      <div class="container-fluid" >
+        <h6 style="margin-bottom: 0 !important;">Welcome, <b><span id="username" class='text-orange font-weight-bold'></span></b>!</h6>
+
+        <div class="logout">
+          <button id="logoutBtn" type="button" class="btn btn-sm btn-danger">LOGOUT</button>
+        </div>
+      </div>
+    </nav>
     <div class='sidebar-fixed position-fixed' style='background-color:#DF3A01;' >
       <br>
         <center><img src='logo.png' class='img-fluid' alt='' style='width: 200px; height: 180px;'></center>
@@ -134,12 +143,8 @@
 
   </header>
 
-  <main class='pt-5 mx-lg-5' >
-    <div class="flex mx-4">
-      <h4>Welcome, <span id="username"></span>!</h4>
-      <button class="btn btn-outline-danger">Logout</button>
-    </div>
-    <div class='container-fluid mt-3'>
+  <main class='pt-5 mx-lg-5'>
+    <div class='container-fluid mt-5'>
       <div class='card'>
         <div class='card-content'>
           <div class='card-header flexHeader'>
@@ -583,7 +588,7 @@
   <script src="js/qrcode.js"></script>
   
   <!-- Local script -->
-  <script src='FIREBASE/init.js'></script>
+  <script src='js/init.js'></script>
 
   <!-- Functions -->
   <script>
