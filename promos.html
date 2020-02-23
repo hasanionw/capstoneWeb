@@ -1,255 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Promos - California Fitness Gym</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="css/mdb.min.css" rel="stylesheet">
+    <!-- Your custom styles (optional) -->
+    <link href="css/style.min.css" rel="stylesheet">
+    <link rel="icon" href="images/gym_logo.png">
+    <link href="css/theme-colors.css" rel="stylesheet">
 
-<head>
-  <meta charset="utf-8">
+    <style>
+        .card-bodyzz {
+          max-height: 325px;
+          overflow-y: auto;
+        }
 
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Promos - California Fitness Gym</title>
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-  <!-- Bootstrap core CSS -->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
-  <!-- Material Design Bootstrap -->
-  <link href="css/mdb.min.css" rel="stylesheet">
-  <!-- Your custom styles (optional) -->
-  <link href="css/style.min.css" rel="stylesheet">
-  <link rel="icon" href="images/gym_logo.png">
-  <link href="css/theme-colors.css" rel="stylesheet">
+        .flexHeader {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
 
-  <style>
-      .card-bodyzz {
-        max-height: 325px;
-        overflow-y: auto;
-      }
+        .flex {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
 
-      .flexHeader {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
+        table > thead > tr > th {
+          font-weight: bold;
+          text-transform: uppercase;
+        }
 
-      .flex {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
+        table > thead > tr > th {
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+    </style>
+  </head>
 
-      table > thead > tr > th {
-        font-weight: bold;
-        text-transform: uppercase;
-      }
-
-      table > thead > tr > th {
-        font-weight: bold;
-        text-transform: uppercase;
-      }
-  </style>
-</head>
-
-<body class="grey lighten-3" >
-  <!--Main Navigation-->
-  <header>
-    <nav class="navbar fixed-top navbar-light bg-darkgrey" >
-      <div class="container-fluid" >
-        <h6 style="margin-bottom: 0 !important;">
-          Welcome, <b><span id="username" class='text-orange font-weight-bold'></span></b>!
-        </h6>
-        <div class="logout">
-          <button id="logoutBtn" type="button" class="btn btn-sm btn-danger">LOGOUT</button>
+  <body class="grey lighten-3" >
+    <!--Main Navigation-->
+    <header>
+      <nav class="navbar fixed-top navbar-light bg-darkgrey" >
+        <div class="container-fluid" >
+          <h6 style="margin-bottom: 0 !important;">
+            Welcome, <b><span id="username" class='text-orange font-weight-bold'></span></b>!
+          </h6>
+          <div class="logout">
+            <button id="logoutBtn" type="button" class="btn btn-sm btn-danger">LOGOUT</button>
+          </div>
         </div>
-      </div>
-    </nav>
-   
-    <!-- Sidebar -->
-     <div class="sidebar-fixed position-fixed" style="background-color:#DF3A01;" >
-      <br>
-      <center><img src="logo.png" class="img-fluid" alt="" style="width: 200px; height: 180px;"></center>
-      <br>
+      </nav>
+    
+      <!-- Sidebar -->
+      <div class="sidebar-fixed position-fixed" style="background-color:#DF3A01">
+        <br>
+        <center><img src="logo.png" class="img-fluid" alt="" style="width: 200px; height: 180px;"></center>
+        <br>
         <div class="list-group list-group-flush" >
-          <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
             <i class="fas fa-chart-pie mr-3"></i>Dashboard
           </a>
-          <a href="members.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <a href="members.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
             <i class="fas fa-user mr-3"></i>Members</a>
-          <a href="trainers.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01; color:white;">
+          <a href="trainers.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
             <i class="fas fa-user-shield mr-3"></i>Trainers
           </a>
-          <a href="inventory.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <a href="inventory.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
             <i class="fas fa-dumbbell  mr-3"></i>Inventory</a>
-          <a href="#" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-            <i class="fas fa-percent mr-3"></i>Promos</a>
-          <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-            <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
-            <a href="reports.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-              <i class="fas fa-flag-checkered mr-3"></i>Reports</a>
-              <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-                <i class="fas fa-history mr-3"></i>Logtrail</a>
-        </div>
-
-    </div>
-    <!-- Sidebar -->
-
-  </header>
-  <!--Main Navigation-->
-
-  <!--Main layout-->
-  <main class="pt-5 mx-lg-5" >
-    <div class="container-fluid mt-5">
-
-      <!-- Heading -->
-      <div class="card mb-4 wow fadeIn">
-        <!--Card content-->
-        <div class="card-body d-sm-flex justify-content-between">
-          <h4 class="mb-1 mb-sm-1 pt-1">
-            <a data-toggle="modal" data-target="#add"><i style="color:#DF3A01; font-size: 25px;" data-toggle="tooltip" data-placement="top" title="Add Promo"  class="fas fa-plus mr-4"></i></a>
-            <b><span>PROMO</span></b>
-          </h4>
-          <form class="d-flex justify-content-center">
-            <input type="search"  placeholder="Type your query" aria-label="Search" class="form-control">
-            <button class="btn btn-dark btn-sm my-0 p" type="submit">
-              <i class="fas fa-search" ></i>
-            </button>
-          </form>
-        </div>
+          <a href="promos.html" class="list-group-item list-group-item-action waves-effect sidebar-item-active">
+            <i class="fas fa-percent mr-3"></i>Promos
+          </a>
+          <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+            <i class="fas fa-money-bill-alt mr-3"></i>Payment Log
+          </a>
+          <a href="reports.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+            <i class="fas fa-flag-checkered mr-3"></i>Reports
+          </a>
+          <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+            <i class="fas fa-history mr-3"></i>Logtrail
+          </a>
+        </div>  
       </div>
+      <!-- Sidebar -->
+    </header>
+    <!--Main Navigation-->
 
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="card h-100">
-            <h4 class="card-header" >Christmas Promo<a data-toggle='modal' data-target='#update'><i data-toggle="tooltip" data-placement="top" title="Update"
-              class="fas fa-pen mx-1  text-warning"style="font-size: 20px" ></i></a>
-              <i class="fas fa-trash-alt ml-3 text-secondary"></i>
+    <!--Main layout-->
+    <main class="pt-5 mx-lg-5" >
+      <div class="container-fluid mt-5">
+        <!-- Heading -->
+        <div class="card mb-4 wow fadeIn">
+          <!--Card content-->
+          <div class="card-body d-sm-flex justify-content-between">
+            <h4 class="mb-1 mb-sm-1 pt-1">
+              <a data-toggle="modal" data-target="#add"><i style="color:#DF3A01; font-size: 25px;" data-toggle="tooltip" data-placement="top" title="Add Promo"  class="fas fa-plus mr-4"></i></a>
+              Promos
             </h4>
-            
-            <div class="card-body">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                 sed do eiusmod tempor incididunt .
-              </p>              
-           </div>
-           <div class="card-footer">
-            <center><a href="#" class="btn btn-success">View members</a></center>
-          </div>
-          </div>
-        </div>
-  
-        <div class="col-sm-4">
-          <div class="card h-100">
-            <h4 class="card-header" >TGIF Promo<a data-toggle='modal' data-target='#update'><i data-toggle="tooltip" data-placement="top" title="Update"
-              class="fas fa-pen mx-1 text-warning"style="font-size: 20px" ></i></a>
-              <i class="fas fa-trash-alt ml-3 text-secondary"></i>
-            </h4>
-            <div class="card-body">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                 sed do eiusmod tempor incididunt .
-              </p>              
-           </div>
-           <div class="card-footer">
-            <center><a href="#" class="btn btn-success">View members</a></center>
-          </div>
-          </div>
-        </div>
-  
-        <div class="col-sm-4">
-          <div class="card h-100">
-            <h4 class="card-header" >New Year Promo<a data-toggle='modal' data-target='#update'><i data-toggle="tooltip" data-placement="top" title="Update"
-              class="fas fa-pen mx-1 text-warning"style="font-size: 20px" ></i></a>
-              <i class="fas fa-trash-alt ml-3 text-secondary"></i>
-            </h4>
-            <div class="card-body">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                 sed do eiusmod tempor incididunt .
-              </p>              
-           </div>
-           <div class="card-footer">
-            <center><a href="#" class="btn btn-success">View members</a></center>
-          </div>
+            <form class="d-flex justify-content-center">
+              <input type="search"  placeholder="Type your query" aria-label="Search" class="form-control">
+              <button class="btn btn-orange btn-sm my-0 p" type="submit">
+                <i class="fas fa-search" ></i>
+              </button>
+            </form>
           </div>
         </div>
       </div>
-      <br>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="card h-100">
-            <h4 class="card-header" >Valentines Promo<a data-toggle='modal' data-target='#update'><i data-toggle="tooltip" data-placement="top" title="Update"
-              class="fas fa-pen mx-1 text-warning"style="font-size: 20px" ></i></a>
-              <i class="fas fa-trash-alt ml-3 text-secondary"></i>
-            </h4>
-            <div class="card-body">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                 sed do eiusmod tempor incididunt .
-              </p>              
-           </div>
-           <div class="card-footer">
-            <center><a href="#" class="btn btn-success">View members</a></center>
-          </div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="card h-100">
-            <h4 class="card-header" >Christmas Promo<a data-toggle='modal' data-target='#update'><i data-toggle="tooltip" data-placement="top" title="Update"
-              class="fas fa-pen mx-1 text-warning"style="font-size: 20px" ></i></a>
-              <i class="fas fa-trash-alt ml-3 text-secondary"></i>
-            </h4>
-            <div class="card-body">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                 sed do eiusmod tempor incididunt .
-              </p>              
-           </div>
-           <div class="card-footer">
-            <center><a href="#" class="btn btn-success">View members</a></center>
-          </div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="card h-100">
-            <h4 class="card-header" >Christmas Promo<a data-toggle='modal' data-target='#update'><i data-toggle="tooltip" data-placement="top" title="Update"
-              class="fas fa-pen mx-1 text-warning"style="font-size: 20px" ></i></a>
-              <i class="fas fa-trash-alt ml-3 text-secondary"></i>
-            </h4>
-            <div class="card-body">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                 sed do eiusmod tempor incididunt .
-              </p>              
-           </div>
-           <div class="card-footer">
-            <center><a href="#" class="btn btn-success">View members</a></center>
-          </div>
-          </div>
-        </div>
-      </div>
-    </div>
     </main>
 
-
-      <div class="modal fade" id="add" >
-        <div class="modal-dialog">
-          <div class="modal-content" >
-            <div class="modal-header" style="background-color:#DF3A01;">
-              <h3 class="modal-title" style="color:white;">Add Promo </h3>  
-           
-              <button type='button' class='close' id='close-modal' data-dismiss='modal'>&times;</button>
-            </div>  
-            <div class="modal-body">
-              <div class="form-group">
-                <div class="form-row">
-
-                  <div class="col-sm-6">
-                    <label>Promo Name</label>
-                    <input type="text" id="promoname" class="form-control" required placeholder="promo name">
-                  </div>
-                  <div class="col-sm-6">
-                    <label>Status</label>
-                    <select id="stat" required class="form-control" style="height:45px; background-color:honeydew">
-                      <option value="permanent" selected>permanent</option>
-                      <option value="temporary">temporary</option>
-                    </select>
-                  </div>  
-                
-                  <div class="col-sm-6">
-                    <label>Amount</label>
-                    <input type="text" class="form-control" required id="amount" required="" placeholder="Amount"  >
+    <div class="modal fade" id="add" >
+      <div class="modal-dialog">
+        <div class="modal-content" >
+          <div class="modal-header" style="background-color:#DF3A01;">
+            <h3 class="modal-title" style="color:white;">Add Promo </h3>  
+            <button type='button' class='close' id='close-modal' data-dismiss='modal'>&times;</button>
+          </div>  
+          <div class="modal-body">
+            <div class="form-group">
+              <div class="form-row">
+                <div class="col-sm-6">
+                  <label>Promo Name</label>
+                  <input type="text" id="promoname" class="form-control" required placeholder="promo name">
+                </div>
+                <div class="col-sm-6">
+                  <label>Status</label>
+                  <select id="stat" required class="form-control" style="height:45px; background-color:honeydew">
+                    <option value="permanent" selected>permanent</option>
+                    <option value="temporary">temporary</option>
+                  </select>
+                </div>  
+                <div class="col-sm-6">
+                  <label>Amount</label>
+                  <input type="text" class="form-control" required id="amount" required="" placeholder="Amount"  >
                 </div>
                 <div class="col-sm-6 ">
                   <label>Start Date</label><br>
@@ -258,253 +148,215 @@
                 <div class="col-sm-6 ">
                   <label>End Date</label><br>
                   <input type="date" class="form-control" id="end" required  >
-              </div>
-              <div class="col-sm-6 "> </div>
-              
-              <div class="col-sm-6 ">
-                <label>Description</label><br>
-                <textarea rows="5" class="form-control" 
-                cols="100" class="form-control" required id="description"
-                 required data-validation-required-message="Please enter description" 
-                 placeholder="Enter description" maxlength="999" style="height: 100px; width: 465px;"
-                 ></textarea>
-              </div>
-
+                </div>
+                <div class="col-sm-6 ">
+                  
+                </div>
+                <div class="col-sm-6 ">
+                  <label>Description</label><br>
+                  <textarea rows="5" class="form-control" 
+                  cols="100" class="form-control" required id="description"
+                    required data-validation-required-message="Please enter description" 
+                    placeholder="Enter description" maxlength="999" style="height: 100px; width: 465px;"
+                    ></textarea>
                 </div>
               </div>
             </div>
-            <div class="modal-footer bot">
-              <button type="submit"  id="addBtn"  class="btn" style="color: white;background-color:#DF3A01;">ADD PROMO</button>
-            </div>
+          </div>
+          <div class="modal-footer bot">
+            <button type="submit"  id="addBtn"  class="btn" style="color: white;background-color:#DF3A01;">ADD PROMO</button>
           </div>
         </div>
-      </div>
-
-<div class="modal fade" id="displayallrecords">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header"style="background-color:#DF3A01;">
-        <h3 class="modal-title" style="color:white;"><span id="viewfname-span"></span></h3>
-       
-        <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <div class="form-row">
-            <div class="col-sm-6">
-              <label>ID</label>
-              <input type="text" class="form-control" id="view-id" disabled>
-            </div>
-            <div class="col-sm-6">
-              <label>Promo name</label>
-              <input type="text" class="form-control" id="view-promoname" disabled>
-            </div>
-            <div class="col-sm-6">
-              <label>Amount</label>
-              <input type="text" class="form-control" id="view-amount" disabled>
-            </div>
-            <div class="col-sm-6">
-              <label>Date Started</label>
-              <input type="text" class="form-control" id="view-start" disabled>
-            </div>
-            <div class="col-sm-6">
-              <label>Date Ended</label>
-              <input type="text" class="form-control" id="view-end" disabled>
-            </div>
-            <div class="col-sm-6">
-              <label>Status</label>
-              <input type="text" class="form-control" id="view-stat" disabled>
-            </div>
-            <div class="col-sm-6">
-              <label>Description</label>
-              <textarea id="view-description" style="height: 100px; width: 465px;" class="form-control" disabled></textarea>
-            </div>
-           
-           
-          </div>
-          </div>
-        </div>
-      
-       
-      </div>
-      
-    </div>
-  </div>
-
-
-  
-<div class="modal fade" id="update">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header"style="background-color:#DF3A01;">
-        <h3 class="modal-title" style="color:white;">Update <span id="fname-span"></span></h3>
-       
-        <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <div class="form-row">
-            <div class="col-sm-6">
-              <label>Name</label>
-              <input type="text" class="form-control" id="updatename" disabled>
-            </div>
-          
-            
-          </div>
-        </div>
-      
-       
-      </div>
-      <div class="modal-footer"  style="height: 70px;">
-        <button class="btn" style="background-color:#DF3A01; color:white;" id="updateBtn">Update</button>
       </div>
     </div>
-  </div>
-</div>
 
-
-
-             
-
+    <div class="modal fade" id="displayallrecords">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header"style="background-color:#DF3A01;">
+            <h3 class="modal-title" style="color:white;"><span id="viewfname-span"></span></h3>
+            <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <div class="form-row">
+                <div class="col-sm-6">
+                  <label>ID</label>
+                  <input type="text" class="form-control" id="view-id" disabled>
+                </div>
+                <div class="col-sm-6">
+                  <label>Promo name</label>
+                  <input type="text" class="form-control" id="view-promoname" disabled>
+                </div>
+                <div class="col-sm-6">
+                  <label>Amount</label>
+                  <input type="text" class="form-control" id="view-amount" disabled>
+                </div>
+                <div class="col-sm-6">
+                  <label>Date Started</label>
+                  <input type="text" class="form-control" id="view-start" disabled>
+                </div>
+                <div class="col-sm-6">
+                  <label>Date Ended</label>
+                  <input type="text" class="form-control" id="view-end" disabled>
+                </div>
+                <div class="col-sm-6">
+                  <label>Status</label>
+                  <input type="text" class="form-control" id="view-stat" disabled>
+                </div>
+                <div class="col-sm-6">
+                  <label>Description</label>
+                  <textarea id="view-description" style="height: 100px; width: 465px;" class="form-control" disabled></textarea>
+                </div>
               </div>
-              <!-- /.First row-->
-
             </div>
-
           </div>
-          <!--/.Card-->
-
         </div>
-        <!--Grid column-->
-
       </div>
-      <!--Grid row-->
-
     </div>
-  </main>
-  <!--Main layout-->
 
-  
-
-  <!-- SCRIPTS -->
-  <!-- JQuery -->
-  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-  <!-- Bootstrap tooltips -->
-  <script type="text/javascript" src="js/popper.min.js"></script>
-  <!-- Bootstrap core JavaScript -->
-  <script type="text/javascript" src="js/bootstrap.min.js"></script>
-  <!-- MDB core JavaScript -->
-  <script type="text/javascript" src="js/mdb.min.js"></script>
-  <!-- Initializations -->
-
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script> 
-  <script src="jquery-3.4.1.min.js"></script>
-
-  
-   <!-- Firebase CDNs -->
-   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
-   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
-   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
-   <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
-   <!-- Local script -->
-   <script src='js/init.js'></script>
-
-
-   <script>
-    var button = document.getElementById('addBtn');
-
-    button.addEventListener('click', function() {
-      var promoname = document.getElementById('promoname').value;
-      var amount = document.getElementById('amount').value;
-      var stat = document.getElementById('stat').value;
-      var start = document.getElementById('start').value;
-      var end = document.getElementById('end').value;
-      var description = document.getElementById('description').value;
-      
+    <div class="modal fade" id="update">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header"style="background-color:#DF3A01;">
+            <h3 class="modal-title" style="color:white;">Update <span id="fname-span"></span></h3>
+            <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <div class="form-row">
+                <div class="col-sm-6">
+                  <label>Name</label>
+                  <input type="text" class="form-control" id="updatename" disabled>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer"  style="height: 70px;">
+            <button class="btn" style="background-color:#DF3A01; color:white;" id="updateBtn">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
     
+    <!-- SCRIPTS -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="js/mdb.min.js"></script>
+    <!-- Initializations -->
 
-      var promos = db.collection('promos');
-      var discount = promos.where('start', '==', start).where('end', '==', end);
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script> 
+    <script src="jquery-3.4.1.min.js"></script>
 
-      if(promoname === '') {
-        alert('ERROR: promo name is required!');
-      } else if(amount === '') {
-        alert('ERROR: amount is required!');
-      } else if(stat === '') {
-        alert('ERROR: status is required!');
-      } else if(start === '') {
-        alert('ERROR: starting date is required!');
-      } else if(end === '') {
-        alert('ERROR: expiry date is required!');
-      }else if(description === '') {
-        alert('ERROR: description is required!');
-      } else {
+    
+    <!-- Firebase CDNs -->
+    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
+    <!-- Local script -->
+    <script src='js/init.js'></script>
 
-      discount.get().then(function(snapshot) {
-        if(snapshot.docs.length > 0) {
-          alert('Error: promo date already exists!');
+
+    <script>
+      var button = document.getElementById('addBtn');
+
+      button.addEventListener('click', function() {
+        var promoname = document.getElementById('promoname').value;
+        var amount = document.getElementById('amount').value;
+        var stat = document.getElementById('stat').value;
+        var start = document.getElementById('start').value;
+        var end = document.getElementById('end').value;
+        var description = document.getElementById('description').value;
+        
+      
+
+        var promos = db.collection('promos');
+        var discount = promos.where('start', '==', start).where('end', '==', end);
+
+        if(promoname === '') {
+          alert('ERROR: promo name is required!');
+        } else if(amount === '') {
+          alert('ERROR: amount is required!');
+        } else if(stat === '') {
+          alert('ERROR: status is required!');
+        } else if(start === '') {
+          alert('ERROR: starting date is required!');
+        } else if(end === '') {
+          alert('ERROR: expiry date is required!');
+        }else if(description === '') {
+          alert('ERROR: description is required!');
         } else {
-          promos.add({
-            promoname: promoname,
-            amount: amount,
-            stat: stat,
-            start: start,
-            end: end,
-            description: description
-            
-          }).then(function() {
-            alert('Successfully added new Promos!');
-            window.location.reload();
-          }).catch(function(error) {
-            alert(error.message);
-          });
+
+        discount.get().then(function(snapshot) {
+          if(snapshot.docs.length > 0) {
+            alert('Error: promo date already exists!');
+          } else {
+            promos.add({
+              promoname: promoname,
+              amount: amount,
+              stat: stat,
+              start: start,
+              end: end,
+              description: description
+              
+            }).then(function() {
+              alert('Successfully added new Promos!');
+              window.location.reload();
+            }).catch(function(error) {
+              alert(error.message);
+            });
+          }
+        });
         }
       });
-      }
-    });
 
-    auth.onAuthStateChanged(function(user) {
-      let span = document.getElementById('username');
+      auth.onAuthStateChanged(function(user) {
+        let span = document.getElementById('username');
 
-      if(user) {
-        span.textContent = user.email;
-      }
-    })
+        if(user) {
+          span.textContent = user.email;
+        }
+      })
 
-  
-
- // tool tip sa plus button
- $(function () {
-      $('[data-toggle="tooltip"]').tooltip();
-    });
-
-
-// logout script
-document.getElementById("logoutBtn").addEventListener("click", function() {
-      var x = confirm("Are you sure?");
-      if(x === true){
-        firebase.auth().signOut().then(function() {
-          alert("Logout successful!");
-          window.location.href = "index.html";
-        }).catch(function() {
-          alert("Failed to log out!");
-        })
-      }
-    });
-
-    firebase.auth().onAuthStateChanged(function(user){
-      if(user) {
-        
-      } else {
-        window.location.href = "index.html";
-      }
-    })
-
-  
     
-  </script>
-  
-</body>
 
+  // tool tip sa plus button
+  $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+
+
+  // logout script
+  document.getElementById("logoutBtn").addEventListener("click", function() {
+        var x = confirm("Are you sure?");
+        if(x === true){
+          firebase.auth().signOut().then(function() {
+            alert("Logout successful!");
+            window.location.href = "index.html";
+          }).catch(function() {
+            alert("Failed to log out!");
+          })
+        }
+      });
+
+      firebase.auth().onAuthStateChanged(function(user){
+        if(user) {
+          
+        } else {
+          window.location.href = "index.html";
+        }
+      })
+
+    
+      
+    </script>
+    
+  </body>
 </html>

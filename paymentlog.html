@@ -107,24 +107,29 @@
         <br>
 
         <div class="list-group list-group-flush" >
-          <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
             <i class="fas fa-chart-pie mr-3"></i>Dashboard
           </a>
-          <a href="members.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <a href="members.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
             <i class="fas fa-user mr-3"></i>Members</a>
-          <a href="trainers.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01; color:white;">
-            <i class="fas fa-user-shield mr-3"></i>Trainers</a>
-          <a href="inventory.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
+          <a href="trainers.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+            <i class="fas fa-user-shield mr-3"></i>Trainers
+          </a>
+          <a href="inventory.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
             <i class="fas fa-dumbbell  mr-3"></i>Inventory</a>
-          <a href="promos.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-            <i class="fas fa-percent mr-3"></i>Promos</a>
-          <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-            <i class="fas fa-money-bill-alt mr-3"></i>Payment Log</a>
-            <a href="reports.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-              <i class="fas fa-flag-checkered mr-3"></i>Reports</a>
-              <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect" style="background-color:#DF3A01;color:white;">
-                <i class="fas fa-history mr-3"></i>Logtrail</a>
-        </div>
+          <a href="promos.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+            <i class="fas fa-percent mr-3"></i>Promos
+          </a>
+          <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect sidebar-item-active">
+            <i class="fas fa-money-bill-alt mr-3"></i>Payment Log
+          </a>
+          <a href="reports.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+            <i class="fas fa-flag-checkered mr-3"></i>Reports
+          </a>
+          <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+            <i class="fas fa-history mr-3"></i>Logtrail
+          </a>
+        </div>  
       </div>
     </header>
 
@@ -206,7 +211,7 @@
               <option value="Yesterday">Yesterday</option>
               <option value="Last 7 days">Last 7 days</option>
               <option value="Last 30 days">Last 30 days</option>
-              <option value="All-time">All-time</option>
+              <option value="All-time" selected>All-time</option>
             </select>
           </div>
           <div class="modal-body table-responsive p-0">
@@ -467,7 +472,7 @@
         }).then(() => {
           db.collection('payments')
             .where('memberId', '==', id)
-            .where('dateOfPayment', '==', today)
+            .orderBy('dateOfPayment', 'desc')
             .orderBy('timeOfPayment', 'desc')
             .get().then((snapshot) => {
               snapshot.forEach((doc) => {
@@ -488,6 +493,7 @@
         let given;
         let today = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
         let history = document.getElementById('history-tbody');
+        let id = document.getElementById('info-uid').textContent;
 
         if(sortMember.value == 'Today') {
           history.innerHTML = '';

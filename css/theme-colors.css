@@ -25,3 +25,18 @@
 .fixed-top {
     position: absolute !important;
 }
+
+.sidebar-items {
+    background-color: #DF3A01 !important;
+    color: white !important;
+}
+
+.sidebar-item-active {
+    background-color: white !important;
+    color: #DF3A01 !important;
+    border-radius: 25px !important;
+}
+
+.list-group-flush .list-group-item {
+    border: 0 !important;
+}
