@@ -21,6 +21,11 @@
     color: white !important;
 }
 
+.btn-darkgrey {
+    color: white !important;
+    background-color: #565656 !important;
+}
+
 /* For navbar */
 .fixed-top {
     position: absolute !important;

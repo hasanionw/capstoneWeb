@@ -17,6 +17,10 @@
     <link href="css/theme-colors.css" rel="stylesheet">
 
     <style>
+      body::-webkit-scrollbar {
+        width: 0 !important;
+      }
+
         .card-bodyzz {
           max-height: 325px;
           overflow-y: auto;
@@ -42,6 +46,28 @@
         table > thead > tr > th {
           font-weight: bold;
           text-transform: uppercase;
+        }
+
+        .promo-cards {
+          width: 30%;
+        }
+
+        #promo-cont {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: flex-start;
+        }
+
+        #main-div {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        .card-img-top {
+          width: 100% !important;
+          height: 10vw !important;
+          object-fit: cover !important;
         }
     </style>
   </head>
@@ -96,7 +122,7 @@
 
     <!--Main layout-->
     <main class="pt-5 mx-lg-5" >
-      <div class="container-fluid mt-5">
+      <div class="container-fluid mt-5" id="main-div">
         <!-- Heading -->
         <div class="card mb-4 wow fadeIn">
           <!--Card content-->
@@ -106,12 +132,15 @@
               Promos
             </h4>
             <form class="d-flex justify-content-center">
-              <input type="search"  placeholder="Type your query" aria-label="Search" class="form-control">
+              <input type="search" placeholder="Search promo name" aria-label="Search" class="form-control">
               <button class="btn btn-orange btn-sm my-0 p" type="submit">
                 <i class="fas fa-search" ></i>
               </button>
             </form>
           </div>
+        </div>
+        <div id="promo-cont">
+
         </div>
       </div>
     </main>
@@ -128,43 +157,54 @@
               <div class="form-row">
                 <div class="col-sm-6">
                   <label>Promo Name</label>
-                  <input type="text" id="promoname" class="form-control" required placeholder="promo name">
+                  <input type="text" id="promoname" class="form-control" required placeholder="Promo Name">
                 </div>
                 <div class="col-sm-6">
                   <label>Status</label>
-                  <select id="stat" required class="form-control" style="height:45px; background-color:honeydew">
-                    <option value="permanent" selected>permanent</option>
-                    <option value="temporary">temporary</option>
+                  <select id="stat" required class="form-control">
+                    <option value="Permanent" selected>Permanent</option>
+                    <option value="Temporary">Temporary</option>
                   </select>
                 </div>  
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-row">
                 <div class="col-sm-6">
                   <label>Amount</label>
-                  <input type="text" class="form-control" required id="amount" required="" placeholder="Amount"  >
+                  <input type="text" class="form-control" required id="amount" placeholder="Amount"  >
                 </div>
                 <div class="col-sm-6 ">
                   <label>Start Date</label><br>
-                  <input type="date" class="form-control" id="start" required  >
+                  <input type="date" class="form-control" id="start" required>
                 </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-row">
                 <div class="col-sm-6 ">
                   <label>End Date</label><br>
-                  <input type="date" class="form-control" id="end" required  >
+                  <input type="date" class="form-control" id="end" required>
                 </div>
                 <div class="col-sm-6 ">
                   
                 </div>
-                <div class="col-sm-6 ">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-row">
+                <div class="col-sm-12">
                   <label>Description</label><br>
                   <textarea rows="5" class="form-control" 
                   cols="100" class="form-control" required id="description"
                     required data-validation-required-message="Please enter description" 
-                    placeholder="Enter description" maxlength="999" style="height: 100px; width: 465px;"
-                    ></textarea>
+                    placeholder="Enter description" maxlength="999"></textarea>
                 </div>
               </div>
             </div>
           </div>
-          <div class="modal-footer bot">
-            <button type="submit"  id="addBtn"  class="btn" style="color: white;background-color:#DF3A01;">ADD PROMO</button>
+          <div class="modal-footer">
+            <button type="submit" id="addBtn" class="btn btn-orange">Add Promo</button>
           </div>
         </div>
       </div>
@@ -214,30 +254,6 @@
         </div>
       </div>
     </div>
-
-    <div class="modal fade" id="update">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header"style="background-color:#DF3A01;">
-            <h3 class="modal-title" style="color:white;">Update <span id="fname-span"></span></h3>
-            <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <div class="form-row">
-                <div class="col-sm-6">
-                  <label>Name</label>
-                  <input type="text" class="form-control" id="updatename" disabled>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer"  style="height: 70px;">
-            <button class="btn" style="background-color:#DF3A01; color:white;" id="updateBtn">Update</button>
-          </div>
-        </div>
-      </div>
-    </div>
     
     <!-- SCRIPTS -->
     <!-- JQuery -->
@@ -265,55 +281,77 @@
 
 
     <script>
-      var button = document.getElementById('addBtn');
+      // globals
+      let button = document.getElementById('addBtn');
+      const date = new Date();
+
+      renderCard = ({id, data}) => {
+        let promoCont = document.getElementById('promo-cont');
+        let card = document.createElement('div');
+        card.classList.add('card', 'promo-cards', 'mx-3', 'my-3');
+        card.setAttribute('data-id', id)
+        card.innerHTML = 
+          `<img src="blank.png" class="card-img-top">
+          <div class="card-body">
+            <h3 class="card-title font-weight-bold text-orange">${data.promoname}</h3>
+            <h6 class="card-subtitle text-muted font-weight-bold">${data.stat}</h6>
+            <p class="card-text mt-2">${data.description}</p>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-sm btn-orange">View details</btn>
+          </div>`;
+
+        promoCont.appendChild(card);
+      }
 
       button.addEventListener('click', function() {
-        var promoname = document.getElementById('promoname').value;
-        var amount = document.getElementById('amount').value;
-        var stat = document.getElementById('stat').value;
-        var start = document.getElementById('start').value;
-        var end = document.getElementById('end').value;
-        var description = document.getElementById('description').value;
-        
-      
+        let promoname = document.getElementById('promoname').value;
+        let amount = document.getElementById('amount').value;
+        let stat = document.getElementById('stat').value;
+        let start = document.getElementById('start').value;
+        let end = document.getElementById('end').value;
+        let description = document.getElementById('description').value;
 
-        var promos = db.collection('promos');
-        var discount = promos.where('start', '==', start).where('end', '==', end);
+        let promos = db.collection('promos');
+        let discount = promos.where('start', '==', start).where('end', '==', end);
+
+        let dateAdded = `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+        let timeAdded = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 
         if(promoname === '') {
-          alert('ERROR: promo name is required!');
+          alert('ERROR: Promo name is required!');
         } else if(amount === '') {
-          alert('ERROR: amount is required!');
+          alert('ERROR: Amount is required!');
         } else if(stat === '') {
-          alert('ERROR: status is required!');
+          alert('ERROR: Status is required!');
         } else if(start === '') {
-          alert('ERROR: starting date is required!');
+          alert('ERROR: Starting date is required!');
         } else if(end === '') {
-          alert('ERROR: expiry date is required!');
-        }else if(description === '') {
-          alert('ERROR: description is required!');
+          alert('ERROR: Expiry date is required!');
+        } else if(description === '') {
+          alert('ERROR: Description is required!');
         } else {
-
-        discount.get().then(function(snapshot) {
-          if(snapshot.docs.length > 0) {
-            alert('Error: promo date already exists!');
-          } else {
-            promos.add({
-              promoname: promoname,
-              amount: amount,
-              stat: stat,
-              start: start,
-              end: end,
-              description: description
-              
-            }).then(function() {
-              alert('Successfully added new Promos!');
-              window.location.reload();
-            }).catch(function(error) {
-              alert(error.message);
-            });
-          }
-        });
+          discount.get().then(function(snapshot) {
+            if(snapshot.docs.length > 0) {
+              alert('Error: promo date already exists!');
+            } else {
+              promos.add({
+                promoname: promoname,
+                amount: amount,
+                stat: stat,
+                start: start,
+                end: end,
+                description: description,
+                dateAdded: dateAdded,
+                timeAdded: timeAdded
+              }).then(function() {
+                alert('Successfully added new promo!');
+                window.location.reload();
+              }).catch(function(error) {
+                alert(error.message);
+              });
+            }
+          });
         }
       });
 
@@ -325,17 +363,20 @@
         }
       })
 
-    
-
-  // tool tip sa plus button
-  $(function () {
+      // tool tip sa plus button
+      $(function () {
         $('[data-toggle="tooltip"]').tooltip();
       });
 
+      db.collection('promos').orderBy('dateAdded', 'desc').orderBy('timeAdded', 'desc').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          renderCard({id: doc.id, data: doc.data()});
+        });
+      });
 
-  // logout script
-  document.getElementById("logoutBtn").addEventListener("click", function() {
-        var x = confirm("Are you sure?");
+      // logout script
+      document.getElementById("logoutBtn").addEventListener("click", function() {
+        let x = confirm("Are you sure?");
         if(x === true){
           firebase.auth().signOut().then(function() {
             alert("Logout successful!");
@@ -346,17 +387,13 @@
         }
       });
 
-      firebase.auth().onAuthStateChanged(function(user){
+      auth.onAuthStateChanged(function(user){
         if(user) {
           
         } else {
           window.location.href = "index.html";
         }
       })
-
-    
-      
     </script>
-    
   </body>
 </html>

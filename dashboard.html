@@ -281,33 +281,27 @@
   <script src='js/init.js'></script>
   
   <script>
-    document.getElementById("logoutBtn").addEventListener("click", function() {
+    document.getElementById("logoutBtn").onclick = () => {
       var x = confirm("Are you sure?");
       if(x === true){
-        firebase.auth().signOut().then(function() {
+        auth.signOut().then(() => {
           alert("Logout successful!");
           window.location.href = "index.html";
-        }).catch(function() {
-          alert("Failed to log out!");
+        }).catch((err) => {
+          alert("ERROR: " + err.message);
         })
       }
-    });
+    }
 
-    firebase.auth().onAuthStateChanged(function(user){
-      if(user) {
-        alert(user.email);
-      } else {
-        window.location.href = "index.html";
-      }
-    })
-
-    auth.onAuthStateChanged(function(user) {
+    auth.onAuthStateChanged(function(user){
       let span = document.getElementById('username');
 
-      if(user) {
+      if(!user) {
+        window.location.href = "index.html";
+      } else {
         span.textContent = user.email;
       }
-    })
+    });
   </script>
 
   <!--Google Maps-->

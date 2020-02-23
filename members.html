@@ -103,8 +103,9 @@
   <header>   
     <nav class="navbar fixed-top navbar-light bg-darkgrey" >
       <div class="container-fluid" >
-        <h6 style="margin-bottom: 0 !important;">Welcome, <b><span id="username" class='text-orange font-weight-bold'></span></b>!</h6>
-
+        <h6 style="margin-bottom: 0 !important;">
+          Welcome, <b><span id="username" class='text-orange font-weight-bold'></span></b>!
+        </h6>
         <div class="logout">
           <button id="logoutBtn" type="button" class="btn btn-sm btn-danger">LOGOUT</button>
         </div>
@@ -112,35 +113,33 @@
     </nav>
     <div class='sidebar-fixed position-fixed' style='background-color:#DF3A01;' >
       <br>
-        <center><img src='logo.png' class='img-fluid' alt='' style='width: 200px; height: 180px;'></center>
-        <br>
-
-        <div class="list-group list-group-flush" >
-          <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
-            <i class="fas fa-chart-pie mr-3"></i>Dashboard
-          </a>
-          <a href="members.html" class="list-group-item list-group-item-action waves-effect sidebar-item-active">
-            <i class="fas fa-user mr-3"></i>Members</a>
-          <a href="trainers.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
-            <i class="fas fa-user-shield mr-3"></i>Trainers
-          </a>
-          <a href="inventory.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
-            <i class="fas fa-dumbbell  mr-3"></i>Inventory</a>
-          <a href="promos.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
-            <i class="fas fa-percent mr-3"></i>Promos
-          </a>
-          <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
-            <i class="fas fa-money-bill-alt mr-3"></i>Payment Log
-          </a>
-          <a href="reports.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
-            <i class="fas fa-flag-checkered mr-3"></i>Reports
-          </a>
-          <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
-            <i class="fas fa-history mr-3"></i>Logtrail
-          </a>
-        </div>  
+      <center><img src='logo.png' class='img-fluid' alt='' style='width: 200px; height: 180px;'></center>
+      <br>
+      <div class="list-group list-group-flush" >
+        <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+          <i class="fas fa-chart-pie mr-3"></i>Dashboard
+        </a>
+        <a href="members.html" class="list-group-item list-group-item-action waves-effect sidebar-item-active">
+          <i class="fas fa-user mr-3"></i>Members</a>
+        <a href="trainers.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+          <i class="fas fa-user-shield mr-3"></i>Trainers
+        </a>
+        <a href="inventory.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+          <i class="fas fa-dumbbell  mr-3"></i>Inventory</a>
+        <a href="promos.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+          <i class="fas fa-percent mr-3"></i>Promos
+        </a>
+        <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+          <i class="fas fa-money-bill-alt mr-3"></i>Payment Log
+        </a>
+        <a href="reports.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+          <i class="fas fa-flag-checkered mr-3"></i>Reports
+        </a>
+        <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+          <i class="fas fa-history mr-3"></i>Logtrail
+        </a>
+      </div>  
     </div>
-
   </header>
 
   <main class='pt-5 mx-lg-5'>
@@ -185,209 +184,6 @@
           <div class="card-footer"></div>
         </div>
       </div>
-
-      <!-- Add member modal -->
-      <div id='add-member' class='modal fade' role='dialog'>
-        <div class='modal-dialog'>
-          <div class='modal-content'>
-            <div class='modal-header'>
-              <h3 class='modal-title'>Add New Member</h3>
-              <button type='button' class='close' id='close-modal' data-dismiss='modal'>&times;</button>
-            </div>
-            <div class='modal-body'>
-              <div class="form-group">
-                <div class="form-row">
-                  <div class="col-sm-6">
-                    <label>First Name</label>
-                    <input type="text" id="fName" class="form-control">
-                  </div>
-                  <div class="col-sm-6">
-                    <label>Last Name</label>
-                    <input type="text" id="lName" class="form-control">
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="form-row">
-                  <div class="col-sm-2">
-                    <label>Sex</label>
-                    <select id="sex" class="form-control">
-                      <option value="Male">M</option>
-                      <option value="Female">F</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-5">
-                    <label>Birthdate</label>
-                    <input type="date" id="birthdate" class="form-control">
-                  </div>
-                  <div class="col-sm-5">
-                    <label>Email</label>
-                    <input type="email" class="form-control" id="email">
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="form-row">
-                  <div class="col-sm-12">
-                    <label>Address</label>
-                    <input type="text" class="form-control" id="address">
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="form-row">
-                  <div class="col-sm-4">
-                    <label>Cellphone Number</label>
-                    <input type="text" class="form-control" id="phone">
-                  </div>
-                  <div class="col-sm-4">
-                    <label>Membership type</label>
-                    <select id="memberType" class="form-control">
-                      <option value="Regular" selected>Regular</option>
-                      <option value="Walk-in">Walk-in</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-4" id="add-program-div">
-                    <label>Program</label>
-                    <select id="program" class="form-control">
-                      
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button class='btn btn-primary' id='addMemberBtn'>Submit</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Update member modal -->
-      <div class="modal fade" id="updateModal">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h3 class="modal-title">Update <span id="fname-span"></span></h3>
-              <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
-            </div>
-            <div class="modal-body">
-              <div class="form-group">
-                <div class="form-row">
-                  <div class="col-sm-6">
-                    <label>First name</label>
-                    <input type="text" class="form-control" id="updateFname" disabled>
-                  </div>
-                  <div class="col-sm-6">
-                    <label>Last name</label>
-                    <input type="text" class="form-control" id="updateLname" disabled>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="form-row">
-                  <div class="col-sm-4">
-                    <label>Date Added</label>
-                    <input type="text" class="form-control" id="updateDateAdded" disabled>
-                  </div>
-                  <div class="col-sm-8">
-                    <label>UID</label>
-                    <input type="text" class="form-control" id="updateUID" disabled>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="form-row">
-                  <div class="col-sm-4">
-                    <label>Membership Type</label>
-                    <select id="updateType" class="form-control">
-                      <option value="Regular">Regular</option>
-                      <option value="Walk-in">Walk-in</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-4">
-                    <label>Status</label>
-                    <select id="updateStatus" class="form-control">
-                      <option value="Paid" selected>Paid</option>
-                      <option value="Expired">Expired</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-4" id="update-program-div">
-                    <label>Program</label>
-                    <select id="updateProgram" class="form-control">
-                      
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-orange" id="updateBtn">Update</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Payment modal -->
-    <div class="modal fade" id="payment-modal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h3 class="modal-title">Add Payment for <span id="payment-fname-span"></span></h3>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <div class="form-row">
-                <div class="col-sm-6">
-                  <label>Unique ID</label>
-                  <input type="text" class="form-control" disabled id="payment-uid">
-                </div>
-                <div class="col-sm-6">
-                  <label>Name</label>
-                  <input type="text" class="form-control" disabled id="payment-name">
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="form-row">
-                <div class="col-sm-6">
-                  <label>Payment Description</label>
-                  <select id="payment-desc" class="form-control" onchange="paymentDescChange()">
-               
-                  </select>
-                </div>
-                <div class="col-sm-6">
-                  <label>Amount</label>
-                  <input type="text" class="form-control" id="payment-amount" disabled>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex justify-content-center">
-              <small><a href="#"><span id="showCalc">Show Calculator</span></a></small>
-            </div>
-            <div id="calculator" class="form-group" style="display: none">
-              <div class="form-row">
-                <div class="col-sm-4">
-                  <label>Cash</label>
-                  <input type="text" class="form-control" id="payment-cash">
-                </div>
-                <div class="col-sm-4">
-                  <label>Change</label>
-                  <input type="text" class="form-control" id="payment-change" disabled>
-                </div>
-                <div class="col-sm-2">
-                  <label></label>
-                  <button class="btn btn-primary btn-sm" id="enterCalc">Enter</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-primary" id="add-payment-btn">Add payment</button>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Walk-in and Program Card -->
@@ -403,7 +199,7 @@
                 <div>
                   <div class="d-flex justify-content-center">
                     <input type="search"  placeholder="Search walk-in here..." aria-label="Search" class="form-control">
-                    <button class="btn btn-dark btn-sm my-0 p" type="submit">
+                    <button class="btn btn-orange btn-sm my-0 p" type="submit">
                       <i class="fas fa-search" ></i>
                     </button>
                   </div>
@@ -455,13 +251,219 @@
     </div>
   </main>
 
+
+  <!-- MODALS HERE -->
+  <!-- Add member modal -->
+  <div id='add-member' class='modal fade' role='dialog'>
+    <div class='modal-dialog'>
+      <div class='modal-content'>
+        <div class='modal-header'>
+          <h3 class='modal-title'>Add New Member</h3>
+          <button type='button' class='close' id='close-modal' data-dismiss='modal'>&times;</button>
+        </div>
+        <div class='modal-body'>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-6">
+                <label>First Name</label>
+                <input type="text" id="fName" class="form-control">
+              </div>
+              <div class="col-sm-6">
+                <label>Last Name</label>
+                <input type="text" id="lName" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-2">
+                <label>Sex</label>
+                <select id="sex" class="form-control">
+                  <option value="Male">M</option>
+                  <option value="Female">F</option>
+                </select>
+              </div>
+              <div class="col-sm-5">
+                <label>Birthdate</label>
+                <input type="date" id="birthdate" class="form-control">
+              </div>
+              <div class="col-sm-5">
+                <label>Email</label>
+                <input type="email" class="form-control" id="email">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-12">
+                <label>Address</label>
+                <input type="text" class="form-control" id="address">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-4">
+                <label>Cellphone Number</label>
+                <input type="text" class="form-control" id="phone">
+              </div>
+              <div class="col-sm-4">
+                <label>Membership type</label>
+                <select id="memberType" class="form-control">
+                  <option value="Regular" selected>Regular</option>
+                  <option value="Walk-in">Walk-in</option>
+                </select>
+              </div>
+              <div class="col-sm-4" id="add-program-div">
+                <label>Program</label>
+                <select id="program" class="form-control">
+                  
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class='btn btn-orange' id='addMemberBtn'>Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Update member modal -->
+  <div class="modal fade" id="updateModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Update <span id="fname-span"></span></h3>
+          <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-6">
+                <label>First name</label>
+                <input type="text" class="form-control" id="updateFname" disabled>
+              </div>
+              <div class="col-sm-6">
+                <label>Last name</label>
+                <input type="text" class="form-control" id="updateLname" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-4">
+                <label>Date Added</label>
+                <input type="text" class="form-control" id="updateDateAdded" disabled>
+              </div>
+              <div class="col-sm-8">
+                <label>UID</label>
+                <input type="text" class="form-control" id="updateUID" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-4">
+                <label>Membership Type</label>
+                <select id="updateType" class="form-control">
+                  <option value="Regular">Regular</option>
+                  <option value="Walk-in">Walk-in</option>
+                </select>
+              </div>
+              <div class="col-sm-4">
+                <label>Status</label>
+                <select id="updateStatus" class="form-control">
+                  <option value="Paid" selected>Paid</option>
+                  <option value="Expired">Expired</option>
+                </select>
+              </div>
+              <div class="col-sm-4" id="update-program-div">
+                <label>Program</label>
+                <select id="updateProgram" class="form-control">
+                  
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-orange" id="updateBtn">Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+  <!-- Payment modal -->
+  <div class="modal fade" id="payment-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Add Payment for <span id="payment-fname-span"></span></h3>
+          <button type='button' class='close' id='close-paymentModal' data-dismiss='modal'>&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-6">
+                <label>Unique ID</label>
+                <input type="text" class="form-control" disabled id="payment-uid">
+              </div>
+              <div class="col-sm-6">
+                <label>Name</label>
+                <input type="text" class="form-control" disabled id="payment-name">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-sm-6">
+                <label>Payment Description</label>
+                <select id="payment-desc" class="form-control" onchange="paymentDescChange()">
+              
+                </select>
+              </div>
+              <div class="col-sm-6">
+                <label>Amount</label>
+                <input type="text" class="form-control" id="payment-amount" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center">
+            <small><a href="#" class="text-darkgrey"><span id="showCalc">Show Calculator</span></a></small>
+          </div>
+          <div id="calculator" class="form-group" style="display: none">
+            <div class="form-row">
+              <div class="col-sm-4">
+                <label>Cash</label>
+                <input type="text" class="form-control" id="payment-cash">
+              </div>
+              <div class="col-sm-4">
+                <label>Change</label>
+                <input type="text" class="form-control" id="payment-change" disabled>
+              </div>
+              <div class="col-sm-2">
+                <label></label>
+                <button class="btn btn-darkgrey btn-sm" id="enterCalc">Enter</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-orange" id="add-payment-btn">Add payment</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- New Member Modal -->
   <div class="modal fade" id="new-member-code">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body new-code-body" id="new-member-body">
           <h3><span id="new-member-name"></span>'s UID:</h3>
-          <h2 id="new-member-uid" style='font-weight: bold'></h2>
+          <h2 class="text-orange font-weight-bold" id="new-member-uid"></h2>
           <div id="qrcode" class="mt-3 mb-5">
 
           </div>
@@ -558,12 +560,13 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-warning" id="update-member-from-view-modal">Update</button>
+          <button class="btn btn-orange" id="update-member-from-view-modal">Update</button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- MODAL TOGGLERS -->
   <a data-toggle='modal' data-target='#updateModal' style="display: none" id="showUpdateModal"></a>
   <a data-toggle='modal' data-target='#payment-modal' style="display: none" id="showPaymentModal"></a>
   <a data-toggle='modal' data-target='#new-member-code' style="display: none" id="showNewMemberCode"></a>
@@ -1164,7 +1167,7 @@
           });
         }).then(() => {
           alert('Successfully added payment!');
-          window.location.reload();
+          document.getElementById('close-paymentModal').click();
         });
       });
     }
