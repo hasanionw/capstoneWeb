@@ -63,6 +63,30 @@
       text-transform: uppercase;
       
     }
+    .inventory-cards {
+          width: 30%;
+        }
+
+        #inventory-cont {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: flex-start;
+        }
+
+        #main-div {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        .card-img-top {
+          width: 100% !important;
+          height: 10vw !important;
+          object-fit: cover !important;
+        }
+        body::-webkit-scrollbar {
+        width: 0 !important;
+      }
 </style>
 </head>
 
@@ -122,61 +146,30 @@
   </header>
   <!--Main Navigation-->
 
-  <!--Main layout-->
-  <main class="pt-5 mx-lg-5" >
-    <div class="container-fluid mt-5">
-<Br>
-     
-
-
-      <div class='card'>
-        <div class='card-content'>
-          <div class='card-header flexHeader'>
-            <h3 class='card-title'>
-              <span class="add-trainer" data-toggle="tooltip" data-placement="top" title="Add new Item">
-                <i style="color:#DF3A01;" data-toggle="modal" data-target="#add" class="fas fa-plus mr-2"></i></span>
-              Inventory
-            </h3>
-
-            <div class="d-flex justify-content-start align-items-center">
-              Sort status:
-              <select id="sort-regular" class="form-control mx-5" style="flex: 1">
-                <option value="Both">Both</option>
-                <option id="weights" value="active">Free Weights</option>
-                <option id="machines" value="inactive">Cardio Machines</option>
-              </select>
-            </div>
-            
-            <div>
-            <div class="d-flex justify-content-center">
-              <input type="search"  placeholder="Search inventory here..." aria-label="Search" class="form-control">
-              <button class="btn btn-dark btn-sm my-0 p" style="background-color:#DF3A01; color:white; height: 38px;" type="submit">
-                <i class="fas fa-search"></i>
-              </button>
-            </div>
-            </div>
-          </div>
-          
-          <div id='card-body' class='card-body table-responsive p-0 card-bodyzz'>  
-            <table class='table table-hover'>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>NAME</th>
-                  <th>CATEGORY</th>
-                  <th>QUANTITY</th>
-                  <th>ACTION</th>
-                  
-                  
-                </tr>
-              </thead>
-              <tbody id='tbody'>
-
-              </tbody>
-            </table>
-          </div>
+   <!--Main layout-->
+   <main class="pt-5 mx-lg-5" >
+    <div class="container-fluid mt-5" id="main-div">
+      <!-- Heading -->
+      <div class="card mb-4 wow fadeIn">
+        <!--Card content-->
+        <div class="card-body d-sm-flex justify-content-between">
+          <h4 class="mb-1 mb-sm-1 pt-1">
+            <a data-toggle="modal" data-target="#add"><i style="color:#DF3A01; font-size: 25px;" data-toggle="tooltip" data-placement="top" title="Add Promo"  class="fas fa-plus mr-4"></i></a>
+            Inventory
+          </h4>
+          <form class="d-flex justify-content-center">
+            <input type="search" placeholder="Search promo name" aria-label="Search" class="form-control">
+            <button class="btn btn-orange btn-sm my-0 p" type="submit">
+              <i class="fas fa-search" ></i>
+            </button>
+          </form>
         </div>
       </div>
+      <div id="inventory-cont">
+
+      </div>
+    </div>
+  </main>
 
       
       <div class="modal fade" id="displayallrecords">
@@ -185,7 +178,7 @@
             <div class="modal-header"style="background-color:#DF3A01;">
               <h3 class="modal-title" style="color:white;">information <span id="viewfname-span"></span></h3>
              
-              <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
+              <button type='button' class='close'id='close-view-modal' data-dismiss='modal'>&times;</button>
             </div>
             <div class="modal-body">
               <div class="form-group">
@@ -223,6 +216,7 @@
                  
                 </div>
                 </div>
+               
               </div>
             
              
@@ -308,7 +302,7 @@
       <div class="modal-body">
         <div class="row d-flex mt-1 mb-3" style="flex-direction: row; position: relative;left: 70px;">
           <div id="profilepic" style="border-radius: 50px; height: 100px; width: 100px; overflow: hidden; background-position: 50% 50%; background-size: cover;  text-align: center;">
-            <img src="box.jpg" id="output" alt="" style="height: 100%; width: 100%; object-fit: cover;">
+            <img src="blank.png" id="output" alt="" style="height: 100%; width: 100%; object-fit: cover;">
             
           </div>
           <p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>
@@ -372,8 +366,7 @@
       <!--Grid row-->
 
     </div>
-  </main>
-  <!--Main layout-->
+
 
   
 
@@ -402,7 +395,8 @@
 
 
    <script>
-     
+
+
  
 // creating a data 
     var button = document.getElementById('addBtn');
@@ -458,48 +452,37 @@ var loadFile = function(event) {
                   image.src = URL.createObjectURL(event.target.files[0]);
               };
 
-// display data in the table
-    function renderData(doc) {
-      let tbody = document.getElementById('tbody');
-      let tr = document.createElement('tr');
+         
 
-      tr.setAttribute('data-id', doc.id);
-      tr.innerHTML = 
-      `<td><span class="hidden" id="${doc.id}-span"></span><a>
-      <small id='${doc.id}-small' onclick='showID("${doc.id}")'>
-      <i data-toggle="tooltip" data-placement="top" title="Show ${doc.data().name}"
-       style="font-size: 20px;" class="fas fa-eye"></i></small></a></td>
-      <td><b>${doc.data().name}</b></td>
-      <td><b>${doc.data().category}<b></td>
-        <td><b>${doc.data().quantity}<b></td>
-      
+renderCard = ({id, data}) => {
+        let InventoryCont = document.getElementById('inventory-cont');
+        let card = document.createElement('div');
+        card.classList.add('card', 'inventory-cards', 'mx-3', 'my-3');
+        card.setAttribute('data-id', id)
+        card.innerHTML = 
+          `<img src="blank.png" class="card-img-top">
+          <div class="card-body">
+            <h3 class="card-title font-weight-bold text-orange">${data.name}</h3>
+            <h6 class="card-subtitle text-muted font-weight-bold">${data.category}</h6>
+            <p class="card-text mt-2">${data.description}</p>
+          </div>
+          <div class="card-footer">
+            <button  onclick='viewInventory(this.parentNode.parentNode)'
+         data-toggle='modal' data-target='#displayallrecords' class="btn btn-sm btn-orange">View details</btn>  
+         <button  onclick='updatefunction(this.parentNode.parentNode)'
+         data-toggle='modal' data-target='#update' style="float:right" class="btn btn-sm btn-orange">Update</btn>
+          </div>
+          
+          `;
 
-     
-      
-      <td>
-        <a class='btn-link' onclick='updatefunction(this.parentNode.parentNode)'
-         data-toggle='modal' data-target='#update'>
-         <i data-toggle="tooltip" data-placement="top" title="Update ${doc.data().name}"
-         class="fas fa-pen mx-1 text-warning"style="font-size: 20px"></i></a>
+          InventoryCont.appendChild(card);
+      }
 
-        <a class='btn-link text-secondary' onclick='viewInventory(this.parentNode.parentNode)'
-         data-toggle='modal' data-target='#displayallrecords'>
-         <i data-toggle="tooltip" data-placement="top" title="view ${doc.data().name}" class="fas fa-eye" style="font-size: 20px;"></i></a>
-      </td> `;
-
-      tbody.appendChild(tr);
-
-      let tt = $('[data-toggle="tooltip"]').tooltip();
-      tt.click(function() {
-        tt.tooltip("hide");
-      });
-
-    }
     // display data by name 
-    db.collection('inventory').orderBy('name', 'desc').get().then(function(snapshot) {
+    db.collection('inventory').orderBy('name', 'asc').get().then(function(snapshot) {
       snapshot.forEach((doc) => {
        
-        renderData(doc);
+        renderCard({id: doc.id, data: doc.data()});
       });
     });
 
@@ -521,9 +504,9 @@ var loadFile = function(event) {
     }
 
 
-
-// update function
-    function updatefunction(tr) {
+ 
+   // update function
+   function updatefunction(tr) {
       let updatename = document.getElementById('updatename');
       let updatequantity = document.getElementById('updatequantity');
       let updateworking = document.getElementById('updateworking');
@@ -560,6 +543,8 @@ var loadFile = function(event) {
         });
       });
     }
+    
+
 
     auth.onAuthStateChanged(function(user) {
       let span = document.getElementById('username');

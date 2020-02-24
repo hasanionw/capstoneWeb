@@ -153,44 +153,50 @@
             <button type='button' class='close' id='close-modal' data-dismiss='modal'>&times;</button>
           </div>  
           <div class="modal-body">
+            <div class="row d-flex mt-1 mb-3" style="flex-direction: row; position: relative;left: 70px;">
+              <div id="profilepic" style="border-radius: 50px; height: 100px; width: 100px; overflow: hidden; background-position: 50% 50%; background-size: cover;  text-align: center;">
+                <img src="blank.png" id="output" alt="" style="height: 100%; width: 100%; object-fit: cover;">
+                
+              </div>
+              <p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>
+              <p><label for="file" style="cursor: pointer;"><i  data-toggle="tooltip" data-placement="top" title="Add item picture" style="font-size: 35px; color:teal;" class="fas fa-plus-circle"></i></label></p>
+    
+              <div class="col-sm-6" style="position: relative; left: 35px;">
+                <label>Promo Name</label>
+                <input type="text" id="promoname" class="form-control" required placeholder="Promo Name">
+              </div>
+    
+            </div>
+            
             <div class="form-group">
               <div class="form-row">
-                <div class="col-sm-6">
-                  <label>Promo Name</label>
-                  <input type="text" id="promoname" class="form-control" required placeholder="Promo Name">
-                </div>
+                
                 <div class="col-sm-6">
                   <label>Status</label>
                   <select id="stat" required class="form-control">
                     <option value="Permanent" selected>Permanent</option>
                     <option value="Temporary">Temporary</option>
                   </select>
-                </div>  
+                </div> 
+                <div class="col-sm-6">
+                  <label>Amount</label>
+                  <input type="text" class="form-control" required id="amount" placeholder="Amount"  >
+                </div> 
               </div>
             </div>
             <div class="form-group">
               <div class="form-row">
-                <div class="col-sm-6">
-                  <label>Amount</label>
-                  <input type="text" class="form-control" required id="amount" placeholder="Amount"  >
-                </div>
                 <div class="col-sm-6 ">
                   <label>Start Date</label><br>
                   <input type="date" class="form-control" id="start" required>
                 </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="form-row">
                 <div class="col-sm-6 ">
                   <label>End Date</label><br>
                   <input type="date" class="form-control" id="end" required>
                 </div>
-                <div class="col-sm-6 ">
-                  
-                </div>
               </div>
             </div>
+          
             <div class="form-group">
               <div class="form-row">
                 <div class="col-sm-12">
@@ -312,8 +318,11 @@
         let end = document.getElementById('end').value;
         let description = document.getElementById('description').value;
 
+        let startDate = date.fromDate(new Date(start));
+        let endDate = date.fromDate(new Date(end));
+
         let promos = db.collection('promos');
-        let discount = promos.where('start', '==', start).where('end', '==', end);
+        let discount = promos.where('start', '<', startDate).where('start', '>', endDate);
 
         if(promoname === '') {
           alert('ERROR: Promo name is required!');
