@@ -155,9 +155,9 @@ input[type=text], input[type=date] {
               Trainers
             </h3>
             <div class="btn-group" role="group" aria-label="Basic example">
-              <button type="button" id="sort-paid" class="btn btn-sm btn-outline-orange">ACTIVE</button>
+              <button type="button" id="sort-active" class="btn btn-sm btn-outline-orange">ACTIVE</button>
               <button type="button" id="sort-both" class="btn btn-sm btn-orange">Both</button>
-              <button type="button" id="sort-expired" class="btn btn-sm btn-outline-orange">INACTIVE</button>
+              <button type="button" id="sort-inactive" class="btn btn-sm btn-outline-orange">INACTIVE</button>
             </div>  
             <div>
               <div class="d-flex justify-content-center">
@@ -443,9 +443,9 @@ input[type=text], input[type=date] {
    <script src='js/init.js'></script>
 
    <script>
-    let sortActive = document.getElementById('sort-paid');
+    let sortActive = document.getElementById('sort-active');
     let sortBoth = document.getElementById('sort-both');
-    let sortInactive = document.getElementById('sort-expired');
+    let sortInactive = document.getElementById('sort-inactive');
     let tbody = document.getElementById('tbody');
 
     // Sorting by BOTH
