@@ -283,7 +283,7 @@
     <script>
       // globals
       let button = document.getElementById('addBtn');
-      const date = new Date();
+      const date = firebase.firestore.Timestamp;
 
       renderCard = ({id, data}) => {
         let promoCont = document.getElementById('promo-cont');
@@ -315,9 +315,6 @@
         let promos = db.collection('promos');
         let discount = promos.where('start', '==', start).where('end', '==', end);
 
-        let dateAdded = `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
-        let timeAdded = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-
         if(promoname === '') {
           alert('ERROR: Promo name is required!');
         } else if(amount === '') {
@@ -333,17 +330,16 @@
         } else {
           discount.get().then(function(snapshot) {
             if(snapshot.docs.length > 0) {
-              alert('Error: promo date already exists!');
+              alert('Error: Promo date already exists!');
             } else {
               promos.add({
                 promoname: promoname,
                 amount: amount,
                 stat: stat,
-                start: start,
-                end: end,
+                start: date.fromDate(new Date(start)),
+                end: date.fromDate(new Date(end)),
                 description: description,
-                dateAdded: dateAdded,
-                timeAdded: timeAdded
+                dateAdded: date.fromDate(new Date())
               }).then(function() {
                 alert('Successfully added new promo!');
                 window.location.reload();
@@ -368,7 +364,9 @@
         $('[data-toggle="tooltip"]').tooltip();
       });
 
-      db.collection('promos').orderBy('dateAdded', 'desc').orderBy('timeAdded', 'desc').get().then((snapshot) => {
+      db.collection('promos')
+      .where('dateAdded', '<', date.fromDate(new Date()))
+      .orderBy('dateAdded', 'desc').get().then((snapshot) => {
         snapshot.forEach((doc) => {
           renderCard({id: doc.id, data: doc.data()});
         });
@@ -378,7 +376,7 @@
       document.getElementById("logoutBtn").addEventListener("click", function() {
         let x = confirm("Are you sure?");
         if(x === true){
-          firebase.auth().signOut().then(function() {
+          auth.signOut().then(function() {
             alert("Logout successful!");
             window.location.href = "index.html";
           }).catch(function() {

@@ -337,8 +337,7 @@
         }
       });
 
-      const date = new Date();
-      const today = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+      const today = firebase.firestore.Timestamp;
 
       // Render Information
       renderInformation = (elem) => {
@@ -362,8 +361,10 @@
         let tbody = document.getElementsByTagName('tbody')[0];
         let tr = document.createElement('tr');
 
+        let date = doc.data().dateOfPayment.toDate();
+
         tr.innerHTML = 
-          `<td>${doc.data().dateOfPayment}</td>
+          `<td>${months[date.getMonth()]}. ${date.getDate()}, ${date.getFullYear()}</td>
           <td>
             <a href="#" class="name-anchor" style="color: #DF3A01" onclick="renderInformation(this)" data-id="${doc.data().memberId}">${doc.data().memberName}</a>
           </td>
@@ -375,7 +376,7 @@
       }
 
       // Get payments
-      db.collection('payments').where('dateOfPayment', '==', today).orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
+      db.collection('payments').where('dateOfPayment', '<', firebase.firestore.Timestamp.fromDate(new Date())).where('dateOfPayment', '>', firebase.firestore.Timestamp.fromDate(new Date(new Date().setDate(new Date().getDate() - 1)))).get().then((snapshot) => {
         snapshot.forEach((doc) => {
           displayPayment(doc);
         });
@@ -450,13 +451,14 @@
       renderHistory = (doc) => {
         let tbody = document.getElementById('history-tbody');
         let tr = document.createElement('tr');
+        let date = doc.data().dateOfPayment.toDate();
 
         tr.innerHTML = 
           `<td>${doc.data().paymentDesc}</td>
           <td>${doc.data().amount}</td>
           <td>Cash</td>
-          <td>${doc.data().dateOfPayment}</td>
-          <td>${doc.data().timeOfPayment}</td>`;
+          <td>${months[date.getMonth()]}. ${date.getDate()}, ${date.getFullYear()}</td>
+          <td>${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}</td>`;
 
         tbody.appendChild(tr);
       }
@@ -472,8 +474,8 @@
         }).then(() => {
           db.collection('payments')
             .where('memberId', '==', id)
+            .where('dateOfPayment', '<', today.fromDate(new Date()))
             .orderBy('dateOfPayment', 'desc')
-            .orderBy('timeOfPayment', 'desc')
             .get().then((snapshot) => {
               snapshot.forEach((doc) => {
                 renderHistory(doc);

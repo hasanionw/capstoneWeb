@@ -600,7 +600,7 @@
       height: 90,
       width: 90
     });
-
+    
     let addBtn = document.getElementById('add-new-member-btn'); 
     let updateFromView = document.getElementById('update-member-from-view-modal');
     let button = document.getElementById('addMemberBtn');
@@ -695,7 +695,7 @@
     }); 
 
     // Adding Members to Firebase
-    button.addEventListener('click', () => {
+    button.onclick = () => {
       let fname = document.getElementById('fName').value;
       let lname = document.getElementById('lName').value;
       let email = document.getElementById('email').value;
@@ -707,7 +707,9 @@
       let phone = document.getElementById('phone').value;
       let address = document.getElementById('address').value;
       let program = document.getElementById('program').value;
+      let birthdate = document.getElementById('birthdate').value;
       let monthlyRate;
+
       if(memberType == 'Regular') {
         monthlyRate = 750;
       } else {
@@ -732,67 +734,68 @@
         alert('ERROR: Address is required!');
       } else if(sex === '') {
         alert('ERROR: Sex is required!');
-      }else if(phone === '') {
+      } else if(phone === '') {
         alert('ERROR: Cellphone number is required!');
       } else {
         member.get().then((snapshot) => {
-        if(snapshot.docs.length > 0) {
-          alert('ERROR: Member already exists!');
-        } else {
-          members.add({
-            fname: fname,
-            lname: lname,
-            memberType: memberType,
-            status: 'N/A',
-            sex: sex,
-            dateAdded: dateAdded,
-            phone: phone,
-            monthlyRate: monthlyRate,
-            annualStart: annualStart,
-            annualEnd: annualEnd,
-            monthlyStart: monthlyStart,
-            monthlyEnd: monthlyEnd,
-            address: address,
-            email: email,
-            program: program
-          }).then(function() {
-            member.get().then((snapshot) => {
-              snapshot.forEach((doc) => {
-                if(doc.data().memberType == 'Regular') {
-                  member.get().then((snapshot) => {
-                    snapshot.forEach((doc) => {
-                      document.getElementById('new-member-name').textContent = `${doc.data().fname} ${doc.data().lname}`;
-                      document.getElementById('new-member-uid').textContent = doc.id;
-                      new QRCode('qrcode', {
-                        text: `${doc.data().fname} ${doc.data().lname}`,
-                        height: 100,
-                        width: 100
+          if(snapshot.docs.length > 0) {
+            alert('ERROR: Member already exists!');
+          } else {
+            members.add({
+              fname: fname,
+              lname: lname,
+              memberType: memberType,
+              status: 'N/A',
+              sex: sex,
+              dateAdded: firebase.firestore.Timestamp.fromDate(new Date()),
+              phone: phone,
+              monthlyRate: monthlyRate,
+              annualStart: firebase.firestore.Timestamp.fromDate(new Date(annualStart)),
+              annualEnd: firebase.firestore.Timestamp.fromDate(new Date(new Date().setDate(new Date(annualStart).getDate() + 365))),
+              monthlyStart: firebase.firestore.Timestamp.fromDate(new Date(monthlyStart)),
+              monthlyEnd: firebase.firestore.Timestamp.fromDate(new Date(new Date().setDate(new Date(monthlyStart).getDate() + 30))),
+              address: address,
+              email: email,
+              program: program,
+              birthdate: firebase.firestore.Timestamp.fromDate(new Date(birthdate))
+            }).then(() => {
+              member.get().then((snapshot) => {
+                snapshot.forEach((doc) => {
+                  if(doc.data().memberType == 'Regular') {
+                    member.get().then((snapshot) => {
+                      snapshot.forEach((doc) => {
+                        document.getElementById('new-member-name').textContent = `${doc.data().fname} ${doc.data().lname}`;
+                        document.getElementById('new-member-uid').textContent = doc.id;
+                        new QRCode('qrcode', {
+                          text: `${doc.data().fname} ${doc.data().lname}`,
+                          height: 100,
+                          width: 100
+                        });
                       });
-                    });
-                  }).then(() => {
-                    document.getElementById('close-modal').click();
-                    
-                    document.getElementById('showNewMemberCode').click();
-                    document.onclick = (e) => {
-                      let x = e.target.id;
-                      if(x != "new-member-body" && x != "new-member-name" && x != "new-member-uid" && x != "new-member-small") {
-                        window.location.reload();
+                    }).then(() => {
+                      document.getElementById('close-modal').click();
+                      
+                      document.getElementById('showNewMemberCode').click();
+                      document.onclick = (e) => {
+                        let x = e.target.id;
+                        if(x != "new-member-body" && x != "new-member-name" && x != "new-member-uid" && x != "new-member-small") {
+                          window.location.reload();
+                        }
                       }
-                    }
-                  });
-                } else {
-                  alert('Successfully added new walk-in!');
-                  window.location.reload();
-                }
-              })
-            })
-          }).catch(function(error) {
-            alert(error.message);
-          });
-        }
-      });
+                    });
+                  } else {
+                    alert('Successfully added new walk-in!');
+                    window.location.reload();
+                  }
+                });
+              });
+            }).catch(function(error) {
+              alert(error.message);
+            });
+          }
+        });
       }
-    });
+    }
 
     // Pressing 'UPDATE' on View Member Modal
     updateFromView.onclick = () => {
@@ -897,10 +900,15 @@
           annualStart.parentNode.style.display = 'none';
           monthlyEnd.parentNode.style.display = 'none';
         } else {
+          let ms = doc.data().monthlyStart.toDate();
+          let me = doc.data().monthlyEnd.toDate();
+          let as = doc.data().annualStart.toDate();
+          let ae = doc.data().annualEnd.toDate();
+
           document.getElementById('flexLa').style.display = 'flex';
-          monthlyStart.value = doc.data().monthlyStart;
-          annualStart.value = doc.data().annualStart;
-          monthlyEnd.value = doc.data().monthlyEnd;
+          monthlyStart.value = `${months[ms.getMonth()]}. ${ms.getDate()}, ${ms.getFullYear()}`;
+          annualStart.value = `${months[as.getMonth()]}. ${as.getDate()}, ${as.getFullYear()}`;
+          monthlyEnd.value = `${months[me.getMonth()]}. ${me.getDate()}, ${me.getFullYear()}`;
           status.value = doc.data().status;
           program.value = doc.data().program;
           rate.value = doc.data().monthlyRate;
@@ -1141,7 +1149,6 @@
         let paymentDesc = document.getElementById('payment-desc').value;
 
         let date = new Date();
-        let dateOfPayment = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
         
         addZero = (i) => {
           if (i < 10) {
@@ -1151,7 +1158,6 @@
           return i;
         }
 
-        let timeOfPayment = `${addZero(date.getHours())}:${addZero(date.getMinutes())}:${addZero(date.getSeconds())}`;
         let name = document.getElementById('payment-name').value;
 
         db.collection('payments').add({
@@ -1159,8 +1165,7 @@
           amount: amount,
           memberName: name,
           paymentDesc: paymentDesc,
-          dateOfPayment: dateOfPayment,
-          timeOfPayment: timeOfPayment
+          dateOfPayment: firebase.firestore.Timestamp.fromDate(new Date())
         }).then(() => {
           db.collection('members').doc(id).update({
             status: 'Paid'
