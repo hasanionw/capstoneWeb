@@ -154,11 +154,16 @@
         <!--Card content-->
         <div class="card-body d-sm-flex justify-content-between">
           <h4 class="mb-1 mb-sm-1 pt-1">
-            <a data-toggle="modal" data-target="#add"><i style="color:#DF3A01; font-size: 25px;" data-toggle="tooltip" data-placement="top" title="Add Promo"  class="fas fa-plus mr-4"></i></a>
+            <a data-toggle="modal" data-target="#add"><i style="color:#DF3A01; font-size: 25px;" data-toggle="tooltip" data-placement="top" title="Add Item"  class="fas fa-plus mr-4"></i></a>
             Inventory
           </h4>
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" id="sort-weights" class="btn btn-sm btn-outline-orange">WEIGHTS</button>
+            <button type="button" id="sort-both" class="btn btn-sm btn-orange">Both</button>
+            <button type="button" id="sort-machines" class="btn btn-sm btn-outline-orange">MACHINES</button>
+          </div>
           <form class="d-flex justify-content-center">
-            <input type="search" placeholder="Search promo name" aria-label="Search" class="form-control">
+            <input type="search" placeholder="Search inventory name" aria-label="Search" class="form-control">
             <button class="btn btn-orange btn-sm my-0 p" type="submit">
               <i class="fas fa-search" ></i>
             </button>
@@ -210,7 +215,7 @@
                   </div>
                   <div class="col-sm-6">
                     <label>Description</label>
-                    <textarea id="view-description" style="height: 100px; width: 465px;" class="form-control" disabled></textarea>
+                    <textarea id="view-description" style="height: 150px; width: 465px;" class="form-control" disabled></textarea>
                   </div>
                  
                  
@@ -396,7 +401,7 @@
 
    <script>
 
-
+   
  
 // creating a data 
     var button = document.getElementById('addBtn');
@@ -477,6 +482,63 @@ renderCard = ({id, data}) => {
 
           InventoryCont.appendChild(card);
       }
+
+    let sortWeights = document.getElementById('sort-weights');
+    let sortBoth = document.getElementById('sort-both');
+    let sortMachines = document.getElementById('sort-machines');
+    let card = document.getElementById('inventory-cont');
+
+    // Sorting by BOTH
+    sortBoth.onclick = () => {
+      card.innerHTML = '';
+      sortBoth.classList.add('btn-orange');
+      sortBoth.classList.remove('btn-outline-orange');
+      sortMachines.classList.add('btn-outline-orange');
+      sortMachines.classList.remove('btn-orange');
+      sortWeights.classList.add('btn-outline-orange');
+      sortWeights.classList.remove('btn-orange');
+
+      db.collection('inventory').orderBy('name', 'asc').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          renderCard({id: doc.id, data: doc.data()});
+        });
+      });
+    }
+
+    // Sorting by Weights
+    sortWeights.onclick = () => {
+      card.innerHTML = '';
+      sortBoth.classList.add('btn-outline-orange');
+      sortBoth.classList.remove('btn-orange');
+      sortMachines.classList.add('btn-outline-orange');
+      sortMachines.classList.remove('btn-orange');
+      sortWeights.classList.add('btn-orange');
+      sortWeights.classList.remove('btn-outline-orange');
+
+      db.collection('inventory').where('category', '==', 'Free Weights').orderBy('name', 'asc').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          renderCard({id: doc.id, data: doc.data()});
+        });
+      });
+    }
+
+      // Sorting by machines
+      sortMachines.onclick = () => {
+      card.innerHTML = '';
+      sortBoth.classList.add('btn-outline-orange');
+      sortBoth.classList.remove('btn-orange');
+      sortMachines.classList.add('btn-orange');
+      sortMachines.classList.remove('btn-outline-orange');
+      sortWeights.classList.add('btn-outline-orange');
+      sortWeights.classList.remove('btn-orange');
+
+      db.collection('inventory').where('category', '==', 'Cardio Machines').orderBy('name', 'asc').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          renderCard({id: doc.id, data: doc.data()});
+        });
+      });
+    }
+
 
     // display data by name 
     db.collection('inventory').orderBy('name', 'asc').get().then(function(snapshot) {
