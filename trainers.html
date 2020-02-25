@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>TRAINERS</title>
+  <title>Trainers - California Fitness Gym</title>
   <link rel="icon" href="images/gym_logo.png">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
@@ -232,14 +232,17 @@ input[type=text], input[type=date] {
             <img src="trainer.png" id="output" alt="" style="height: 100%; width: 100%; object-fit: cover;">
             
           </div>
-          <p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>
-          <p><label for="file" style="cursor: pointer;"><i  data-toggle="tooltip" data-placement="top" title="Add profile picture" style="font-size: 35px;color:teal;" class="fas fa-plus-circle"></i></label></p>
-
+          
+          <p><input type="file" value="upload" id="fileButton" accept="image/*" name="image"   onchange="loadFile(event)" style="display: none;"></p>
+          <p><label for="fileButton" style="cursor: pointer;"><i  data-toggle="tooltip" data-placement="top" title="Add profile picture" style="font-size: 35px;color:teal;" class="fas fa-plus-circle"></i></label></p>
+           
           <div class="col-sm-6" style="position: relative; left: 35px;">
             <label>E-mail</label>
             <input type="text" id="email" class="form-control" required="" placeholder="E-mail">
           </div>
-
+          <div class="col-sm-6" style="position: relative; right: 40px; top: 10px;">
+          <progress class="w3-green" value="0" max="100" id="uploader">0%</progress>
+          </div>
         </div>
         <div class="form-group">
           <div class="form-row">
@@ -298,12 +301,22 @@ input[type=text], input[type=date] {
         <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
       </div>
       <div class="modal-body">
+
+        <div class="row d-flex mt-1 mb-3" style="flex-direction: row; position: relative;left: 70px;">
+          <div id="profilepic" style="border-radius: 50px; height: 100px; width: 100px; overflow: hidden; background-position: 50% 50%; background-size: cover;  text-align: center;">
+           
+            <img src="blank.png" id="output" alt="" style="height: 100%; width: 100%; object-fit: cover;">
+     
+          </div>
+          <div class="col-sm-7" style="left:40px">
+            <label>ID</label>
+            <input type="text" class="form-control" id="view-id" disabled>
+          </div>  
+        </div>
+
         <div class="form-group">
           <div class="form-row">
-            <div class="col-sm-6">
-              <label>ID</label>
-              <input type="text" class="form-control" id="view-id" disabled>
-            </div>
+            
             <div class="col-sm-6">
               <label>First name</label>
               <input type="text" class="form-control" id="view-fname" disabled>
@@ -340,6 +353,8 @@ input[type=text], input[type=date] {
               <label>Status</label>
               <input type="text" class="form-control" id="view-status" disabled>
             </div>
+
+           
            
           </div>
           </div>
@@ -443,6 +458,39 @@ input[type=text], input[type=date] {
    <script src='js/init.js'></script>
 
    <script>
+
+      // para mo sulod ang picture sa circle
+    var loadFile = function(event) {
+    var image = document.getElementById('output');
+    image.src = URL.createObjectURL(event.target.files[0]);
+ };
+  
+  // para mo upload kag picture
+    var uploader = document.getElementById('uploader');
+    var fileButton = document.getElementById('fileButton');
+    fileButton.addEventListener('change', function(e){
+        var file = e.target.files[0];
+        var storageRef = firebase.storage().ref('images/' + file.name);
+        var task = storageRef.put(file);
+        task.on('state_changed',
+            function progress(snapshot){
+                var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                uploader.value = percentage;
+            },
+            function error(err){
+
+            },
+            function complete(){
+
+            }  
+        );
+    });
+
+
+
+
+
+ 
     let sortActive = document.getElementById('sort-active');
     let sortBoth = document.getElementById('sort-both');
     let sortInactive = document.getElementById('sort-inactive');
@@ -562,11 +610,7 @@ input[type=text], input[type=date] {
       }
     });
 
-    // para mo upload kag picture
-    var loadFile = function(event) {
-    var image = document.getElementById('output');
-    image.src = URL.createObjectURL(event.target.files[0]);
- };
+   
 
 // display data in the table  
 renderData = ({id, doc}) => {
