@@ -388,9 +388,9 @@
           auth.signOut().then(function() {
             alert("Logout successful!");
             window.location.href = "index.html";
-          }).catch(function() {
-            alert("Failed to log out!");
-          })
+          }).catch((err) => {
+            alert(`ERROR: ${err.message}`);
+          });
         }
       });
 

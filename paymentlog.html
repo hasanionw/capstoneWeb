@@ -274,7 +274,10 @@
     <!-- Functions -->
     <script>
       const uid = [];
-      let results = [];
+      const results = [];
+      const date = new Date();
+      const now = `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+      const today = new Date(now);
 
       renderNewPayments = () => {
         let tbody = document.getElementsByTagName('tbody')[0];
@@ -337,7 +340,7 @@
         }
       });
 
-      const today = firebase.firestore.Timestamp;
+      const timestamp = firebase.firestore.Timestamp;
 
       // Render Information
       renderInformation = (elem) => {
@@ -360,11 +363,10 @@
       displayPayment = (doc) => {
         let tbody = document.getElementsByTagName('tbody')[0];
         let tr = document.createElement('tr');
-
         let date = doc.data().dateOfPayment.toDate();
 
         tr.innerHTML = 
-          `<td>${months[date.getMonth()]}. ${date.getDate()}, ${date.getFullYear()}</td>
+          `<td>${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}</td>
           <td>
             <a href="#" class="name-anchor" style="color: #DF3A01" onclick="renderInformation(this)" data-id="${doc.data().memberId}">${doc.data().memberName}</a>
           </td>
@@ -376,70 +378,74 @@
       }
 
       // Get payments
-      db.collection('payments').where('dateOfPayment', '<', firebase.firestore.Timestamp.fromDate(new Date())).where('dateOfPayment', '>', firebase.firestore.Timestamp.fromDate(new Date(new Date().setDate(new Date().getDate() - 1)))).get().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          displayPayment(doc);
+      db.collection('payments')
+        .where('dateOfPayment', '<', timestamp.fromDate(new Date()))
+        .where('dateOfPayment', '>', today)
+        .get().then((snapshot) => {
+          snapshot.forEach((doc) => {
+            displayPayment(doc);
+          });
         });
-      });
 
       document.getElementById('sortDate').onchange = () => {
         // Date
-        let d = new Date();
-        let given;
-        let today = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
-
         let sortDate = document.getElementById('sortDate');
-
         if(sortDate.value == 'Yesterday') {
-          given = `${d.getMonth()+1}/${d.getDate()-1}/${d.getFullYear()}`;
+          document.getElementsByTagName('tbody')[0].innerHTML = '';
 
-          db.collection('payments').where('dateOfPayment', '==', given).orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
-            document.getElementsByTagName('tbody')[0].innerHTML = '';
+          db.collection('payments')
+          .where('dateOfPayment', '<', today)
+          .where('dateOfPayment', '>', new Date(new Date(now).setDate(today.getDate() - 1)))
+          .orderBy('dateOfPayment', 'desc')
+          .get().then((snapshot) => {
 
             snapshot.forEach((doc) => {
               displayPayment(doc);
             });
           });
         } else if(sortDate.value == 'Today') {
-          given = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+          document.getElementsByTagName('tbody')[0].innerHTML = '';
 
-          db.collection('payments').where('dateOfPayment', '==', given).orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
-            document.getElementsByTagName('tbody')[0].innerHTML = '';
+          db.collection('payments')
+          .where('dateOfPayment', '<', timestamp.fromDate(new Date()).toDate())
+          .where('dateOfPayment', '>', today)
+          .orderBy('dateOfPayment', 'desc')
+          .get().then((snapshot) => {
 
             snapshot.forEach((doc) => {
               displayPayment(doc);
             });
           });
         } else if(sortDate.value == 'Last 7 days') {
-          given = `${d.getMonth()+1}/${d.getDate()-7}/${d.getFullYear()}`;
+          document.getElementsByTagName('tbody')[0].innerHTML = '';
 
-          db.collection('payments').where('dateOfPayment', '<=', today).where('dateOfPayment', '>=', given).orderBy('dateOfPayment', 'desc').orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
-            document.getElementsByTagName('tbody')[0].innerHTML = '';
-
+          db.collection('payments')
+          .where('dateOfPayment', '<', timestamp.fromDate(new Date()))
+          .where('dateOfPayment', '>', new Date(new Date(now).setDate(today.getDate() - 7)))
+          .orderBy('dateOfPayment', 'desc')
+          .get().then((snapshot) => {
             snapshot.forEach((doc) => {
               displayPayment(doc);
             });
           });
         } else if(sortDate.value == 'Last 30 days') {
-          if(d.getMonth()+1 == 1){
-            given = `12/${d.getDate()}/${d.getFullYear()-1}`;
-          } else {
-            given = `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}`;
-          }
+          document.getElementsByTagName('tbody')[0].innerHTML = '';
 
-          db.collection('payments').where('dateOfPayment', '<=', today).where('dateOfPayment', '>=', given).orderBy('dateOfPayment', 'desc').orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
-            document.getElementsByTagName('tbody')[0].innerHTML = '';
-
+          db.collection('payments')
+          .where('dateOfPayment', '<', timestamp.fromDate(new Date()))
+          .where('dateOfPayment', '>', new Date(new Date(now).setDate(today.getDate() - 30)))
+          .orderBy('dateOfPayment', 'desc')
+          .get().then((snapshot) => {
             snapshot.forEach((doc) => {
               displayPayment(doc);
             });
           });
-
-          console.log(given);
         } else if(sortDate.value == 'All-time') {
-          db.collection('payments').orderBy('dateOfPayment', 'desc').orderBy('timeOfPayment', 'desc').get().then((snapshot) => {
-            document.getElementsByTagName('tbody')[0].innerHTML = '';
+          document.getElementsByTagName('tbody')[0].innerHTML = '';
 
+          db.collection('payments')
+          .orderBy('dateOfPayment', 'desc')
+          .get().then((snapshot) => {
             snapshot.forEach((doc) => {
               displayPayment(doc);
             });
@@ -511,12 +517,11 @@
             });
         } else if(sortMember.value == 'Yesterday') {
           history.innerHTML = '';
-          given = `${d.getMonth()+1}/${d.getDate()-1}/${d.getFullYear()}`;
 
           db.collection('payments')
             .where('memberId', '==', id)
-            .where('dateOfPayment', '==', given)
-            .orderBy('timeOfPayment', 'desc')
+            .where('dateOfPayment', '<', new Date(now))
+            .where('dateOfPayment', '>', )
             .get().then((snapshot) => {
               snapshot.forEach((doc) => {
                 renderHistory(doc);
