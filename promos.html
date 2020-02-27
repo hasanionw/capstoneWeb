@@ -73,6 +73,11 @@
   </head>
 
   <body class="grey lighten-3" >
+    <div class="loaderparent" id="loader">
+      <div class="loader" id="loaderchild">
+        <div class="loader-spinner"></div>
+      </div>
+    </div>
     <!--Main Navigation-->
     <header>
       <nav class="navbar fixed-top navbar-light bg-darkgrey" >
@@ -208,7 +213,7 @@
                 <div class="col-sm-12">
                   <label>Description</label><br>
                   <textarea rows="5" class="form-control" 
-                  cols="100" class="form-control" required id="description"
+                  cols="100" style="resize: none;" class="form-control" required id="description"
                     required data-validation-required-message="Please enter description" 
                     placeholder="Enter description" maxlength="999"></textarea>
                 </div>
@@ -258,7 +263,7 @@
                 </div>
                 <div class="col-sm-6">
                   <label>Description</label>
-                  <textarea id="view-description" style="height: 100px; width: 465px;" class="form-control" disabled></textarea>
+                  <textarea id="view-description" style="height: 100px; resize: none; width: 465px;" class="form-control" disabled></textarea>
                 </div>
               </div>
             </div>
@@ -266,6 +271,63 @@
         </div>
       </div>
     </div>
+
+
+    
+<div class="modal fade" id="update">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"style="background-color:#DF3A01;">
+        <h3 class="modal-title" style="color:white;">Update <span id="promoname-span"></span></h3>
+  
+        <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <div class="form-row">
+            <div class="col-sm-6">
+              <label>Promo Name</label>
+              <input type="text" class="form-control" id="updatepromoname" disabled>
+            </div>
+            <div class="col-sm-6">
+              <label>Update Amount</label>
+              <input type="text" class="form-control" id="updateamount" >
+            </div>
+        
+            <div class="col-sm-6 my-2">
+              <label>Update Starting Date</label>
+              <input type="date" class="form-control" id="updatestart" >
+            </div>
+
+            <div class="col-sm-6 my-2">
+              <label>Update Edning Date</label>
+              <input type="date" class="form-control" id="updateend" >
+            </div>
+
+            
+            <div class="col-sm-6 my-2">
+              <label>Update Status</label>
+              <input type="text" class="form-control" id="updatestat" >
+            </div>
+            <div class="col-sm-6 my-2"></div>
+           
+              <div class="col-sm-3">
+                <label>Description</label>
+                <textarea id="updatedescription" style="height: 150px; width: 440px;resize: none;" class="form-control"></textarea>
+              </div>
+             
+            </div>
+            
+          </div>
+        </div>
+      
+    
+      <div class="modal-footer"  style="height: 70px;">
+        <button class="btn" style="background-color:#DF3A01; color:white;" id="updateBtn">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
     
     <!-- SCRIPTS -->
     <!-- JQuery -->
@@ -297,6 +359,16 @@
       let button = document.getElementById('addBtn');
       const date = firebase.firestore.Timestamp;
 
+
+      
+    const loader = document.getElementById('loader');
+    const loaderchild = document.getElementById('loaderchild');
+    window.onload = () => {
+      loader.style.display = 'block';
+    }
+
+
+
       renderCard = ({id, data}) => {
         let promoCont = document.getElementById('promo-cont');
         let card = document.createElement('div');
@@ -311,10 +383,14 @@
           </div>
           <div class="card-footer">
             <button class="btn btn-sm btn-orange">View details</button>
-            
+          
             <i onclick='deletepromos(this.parentNode.parentNode)'
              data-toggle="tooltip" data-placement="top" title="Delete Card"
-             class="far fa-trash-alt" style="font-size: 30px; float: right; color: #DF3A01" ></i>
+             class="far fa-trash-alt my-2" style="font-size: 25px; float: right; color: #DF3A01" ></i>
+
+            <a  onclick='updatefunction(this.parentNode.parentNode)' data-toggle='modal' data-target='#update'>
+             <i  data-toggle="tooltip" data-placement="top" title="Update Card" 
+             class="fas fa-pen mx-3 my-2"   style="font-size: 25px; float: right; color: #DF3A01" ></i></a>
             
           </div>`;
         promoCont.appendChild(card);
@@ -325,6 +401,8 @@
       tt.click(function() {
         tt.tooltip("hide");
       });
+
+      
 
       }
 
@@ -382,9 +460,7 @@
             renderCard({id: doc.id, data: doc.data()});
           });
         });
-<<<<<<< HEAD
-      });
-    }
+      }
 
     // delete card
     function deletepromos(x) {
@@ -402,11 +478,10 @@
       }
     }
 
-
     
-=======
-      }
->>>>>>> 6ee02bfb1190969a91fdae9351ce911bb27265d0
+    
+    
+    
 
       button.addEventListener('click', function() {
         let promoname = document.getElementById('promoname').value;
@@ -477,6 +552,7 @@
         snapshot.forEach((doc) => {
           renderCard({id: doc.id, data: doc.data()});
         });
+         document.getElementById('loader').style.display = 'none';
       });
 
       // logout script

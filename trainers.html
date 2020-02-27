@@ -67,28 +67,39 @@
     text-transform: uppercase;
     text-align: center;
     
-<<<<<<< HEAD
-    th, td, tr{
-      text-align: center;
-    }
-
-=======
->>>>>>> 6ee02bfb1190969a91fdae9351ce911bb27265d0
     
   }
   
   th, td, tr{
     text-align: center;
   }
+
+  
+  .table-loader {
+        width: 100%;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .table-parent {
+        display: none;
+      }
+
+      .no-data-div {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        height: 375px;
+        width: 100%;
+        position: absolute;
+      }
+      
 </style>
 </head>
 
 <body class="grey lighten-3" >
-  <div class="loaderparent" id="loader">
-    <div class="loader" id="loaderchild">
-      <div class="loader-spinner"></div>
-    </div>
-  </div>
   <!--Main Navigation-->
   <header>
 
@@ -163,8 +174,8 @@
             <div>
               <div class="d-flex justify-content-center">
                 <input type="search"  placeholder="Search Trainer here..." aria-label="Search" class="form-control" id="#">
-                <button class="btn btn-dark btn-sm my-0 p" style=" color:white; height: 38px;" type="submit">
-                  <i class="fas fa-search" ></i>
+                <button class="btn btn-orange btn-sm my-0 p" style=" color:white; height: 38px;" type="submit">
+                  <i   class="fas fa-search" ></i>
                 </button>
               </div>
             </div>
@@ -188,6 +199,11 @@
 
               </tbody>
             </table>
+            <div class="table-parent my-5" id="table-loader">
+              <div class="table-loader">
+                <div class="loader-spinner"></div>
+              </div>
+            </div>
           
         </div>
           </div>
@@ -304,12 +320,12 @@
       <div class="modal-body">
 
         <div class="row d-flex mt-1 mb-3" style="flex-direction: row; position: relative;left: 70px;">
-          <div id="profilepic" style="border-radius: 50px; height: 100px; width: 100px; overflow: hidden; background-position: 50% 50%; background-size: cover;  text-align: center;">
+          <div id="profilepic" style=" height: 120px; width: 120px; overflow: hidden; background-position: 50% 50%; background-size: cover;  text-align: center;">
            
             <img src="blank.png" id="output" alt="" style="height: 100%; width: 100%; object-fit: cover;">
      
           </div>
-          <div class="col-sm-7" style="left:40px">
+          <div class="col-sm-6" style="left:50px">
             <label>ID</label>
             <input type="text" class="form-control" id="view-id" disabled>
           </div>  
@@ -459,10 +475,14 @@
    <script src='js/init.js'></script>
 
    <script>
-<<<<<<< HEAD
-
-
-
+    
+     
+     
+      let tableLoader = document.getElementById('table-loader');
+      const noData = document.getElementById('no-data');
+      window.onload = () => {
+        tableLoader.style.display = 'block';
+      }
 
       // para mo sulod ang picture sa circle
     var loadFile = function(event) {
@@ -489,20 +509,12 @@
 
             },
             function complete(){
-
+             
             }  
         );
     });
 
  
-=======
-    const loader = document.getElementById('loader');
-    const loaderchild = document.getElementById('loaderchild');
-    window.onload = () => {
-      loader.style.display = 'block';
-    }
-
->>>>>>> 6ee02bfb1190969a91fdae9351ce911bb27265d0
     let sortActive = document.getElementById('sort-active');
     let sortBoth = document.getElementById('sort-both');
     let sortInactive = document.getElementById('sort-inactive');
@@ -647,7 +659,7 @@ renderData = ({id, doc}) => {
          data-toggle='modal' data-target='#update'>
          <i class="fas fa-pen mx-1 " style='font-size: 20px; color:#DF3A01' data-toggle="tooltip" title="Update ${doc.fname}" data-placement="top"></i></a>
          
-        <a class='btn-link text-secondary' onclick='viewTrainers(this.parentNode.parentNode)'
+        <a class='btn-link' onclick='viewTrainers(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#displayallrecords'>
          <i data-toggle="tooltip" data-placement="top" title="view ${doc.fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
       </td>`;
@@ -666,7 +678,7 @@ renderData = ({id, doc}) => {
         renderData({id: doc.id, doc: doc.data()});
       });
 
-      loader.style.display = 'none';
+      tableLoader.style.display = 'none';
     });
 
 
