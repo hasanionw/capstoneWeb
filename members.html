@@ -99,7 +99,12 @@
   </style>
 </head>
 
-<body class='grey lighten-3' >
+<body class='grey lighten-3'>
+  <div class="loaderparent" id="loader">
+    <div class="loader" id="loaderchild">
+      <div class="loader-spinner"></div>
+    </div>
+  </div>
   <header>   
     <nav class="navbar fixed-top navbar-light bg-darkgrey" >
       <div class="container-fluid" >
@@ -601,6 +606,12 @@
       width: 90
     });
 
+    const loader = document.getElementById('loader');
+    const loaderchild = document.getElementById('loaderchild');
+    window.onload = () => {
+      loader.style.display = 'block';
+    }
+
     let addBtn = document.getElementById('add-new-member-btn'); 
     let updateFromView = document.getElementById('update-member-from-view-modal');
     let button = document.getElementById('addMemberBtn');
@@ -973,6 +984,7 @@
       snapshot.forEach((doc) => {
         renderData({id: doc.id, doc: doc.data()});
       });
+      // document.getElementById('loader').style.display = 'none';
     });
 
     // Rendering Data for Walk-in Member Card
@@ -1005,6 +1017,11 @@
       snapshot.forEach((doc) => {
         renderWalkin({id: doc.id, doc: doc.data()});
       });
+
+      loader.style.display = 'none';
+    }).catch((err) => {
+      loader.style.display = 'none';
+      alert(`ERROR: ${err.message}`);
     });
 
     // Rendering Data for Update Member Modal
@@ -1183,7 +1200,7 @@
           });
         }).then(() => {
           alert('Successfully added payment!');
-          document.getElementById('close-paymentModal').click();
+          window.location.reload();
         });
       });
     }
