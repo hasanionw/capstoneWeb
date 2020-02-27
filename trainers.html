@@ -79,6 +79,7 @@ input[type=text], input[type=date] {
     th, td, tr{
       text-align: center;
     }
+
     
 
    
@@ -241,7 +242,7 @@ input[type=text], input[type=date] {
             <input type="text" id="email" class="form-control" required="" placeholder="E-mail">
           </div>
           <div class="col-sm-6" style="position: relative; right: 40px; top: 10px;">
-          <progress class="w3-green" value="0" max="100" id="uploader">0%</progress>
+          <progress  value="0" max="100" id="uploader">0%</progress>
           </div>
         </div>
         <div class="form-group">
@@ -459,19 +460,25 @@ input[type=text], input[type=date] {
 
    <script>
 
+
+
+
       // para mo sulod ang picture sa circle
     var loadFile = function(event) {
     var image = document.getElementById('output');
     image.src = URL.createObjectURL(event.target.files[0]);
  };
+
   
   // para mo upload kag picture
     var uploader = document.getElementById('uploader');
     var fileButton = document.getElementById('fileButton');
+   
     fileButton.addEventListener('change', function(e){
         var file = e.target.files[0];
-        var storageRef = firebase.storage().ref('images/' + file.name);
+        var storageRef = firebase.storage().ref('trainerimages/' + file.name);
         var task = storageRef.put(file);
+       
         task.on('state_changed',
             function progress(snapshot){
                 var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -485,10 +492,6 @@ input[type=text], input[type=date] {
             }  
         );
     });
-
-
-
-
 
  
     let sortActive = document.getElementById('sort-active');
@@ -547,6 +550,8 @@ input[type=text], input[type=date] {
         });
       });
     }
+
+
 
 
     // creating a data 
@@ -629,9 +634,9 @@ renderData = ({id, doc}) => {
       
 
       <td>
-        <a id="usc" class='btn-link text-primary edit' onclick='updatestat(this.parentNode.parentNode)'
+        <a id="usc" class='btn-link  edit' onclick='updatestat(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#update'>
-         <i class="fas fa-pen mx-1 text-warning" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.fname}" data-placement="top"></i></a>
+         <i class="fas fa-pen mx-1 " style='font-size: 20px; color:#DF3A01' data-toggle="tooltip" title="Update ${doc.fname}" data-placement="top"></i></a>
          
         <a class='btn-link text-secondary' onclick='viewTrainers(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#displayallrecords'>

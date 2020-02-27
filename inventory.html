@@ -158,9 +158,10 @@
             Inventory
           </h4>
           <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" id="sort-weights" class="btn btn-sm btn-outline-orange">WEIGHTS</button>
+            <button type="button" id="sort-weights" class="btn btn-sm btn-outline-orange">Cardio Equipment
+            </button>
             <button type="button" id="sort-both" class="btn btn-sm btn-orange">Both</button>
-            <button type="button" id="sort-machines" class="btn btn-sm btn-outline-orange">MACHINES</button>
+            <button type="button" id="sort-machines" class="btn btn-sm btn-outline-orange">Weight Room Equipment</button>
           </div>
           <form class="d-flex justify-content-center">
             <input type="search" placeholder="Search inventory name" aria-label="Search" class="form-control">
@@ -329,8 +330,8 @@
           <div class="col-sm-6 train">
             <label>Category</label><br>
             <select id="category"  class="form-control" name="category"  required="" style="left:60px;">
-              <option value="Free Weights" selected>Free Weights</option>
-              <option value="Cardio Machines">Cardio Machines</option>
+              <option value="Cardio Equipment" selected>Cardio Equipment</option>
+              <option value="Weight Room Equipment">Weight Room Equipment</option>
            </select>
           </div>
           <div class="col-sm-6 ">
@@ -515,7 +516,7 @@ renderCard = ({id, data}) => {
       sortWeights.classList.add('btn-orange');
       sortWeights.classList.remove('btn-outline-orange');
 
-      db.collection('inventory').where('category', '==', 'Free Weights').orderBy('name', 'asc').get().then((snapshot) => {
+      db.collection('inventory').where('category', '==', 'Cardio Equipment').orderBy('name', 'asc').get().then((snapshot) => {
         snapshot.forEach((doc) => {
           renderCard({id: doc.id, data: doc.data()});
         });
@@ -532,7 +533,7 @@ renderCard = ({id, data}) => {
       sortWeights.classList.add('btn-outline-orange');
       sortWeights.classList.remove('btn-orange');
 
-      db.collection('inventory').where('category', '==', 'Cardio Machines').orderBy('name', 'asc').get().then((snapshot) => {
+      db.collection('inventory').where('category', '==', 'Weight Room Equipment').orderBy('name', 'asc').get().then((snapshot) => {
         snapshot.forEach((doc) => {
           renderCard({id: doc.id, data: doc.data()});
         });

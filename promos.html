@@ -310,10 +310,22 @@
             <p class="card-text mt-2">${data.description}</p>
           </div>
           <div class="card-footer">
-            <button class="btn btn-sm btn-orange">View details</btn>
+            <button class="btn btn-sm btn-orange">View details</button>
+            
+            <i onclick='deletepromos(this.parentNode.parentNode)'
+             data-toggle="tooltip" data-placement="top" title="Delete Card"
+             class="far fa-trash-alt" style="font-size: 30px; float: right; color: #DF3A01" ></i>
+            
           </div>`;
-
         promoCont.appendChild(card);
+
+       
+
+      let tt = $('[data-toggle="tooltip"]').tooltip();
+      tt.click(function() {
+        tt.tooltip("hide");
+      });
+
       }
 
     let sortPermanent = document.getElementById('sort-permanent');
@@ -373,6 +385,21 @@
       });
     }
 
+    // delete card
+    function deletepromos(x) {
+      let dataid = x.getAttribute("data-id");
+      let agree = confirm("are you sure you want to delete card?");
+
+      if(agree === true){
+      db.collection("promos").doc(dataid).delete().then(function() {
+      console.log("Card successfully deleted!");
+      window.location.reload();  
+      })
+      .catch(function(error) {
+          console.error("Error removing Card: ", error);
+      });
+      }
+    }
 
 
     
