@@ -328,60 +328,61 @@
 
       }
 
-    let sortPermanent = document.getElementById('sort-permanent');
-    let sortBoth = document.getElementById('sort-both');
-    let sortTemporary = document.getElementById('sort-temporary');
-    let card = document.getElementById('promo-cont');
+      let sortPermanent = document.getElementById('sort-permanent');
+      let sortBoth = document.getElementById('sort-both');
+      let sortTemporary = document.getElementById('sort-temporary');
+      let card = document.getElementById('promo-cont');
 
-    // Sorting by BOTH
-    sortBoth.onclick = () => {
-      card.innerHTML = '';
-      sortBoth.classList.add('btn-orange');
-      sortBoth.classList.remove('btn-outline-orange');
-      sortTemporary.classList.add('btn-outline-orange');
-      sortTemporary.classList.remove('btn-orange');
-      sortPermanent.classList.add('btn-outline-orange');
-      sortPermanent.classList.remove('btn-orange');
+      // Sorting by BOTH
+      sortBoth.onclick = () => {
+        card.innerHTML = '';
+        sortBoth.classList.add('btn-orange');
+        sortBoth.classList.remove('btn-outline-orange');
+        sortTemporary.classList.add('btn-outline-orange');
+        sortTemporary.classList.remove('btn-orange');
+        sortPermanent.classList.add('btn-outline-orange');
+        sortPermanent.classList.remove('btn-orange');
 
-      db.collection('promos').orderBy('promoname', 'asc').get().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          renderCard({id: doc.id, data: doc.data()});
+        db.collection('promos').orderBy('promoname', 'asc').get().then((snapshot) => {
+          snapshot.forEach((doc) => {
+            renderCard({id: doc.id, data: doc.data()});
+          });
         });
-      });
-    }
+      }
 
-        // Sorting by Weights
-        sortPermanent.onclick = () => {
-      card.innerHTML = '';
-      sortBoth.classList.add('btn-outline-orange');
-      sortBoth.classList.remove('btn-orange');
-      sortTemporary.classList.add('btn-outline-orange');
-      sortTemporary.classList.remove('btn-orange');
-      sortPermanent.classList.add('btn-orange');
-      sortPermanent.classList.remove('btn-outline-orange');
+      // Sorting by Weights
+      sortPermanent.onclick = () => {
+        card.innerHTML = '';
+        sortBoth.classList.add('btn-outline-orange');
+        sortBoth.classList.remove('btn-orange');
+        sortTemporary.classList.add('btn-outline-orange');
+        sortTemporary.classList.remove('btn-orange');
+        sortPermanent.classList.add('btn-orange');
+        sortPermanent.classList.remove('btn-outline-orange');
 
-      db.collection('promos').where('stat', '==', 'Permanent').orderBy('promoname', 'asc').get().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          renderCard({id: doc.id, data: doc.data()});
+        db.collection('promos').where('stat', '==', 'Permanent').orderBy('promoname', 'asc').get().then((snapshot) => {
+          snapshot.forEach((doc) => {
+            renderCard({id: doc.id, data: doc.data()});
+          });
         });
-      });
-    }
+      }
 
-    
       // Sorting by machines
       sortTemporary.onclick = () => {
-      card.innerHTML = '';
-      sortBoth.classList.add('btn-outline-orange');
-      sortBoth.classList.remove('btn-orange');
-      sortTemporary.classList.add('btn-orange');
-      sortTemporary.classList.remove('btn-outline-orange');
-      sortPermanent.classList.add('btn-outline-orange');
-      sortPermanent.classList.remove('btn-orange');
+        card.innerHTML = '';
+        sortBoth.classList.add('btn-outline-orange');
+        sortBoth.classList.remove('btn-orange');
+        sortTemporary.classList.add('btn-orange');
+        sortTemporary.classList.remove('btn-outline-orange');
+        sortPermanent.classList.add('btn-outline-orange');
+        sortPermanent.classList.remove('btn-orange');
 
-      db.collection('promos').where('stat', '==', 'Temporary').orderBy('promoname', 'asc').get().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          renderCard({id: doc.id, data: doc.data()});
+        db.collection('promos').where('stat', '==', 'Temporary').orderBy('promoname', 'asc').get().then((snapshot) => {
+          snapshot.forEach((doc) => {
+            renderCard({id: doc.id, data: doc.data()});
+          });
         });
+<<<<<<< HEAD
       });
     }
 
@@ -403,6 +404,9 @@
 
 
     
+=======
+      }
+>>>>>>> 6ee02bfb1190969a91fdae9351ce911bb27265d0
 
       button.addEventListener('click', function() {
         let promoname = document.getElementById('promoname').value;
@@ -482,9 +486,9 @@
           auth.signOut().then(function() {
             alert("Logout successful!");
             window.location.href = "index.html";
-          }).catch(function() {
-            alert("Failed to log out!");
-          })
+          }).catch((err) => {
+            alert(`ERROR: ${err.message}`);
+          });
         }
       });
 

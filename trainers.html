@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,74 +18,77 @@
   <link href="css/style.min.css" rel="stylesheet">
   <link href="css/theme-colors.css" rel="stylesheet">
 
-
-
 <style>
- 
-
- .card-bodyzz::-webkit-scrollbar {
-      width: 0;
-    }
-    
-input[type=text], input[type=date] {
- 
-  height: 45px;
-} 
-
-.train select{
-  height: 45px;
- 
-}
-
-.bot button{
-  background-color:#DF3A01;
-  color:white;
-} 
-.bot{
-  height:70px;
-  background-color:honeydew;
-}
-
-.viewbutton input[type="text"]{
-  width:220px;
-}
-
-.card-bodyzz {  
-      max-height: 325px;
-      overflow-y: auto;
-    }
-    .flexHeader {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .flex {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    table > thead > tr > th {
-      font-weight: bold;
-      text-transform: uppercase;
-      text-align: center;
-     
+  .card-bodyzz::-webkit-scrollbar {
+    width: 0;
+  }
       
-    }
+  input[type=text], input[type=date] {
+  
+    height: 45px;
+  } 
+
+  .train select{
+    height: 45px;
+  
+  }
+
+  .bot button{
+    background-color:#DF3A01;
+    color:white;
+  } 
+  .bot{
+    height:70px;
+    background-color:honeydew;
+  }
+
+  .viewbutton input[type="text"]{
+    width:220px;
+  }
+
+  .card-bodyzz {  
+    max-height: 325px;
+    overflow-y: auto;
+  }
+
+  .flexHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  table > thead > tr > th {
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
     
+<<<<<<< HEAD
     th, td, tr{
       text-align: center;
     }
 
+=======
+>>>>>>> 6ee02bfb1190969a91fdae9351ce911bb27265d0
     
-
-   
-
+  }
+  
+  th, td, tr{
+    text-align: center;
+  }
 </style>
 </head>
 
 <body class="grey lighten-3" >
-
+  <div class="loaderparent" id="loader">
+    <div class="loader" id="loaderchild">
+      <div class="loader-spinner"></div>
+    </div>
+  </div>
   <!--Main Navigation-->
   <header>
 
@@ -459,6 +459,7 @@ input[type=text], input[type=date] {
    <script src='js/init.js'></script>
 
    <script>
+<<<<<<< HEAD
 
 
 
@@ -494,6 +495,14 @@ input[type=text], input[type=date] {
     });
 
  
+=======
+    const loader = document.getElementById('loader');
+    const loaderchild = document.getElementById('loaderchild');
+    window.onload = () => {
+      loader.style.display = 'block';
+    }
+
+>>>>>>> 6ee02bfb1190969a91fdae9351ce911bb27265d0
     let sortActive = document.getElementById('sort-active');
     let sortBoth = document.getElementById('sort-both');
     let sortInactive = document.getElementById('sort-inactive');
@@ -650,15 +659,14 @@ renderData = ({id, doc}) => {
       });
     
     }
-
-
-    
   
     // Querying trainers
     db.collection('trainers').orderBy('fname', 'asc').get().then((snapshot) => {
       snapshot.forEach((doc) => {
         renderData({id: doc.id, doc: doc.data()});
       });
+
+      loader.style.display = 'none';
     });
 
 

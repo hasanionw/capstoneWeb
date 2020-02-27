@@ -99,7 +99,12 @@
   </style>
 </head>
 
-<body class='grey lighten-3' >
+<body class='grey lighten-3'>
+  <div class="loaderparent" id="loader">
+    <div class="loader" id="loaderchild">
+      <div class="loader-spinner"></div>
+    </div>
+  </div>
   <header>   
     <nav class="navbar fixed-top navbar-light bg-darkgrey" >
       <div class="container-fluid" >
@@ -600,7 +605,13 @@
       height: 90,
       width: 90
     });
-    
+
+    const loader = document.getElementById('loader');
+    const loaderchild = document.getElementById('loaderchild');
+    window.onload = () => {
+      loader.style.display = 'block';
+    }
+
     let addBtn = document.getElementById('add-new-member-btn'); 
     let updateFromView = document.getElementById('update-member-from-view-modal');
     let button = document.getElementById('addMemberBtn');
@@ -694,6 +705,20 @@
       }
     }); 
 
+    calculateExpiry = ({date, isMonth}) => {
+      let result;
+      let days;
+
+      if(isMonth === true) {
+        days = 30;
+      } else {
+        days = 365;
+      }
+
+      result = new Date(new Date(date).setDate(new Date(date).getDate() + days));
+      return result;
+    }
+
     // Adding Members to Firebase
     button.onclick = () => {
       let fname = document.getElementById('fName').value;
@@ -702,8 +727,6 @@
       let memberType = document.getElementById('memberType').value;
       let modal = document.getElementById('close-modal');
       let sex = document.getElementById('sex').value;
-      let date = new Date();
-      let dateAdded = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
       let phone = document.getElementById('phone').value;
       let address = document.getElementById('address').value;
       let program = document.getElementById('program').value;
@@ -716,10 +739,9 @@
         monthlyRate = '';
       }
 
-      let annualStart = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
-      let annualEnd = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()+1}`;
-      let monthlyStart = `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
-      let monthlyEnd = `${date.getMonth()+2}/${date.getDate()}/${date.getFullYear()}`;
+      let date = new Date();
+      let annualStart = `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+      let monthlyStart = `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 
       let members = db.collection('members');
       let member = members.where('fname', '==', fname).where('lname', '==', lname);
@@ -750,10 +772,10 @@
               dateAdded: firebase.firestore.Timestamp.fromDate(new Date()),
               phone: phone,
               monthlyRate: monthlyRate,
-              annualStart: firebase.firestore.Timestamp.fromDate(new Date(annualStart)),
-              annualEnd: firebase.firestore.Timestamp.fromDate(new Date(new Date().setDate(new Date(annualStart).getDate() + 365))),
-              monthlyStart: firebase.firestore.Timestamp.fromDate(new Date(monthlyStart)),
-              monthlyEnd: firebase.firestore.Timestamp.fromDate(new Date(new Date().setDate(new Date(monthlyStart).getDate() + 30))),
+              annualStart: new Date(annualStart),
+              annualEnd: calculateExpiry({date: annualStart, isMonth: false}),
+              monthlyStart: new Date(monthlyStart),
+              monthlyEnd: calculateExpiry({date: monthlyStart, isMonth: true}),
               address: address,
               email: email,
               program: program,
@@ -962,6 +984,7 @@
       snapshot.forEach((doc) => {
         renderData({id: doc.id, doc: doc.data()});
       });
+      // document.getElementById('loader').style.display = 'none';
     });
 
     // Rendering Data for Walk-in Member Card
@@ -994,6 +1017,11 @@
       snapshot.forEach((doc) => {
         renderWalkin({id: doc.id, doc: doc.data()});
       });
+
+      loader.style.display = 'none';
+    }).catch((err) => {
+      loader.style.display = 'none';
+      alert(`ERROR: ${err.message}`);
     });
 
     // Rendering Data for Update Member Modal
@@ -1172,7 +1200,7 @@
           });
         }).then(() => {
           alert('Successfully added payment!');
-          document.getElementById('close-paymentModal').click();
+          window.location.reload();
         });
       });
     }
