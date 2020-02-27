@@ -137,10 +137,10 @@
         <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
           <i class="fas fa-money-bill-alt mr-3"></i>Payment Log
         </a>
-        <a href="reports.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
-          <i class="fas fa-flag-checkered mr-3"></i>Reports
-        </a>
-        <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+        <a  onclick="securityReports()" class="list-group-item list-group-item-action waves-effect sidebar-items"  
+        data-toggle='modal' data-target='#security'> <i class="fas fa-flag-checkered mr-3"></i>Reports
+       </a>
+        <a  onclick="securityLogtrail()" class="list-group-item list-group-item-action waves-effect sidebar-items">
           <i class="fas fa-history mr-3"></i>Logtrail
         </a>
       </div>  
@@ -1256,6 +1256,38 @@
       }).catch((err) => {
         console.log(`ERROR: ${err.message}`);
       });
+
+   // logout script
+   document.getElementById("logoutBtn").addEventListener("click", function() {
+      var x = confirm("Are you sure?");
+      if(x === true){
+        firebase.auth().signOut().then(function() {
+          alert("Logout successful!");
+          window.location.href = "index.html";
+        }).catch(function() {
+          alert("Failed to log out!");
+        })
+      }
+    });
+  
+
+      function securityReports() {
+        
+        let password = prompt('security password');
+      if(password == '123')
+      {
+        window.location.href = "reports.html";
+      }
+    }
+
+    function securityLogtrail() {
+      
+      let password = prompt('security password');
+    if(password == '123')
+    {
+      window.location.href = "logtrail.html";
+    } 
+  }
   </script>
 </body>
 </html>

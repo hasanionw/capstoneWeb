@@ -139,12 +139,12 @@
           <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
             <i class="fas fa-money-bill-alt mr-3"></i>Payment Log
           </a>
-          <a href="reports.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
-            <i class="fas fa-flag-checkered mr-3"></i>Reports
-          </a>
-          <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
-            <i class="fas fa-history mr-3"></i>Logtrail
-          </a>
+          <a  onclick="securityReports()" class="list-group-item list-group-item-action waves-effect sidebar-items"  
+        data-toggle='modal' data-target='#security'> <i class="fas fa-flag-checkered mr-3"></i>Reports
+       </a>
+        <a  onclick="securityLogtrail()" class="list-group-item list-group-item-action waves-effect sidebar-items">
+          <i class="fas fa-history mr-3"></i>Logtrail
+        </a>
         </div>  
 
     </div>
@@ -210,12 +210,12 @@
         </div>
       </div>
 
-      
-<!-- Register Modal -->
+    
+
 <div id="display" class="modal fade" role="dialog" >
   <div class="modal-dialog">
 
-<!-- Modal content-->
+
     <div class="modal-content" style="width:900px; left:-60px; top:190px;">
       <div class="modal-header"style="background-color:#DF3A01;">
      
@@ -799,6 +799,25 @@ renderData = ({id, doc}) => {
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });
+
+
+    function securityReports() {
+        
+        let password = prompt('security password');
+      if(password == '123')
+      {
+        window.location.href = "reports.html";
+      }
+    }
+
+    function securityLogtrail() {
+      
+      let password = prompt('security password');
+    if(password == '123')
+    {
+      window.location.href = "logtrail.html";
+    } 
+  }
 
     </script>
 </body>

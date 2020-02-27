@@ -137,12 +137,13 @@
           <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
             <i class="fas fa-money-bill-alt mr-3"></i>Payment Log
           </a>
-          <a href="reports.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
-            <i class="fas fa-flag-checkered mr-3"></i>Reports
-          </a>
-          <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
-            <i class="fas fa-history mr-3"></i>Logtrail
-          </a>
+          <a  onclick="securityReports()" class="list-group-item list-group-item-action waves-effect sidebar-items"  
+        data-toggle='modal' data-target='#security'> <i class="fas fa-flag-checkered mr-3"></i>Reports
+       </a>
+        
+        <a  onclick="securityLogtrail()" class="list-group-item list-group-item-action waves-effect sidebar-items">
+          <i class="fas fa-history mr-3"></i>Logtrail
+        </a>
         </div>  
 
     </div>
@@ -490,6 +491,7 @@ renderCard = ({id, data}) => {
           <div class="card-footer">
             <button  onclick='viewInventory(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#displayallrecords' class="btn btn-sm btn-orange">View details</btn>  
+         
          <button  onclick='updatefunction(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#update' style="float:right" class="btn btn-sm btn-orange">UPDATE</btn>
           </div>
@@ -710,6 +712,24 @@ renderCard = ({id, data}) => {
     });
 
     
+
+    function securityReports() {
+        
+        let password = prompt('security password');
+      if(password == '123')
+      {
+        window.location.href = "reports.html";
+      }
+    }
+
+    function securityLogtrail() {
+      
+      let password = prompt('security password');
+    if(password == '123')
+    {
+      window.location.href = "logtrail.html";
+    } 
+  }
   </script>
   
 </body>
