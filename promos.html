@@ -309,13 +309,16 @@
             </div>
 
             
+
             <div class="col-sm-6 my-2">
               <label>Update Status</label>
-              <select id="updatestat" class="form-control">
-                <option value="Permanent" selected >Permanent</option>
-                <option value="Temporary" >Temporary</option>
+             
+              <select id="updatestat" class="form-control" >
+                <option value="Permanent" selected>Permanent</option>
+                <option value="Temporary">Temporary</option>
               </select>
             </div>
+
 
             <div class="col-sm-6 my-2"></div>
            
@@ -429,7 +432,7 @@
         sortPermanent.classList.add('btn-outline-orange');
         sortPermanent.classList.remove('btn-orange');
 
-        db.collection('promos').orderBy('promoname', 'asc').get().then((snapshot) => {
+        db.collection('promos').orderBy('dateAdded', 'asc').get().then((snapshot) => {
           snapshot.forEach((doc) => {
             renderCard({id: doc.id, data: doc.data()});
           });
@@ -446,7 +449,7 @@
         sortPermanent.classList.add('btn-orange');
         sortPermanent.classList.remove('btn-outline-orange');
 
-        db.collection('promos').where('stat', '==', 'Permanent').orderBy('promoname', 'asc').get().then((snapshot) => {
+        db.collection('promos').where('stat', '==', 'Permanent').orderBy('dateAdded', 'asc').get().then((snapshot) => {
           snapshot.forEach((doc) => {
             renderCard({id: doc.id, data: doc.data()});
           });
@@ -463,7 +466,7 @@
         sortPermanent.classList.add('btn-outline-orange');
         sortPermanent.classList.remove('btn-orange');
 
-        db.collection('promos').where('stat', '==', 'Temporary').orderBy('promoname', 'asc').get().then((snapshot) => {
+        db.collection('promos').where('stat', '==', 'Temporary').orderBy('dateAdded', 'asc').get().then((snapshot) => {
           snapshot.forEach((doc) => {
             renderCard({id: doc.id, data: doc.data()});
           });

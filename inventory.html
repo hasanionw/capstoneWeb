@@ -413,8 +413,11 @@
 
    <script>
 
+//globals
 const loader = document.getElementById('loader');
-    const loaderchild = document.getElementById('loaderchild');
+const date = firebase.firestore.Timestamp;
+const loaderchild = document.getElementById('loaderchild');
+
     window.onload = () => {
       loader.style.display = 'block';
     }
@@ -455,7 +458,8 @@ const loader = document.getElementById('loader');
             quantity: quantity,
             working: quantity,
             damage: "0",
-            description: description
+            description: description,
+            dateAdded: date.fromDate(new Date())
             
           }).then(function() {
             alert('Successfully added new Inventory!');
@@ -516,7 +520,7 @@ renderCard = ({id, data}) => {
       sortWeights.classList.add('btn-outline-orange');
       sortWeights.classList.remove('btn-orange');
 
-      db.collection('inventory').orderBy('name', 'asc').get().then((snapshot) => {
+      db.collection('inventory').orderBy('dateAdded', 'desc').get().then((snapshot) => {
         snapshot.forEach((doc) => {
           renderCard({id: doc.id, data: doc.data()});
         });
@@ -534,7 +538,7 @@ renderCard = ({id, data}) => {
       sortWeights.classList.add('btn-orange');
       sortWeights.classList.remove('btn-outline-orange');
 
-      db.collection('inventory').where('category', '==', 'Cardio Equipment').orderBy('name', 'asc').get().then((snapshot) => {
+      db.collection('inventory').where('category', '==', 'Cardio Equipment').orderBy('dateAdded', 'desc').get().then((snapshot) => {
         snapshot.forEach((doc) => {
           renderCard({id: doc.id, data: doc.data()});
         });
@@ -551,7 +555,7 @@ renderCard = ({id, data}) => {
       sortWeights.classList.add('btn-outline-orange');
       sortWeights.classList.remove('btn-orange');
 
-      db.collection('inventory').where('category', '==', 'Weight Room Equipment').orderBy('name', 'asc').get().then((snapshot) => {
+      db.collection('inventory').where('category', '==', 'Weight Room Equipment').orderBy('dateAdded', 'desc').get().then((snapshot) => {
         snapshot.forEach((doc) => {
           renderCard({id: doc.id, data: doc.data()});
         });
@@ -559,8 +563,8 @@ renderCard = ({id, data}) => {
     }
 
 
-    // display data by name 
-    db.collection('inventory').orderBy('name', 'asc').get().then(function(snapshot) {
+    // display data by dateaAdded
+    db.collection('inventory').orderBy('dateAdded', 'desc').get().then(function(snapshot) {
       snapshot.forEach((doc) => {
        
         renderCard({id: doc.id, data: doc.data()});
@@ -568,6 +572,7 @@ renderCard = ({id, data}) => {
           document.getElementById('loader').style.display = 'none';
     });
 
+   
 
     // ID show and hide in the table
     function showID(id) {
@@ -605,6 +610,8 @@ renderCard = ({id, data}) => {
         updateworking.value = doc.data().working;
         updatedamage.value = doc.data().damage;
         updatedescription.value = doc.data().description;
+
+       
        
 
       document.getElementById('updateBtn').addEventListener('click', () => {
@@ -618,7 +625,8 @@ renderCard = ({id, data}) => {
             category: category,
             working: working,
             damage: damage,
-            description: description
+            description: description,
+            
               
           }).then(() => {
             alert('Successfully updated Inventory!');
@@ -631,6 +639,7 @@ renderCard = ({id, data}) => {
     }
     
 
+    
 
     auth.onAuthStateChanged(function(user) {
       let span = document.getElementById('username');
