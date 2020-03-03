@@ -91,6 +91,11 @@
 </head>
 
 <body class="grey lighten-3" >
+  <div class="loaderparent" id="loader">
+    <div class="loader" id="loaderchild">
+      <div class="loader-spinner"></div>
+    </div>
+  </div>
 
   <!--Main Navigation-->
   <header>
@@ -132,12 +137,13 @@
           <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
             <i class="fas fa-money-bill-alt mr-3"></i>Payment Log
           </a>
-          <a href="reports.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
-            <i class="fas fa-flag-checkered mr-3"></i>Reports
-          </a>
-          <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
-            <i class="fas fa-history mr-3"></i>Logtrail
-          </a>
+          <a  onclick="securityReports()" class="list-group-item list-group-item-action waves-effect sidebar-items"  
+        data-toggle='modal' data-target='#security'> <i class="fas fa-flag-checkered mr-3"></i>Reports
+       </a>
+        
+        <a  onclick="securityLogtrail()" class="list-group-item list-group-item-action waves-effect sidebar-items">
+          <i class="fas fa-history mr-3"></i>Logtrail
+        </a>
         </div>  
 
     </div>
@@ -236,7 +242,7 @@
     <div class="modal-content">
       <div class="modal-header"style="background-color:#DF3A01;">
         <h3 class="modal-title" style="color:white;">Update <span id="fname-span"></span></h3>
-       
+  
         <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
       </div>
       <div class="modal-body">
@@ -247,47 +253,52 @@
               <input type="text" class="form-control" id="updatename" disabled>
             </div>
             <div class="col-sm-6">
-              <label>Quantity</label>
+              <label>Update Quantity</label>
               <input type="text" class="form-control" id="updatequantity" >
             </div>
         
             
-            <div class="col-sm-6">
-              <label>Category</label>
+            <div class="col-sm-6 my-2">
+              <label>Update Category</label>
               <select id="updatecategory" class="form-control">
                 <option value="Free Weights" selected>Free Weights</option>
                 <option value="Cardio Machines">Cardio Machines</option>
               </select>
             </div>
 
-            <div class="col-sm-6"></div>
+          
 
-            <div class="col-sm-6">
-              <label></label>
+            <div class="col-sm-6 my-2">
+              <label>Update Number of item</label>
   
-              <h5 style="text-align: center;">Number of item</h5>
+           
               <div class="form-row">
-                <div class="col-sm-5">
+                <div class="col-sm-3">
                   <label>Damage</label>
                   <input type="text" placeholder="number" class="form-control" id="updatedamage">
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-3 mx-2">
                   <label>Working</label>
                   <input type="text" class="form-control" id="updateworking" disabled>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3 my-2">
                   <label></label>
-                  <button class="btn btn-success btn-sm" id="enterCalc">Enter</button>
+                  <button class="btn btn-success btn-sm  " id="enterCalc">Enter</button>
                 </div>
               </div>
+            </div>
+              <div class="col-sm-3">
+                <label>Description</label>
+                <textarea id="updatedescription" style="height: 150px; width: 440px;resize: none;" class="form-control"></textarea>
+              </div>
+             
             </div>
             
             
           </div>
         </div>
       
-       
-      </div>
+    
       <div class="modal-footer"  style="height: 70px;">
         <button class="btn" style="background-color:#DF3A01; color:white;" id="updateBtn">Update</button>
       </div>
@@ -341,7 +352,7 @@
               <textarea rows="5" class="form-control" 
               cols="100" class="form-control" id="description"
                required data-validation-required-message="Please enter description" 
-               placeholder="Enter description" maxlength="999" style="height: 100px; width: 465px;"
+               placeholder="Enter description" maxlength="999" style="resize: none; height: 100px; width: 465px;"
                ></textarea>
         </div>
           </div>
@@ -402,6 +413,11 @@
 
    <script>
 
+const loader = document.getElementById('loader');
+    const loaderchild = document.getElementById('loaderchild');
+    window.onload = () => {
+      loader.style.display = 'block';
+    }
    
  
 // creating a data 
@@ -475,8 +491,9 @@ renderCard = ({id, data}) => {
           <div class="card-footer">
             <button  onclick='viewInventory(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#displayallrecords' class="btn btn-sm btn-orange">View details</btn>  
+         
          <button  onclick='updatefunction(this.parentNode.parentNode)'
-         data-toggle='modal' data-target='#update' style="float:right" class="btn btn-sm btn-orange">Update</btn>
+         data-toggle='modal' data-target='#update' style="float:right" class="btn btn-sm btn-orange">UPDATE</btn>
           </div>
           
           `;
@@ -503,6 +520,7 @@ renderCard = ({id, data}) => {
         snapshot.forEach((doc) => {
           renderCard({id: doc.id, data: doc.data()});
         });
+     
       });
     }
 
@@ -547,6 +565,7 @@ renderCard = ({id, data}) => {
        
         renderCard({id: doc.id, data: doc.data()});
       });
+          document.getElementById('loader').style.display = 'none';
     });
 
 
@@ -574,6 +593,7 @@ renderCard = ({id, data}) => {
       let updatequantity = document.getElementById('updatequantity');
       let updateworking = document.getElementById('updateworking');
       let updatedamage = document.getElementById('updatedamage');
+      let updatedescription = document.getElementById('updatedescription');
       let span = document.getElementById('fname-span');
       let dataId = tr.getAttribute('data-id');
     
@@ -584,6 +604,7 @@ renderCard = ({id, data}) => {
         updatequantity.value = doc.data().quantity;
         updateworking.value = doc.data().working;
         updatedamage.value = doc.data().damage;
+        updatedescription.value = doc.data().description;
        
 
       document.getElementById('updateBtn').addEventListener('click', () => {
@@ -591,11 +612,13 @@ renderCard = ({id, data}) => {
           let category = document.getElementById('updatecategory').value;
           let working = document.getElementById('updateworking').value;
           let damage = document.getElementById('updatedamage').value;
+          let description = document.getElementById('updatedescription').value;
           db.collection('inventory').doc(doc.id).update({
             quantity: quantity,
             category: category,
             working: working,
-            damage: damage
+            damage: damage,
+            description: description
               
           }).then(() => {
             alert('Successfully updated Inventory!');
@@ -689,6 +712,24 @@ renderCard = ({id, data}) => {
     });
 
     
+
+    function securityReports() {
+        
+        let password = prompt('security password');
+      if(password == '123')
+      {
+        window.location.href = "reports.html";
+      }
+    }
+
+    function securityLogtrail() {
+      
+      let password = prompt('security password');
+    if(password == '123')
+    {
+      window.location.href = "logtrail.html";
+    } 
+  }
   </script>
   
 </body>

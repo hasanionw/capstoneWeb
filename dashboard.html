@@ -66,12 +66,16 @@
         <a href="paymentlog.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
           <i class="fas fa-money-bill-alt mr-3"></i>Payment Log
         </a>
-        <a href="reports.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+        
+        <a  onclick="securityReports()" class="list-group-item list-group-item-action waves-effect sidebar-items">
           <i class="fas fa-flag-checkered mr-3"></i>Reports
-        </a>
-        <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+       </a>
+        
+        <a onclick="securityLogtrail()"  class="list-group-item list-group-item-action waves-effect sidebar-items">
           <i class="fas fa-history mr-3"></i>Logtrail
         </a>
+        
+        
       </div>  
 
 
@@ -105,6 +109,9 @@
         </div>
 
       </div>
+
+
+      
       <!-- Heading -->
 
       <!--Grid row-->
@@ -209,6 +216,8 @@
       </div>
       <!--Grid row-->
 
+      </div>
+
     </div>
   </main>
   <!--Main layout-->
@@ -262,9 +271,7 @@
 
   </footer>
   
-  <script type="text/javascript">
-    new WOW().init();
-  </script>
+  
 
   <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
   <script type="text/javascript" src="js/popper.min.js"></script>
@@ -301,6 +308,32 @@
         span.textContent = user.email;
       }
     });
+
+
+
+
+
+    function securityReports() {
+        
+          let password = prompt('security password');
+        if(password == '123')
+        {
+          window.location.href = "reports.html";
+        }
+      }
+
+      function securityLogtrail() {
+        
+        let password = prompt('security password');
+      if(password == '123')
+      {
+        window.location.href = "logtrail.html";
+      }
+
+    }
+
+      
+      
   </script>
 
   <!--Google Maps-->
