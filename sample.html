@@ -1,34 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang='en'>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Sample - California Fitness Gym</title>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+  <meta http-equiv='x-ua-compatible' content='ie=edge'>
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-  <!-- Bootstrap core CSS -->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
-  <!-- Material Design Bootstrap -->
-  <link href="css/mdb.min.css" rel="stylesheet">
-  <!-- Your custom styles (optional) -->
-  <link href="css/style.min.css" rel="stylesheet">
+  <title>Members - California Fitness Gym</title>
+
   <link rel="icon" href="images/gym_logo.png">
+  <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.11.2/css/all.css'>
+  <link href='css/bootstrap.min.css' rel='stylesheet'>
+  <link href='css/mdb.min.css' rel='stylesheet'>
+  <link href='css/style.min.css' rel='stylesheet'>
   <link href="css/theme-colors.css" rel="stylesheet">
 
-<style>
-  
+  <style>
+    .john label {
+      font-family: Helvetica;
+      font-size: 18px;
+      position: relative;
+    }
 
-</style>
+    table > thead > tr > th {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .card-header > .card-title {
+      margin-bottom: 0;
+    }
+
+    .card-header > .card-title > h3 {
+      margin-block-end: 0;
+    }
+
+    .card-bodyzz {
+      max-height: 325px;
+      overflow-y: auto;
+    }
+
+    .card-bodyzz::-webkit-scrollbar {
+      width: 0;
+    }
+
+    small {
+      color: grey;
+      margin-left: 5px;
+    }
+
+    .add-members {
+      color: #DF3A01;
+    }
+
+    .add-members:hover {
+      filter: brightness(70%);
+      cursor: pointer;
+    }
+
+    .flexHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logoutBtn:hover {
+      text-decoration: underline;
+    }
+
+    th, td {
+      text-align: center;
+    }
+
+    .new-code-body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .qrcode-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flexLa {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    #no-data-div {
+      justify-content: center;
+      align-items: center;
+      display: none;
+    }
+  </style>
 </head>
 
-<body  class="grey lighten-3">
-
-  <!--Main Navigation-->
-  <header>
-
+<body class='grey lighten-3'>
+  <div class="loaderparent" id="loader">
+    <div class="loader" id="loaderchild">
+      <div class="loader-spinner"></div>
+    </div>
+  </div>
+  <header>   
     <nav class="navbar fixed-top navbar-light bg-darkgrey" >
       <div class="container-fluid" >
         <h6 style="margin-bottom: 0 !important;">
@@ -39,22 +122,15 @@
         </div>
       </div>
     </nav>
-   
-
-
-    <!-- Sidebar -->
-    <div class="sidebar-fixed position-fixed" style="background-color:#DF3A01;" >
+    <div class='sidebar-fixed position-fixed' style='background-color:#DF3A01;' >
       <br>
-
-      <center><img src="logo.png" class="img-fluid" alt="" style="width: 200px; height: 180px;"></center>
-     
-
+      <center><img src='logo.png' class='img-fluid' alt='' style='width: 200px; height: 180px;'></center>
       <br>
       <div class="list-group list-group-flush" >
         <a href="dashboard.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
           <i class="fas fa-chart-pie mr-3"></i>Dashboard
         </a>
-        <a href="members.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
+        <a href="members.html" class="list-group-item list-group-item-action waves-effect sidebar-item-active">
           <i class="fas fa-user mr-3"></i>Members</a>
         <a href="trainers.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
           <i class="fas fa-user-shield mr-3"></i>Trainers
@@ -70,109 +146,148 @@
         <a href="reports.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
           <i class="fas fa-flag-checkered mr-3"></i>Reports
         </a>
-        <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect sidebar-item-active">
+        <a href="logtrail.html" class="list-group-item list-group-item-action waves-effect sidebar-items">
           <i class="fas fa-history mr-3"></i>Logtrail
         </a>
-      </div>   
+      </div>  
     </div>
-    <!-- Sidebar -->
-
   </header>
 
+  <main class='pt-5 mx-lg-5'>
+    <div class='container-fluid mt-5'>
+      <div class='card'>
+        <div class='card-content'>
+          <div class='card-header flexHeader'>
+            <h3 class='card-title'>
+              <span class="add-members" data-toggle="tooltip" data-placement="top" title="Add new member"><i id="add-new-member-btn" class="fas fa-plus mr-2"></i></span>
+              Regular Members
+            </h3>
+            <div>
+              <div class="d-flex justify-content-center">
+                <input type="search"  placeholder="Search member here..." aria-label="Search" class="form-control" id="search-member">
+                <button class="btn btn-orange btn-sm my-0 p" type="submit" id="search-member-btn">
+                  <i class="fas fa-search" ></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class='card-body card-bodyzz table-responsive p-0'>
+            <table class='table table-hover'>
+              <thead>
+                <tr>
+                  <th>First name</th>
+                  <th>Last name</th>
+                  <th>Unique ID</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id='tbody'>
+                
+              </tbody>
+            </table>
+            <div id="no-data-div" class="my-3 text-muted">
+              No data available!
+            </div>
+          </div>
+          <div class="card-footer"></div>
+        </div>
+      </div>
+    </div>
+  </main>
 
-
-  <!--Main Navigation-->
-  <main><br><br><br><br><br><br><br><br>
-  <center><progress value="0" max="100" id="uploader">0%</progress><br>
-  <input type="file" value="upload" id="fileButton"></center>
-</main>
-
-
-
-
-
-
- 
-  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-  <script type="text/javascript" src="js/popper.min.js"></script>
-  <script type="text/javascript" src="js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="js/mdb.min.js"></script>
-
-  <!-- Firebase CDNs -->
-  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
-  <!-- Local script -->
-  <script src='js/init.js'></script>
-
+  <script type='text/javascript' src='js/jquery-3.4.1.min.js'></script>
+  <script type='text/javascript' src='js/popper.min.js'></script>
+  <script type='text/javascript' src='js/bootstrap.min.js'></script>
+  <script type='text/javascript' src='js/mdb.min.js'></script>
   <script>
-
-    var uploader = document.getElementById('uploader');
-    var fileButton = document.getElementById('fileButton');
-
-    fileButton.addEventListener('change', function(e){
-        var file = e.target.files[0];
-
-        var storageRef = firebase.storage().ref('images/' + file.name);
-
-        var task = storageRef.put(file);
-
-        task.on('state_changed',
-        
-            function progress(snapshot){
-                var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                uploader.value = percentage;
-            },
-
-            function error(err){
-
-            },
-
-            function complete(){
-
-            }  
-
-
-
-        );
-
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
     });
-
-
-
-
-    document.getElementById("logoutBtn").addEventListener("click", function() {
-      var x = confirm("Are you sure?");
-      if(x === true){
-        firebase.auth().signOut().then(function() {
-          alert("Logout successful!");
-          window.location.href = "index.html";
-        }).catch(function() {
-          alert("Failed to log out!");
-        })
-      }
-    });
-
-    firebase.auth().onAuthStateChanged(function(user){
-      if(user) {
-        
-      } else {
-        window.location.href = "index.html";
-      }
-    })
-
-    auth.onAuthStateChanged(function(user) {
-      let span = document.getElementById('username');
-
-      if(user) {
-        span.textContent = user.email;
-      }
-    })
   </script>
 
-  <!--Google Maps-->
-  <script src="https://maps.google.com/maps/api/js"></script>
-</body>
+  <!-- Firebase CDNs -->
+  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js'></script>
+  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js'></script>
+  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js'></script>
+  <script src='https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js'></script>
+  <script src="js/qrcode.js"></script>
+  
+  <!-- Local script -->
+  <script src='js/init.js'></script>
+  
+  <!-- Functions -->
+  <script>
+    const members = [];
+    let search = document.getElementById('search-member');;
 
+    renderData = () => {
+      let tbody = document.getElementById('tbody');
+      tbody.innerHTML = ``;
+
+      members.forEach((doc) => {
+        let tr = document.createElement('tr');
+
+        tr.innerHTML = 
+          `<td>${doc.data.fname}</td>
+          <td>${doc.data.lname}</td>
+          <td>${doc.id}</td>
+          <td>${doc.data.status}</td>
+          <td></td>`;
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Query for ALL members
+    db.collection('members').get().then((snapshot) => {
+      snapshot.forEach((doc) => {
+        members.push({id: doc.id, data: doc.data(), fullName: `${doc.data().fname} ${doc.data().lname}`});
+      });
+    }).finally(() => {
+      renderData();
+      console.log(members);
+    });
+
+    renderNewData = (docs) => {
+      let tbody = document.getElementById('tbody');
+      tbody.innerHTML = ``;
+
+      if(docs.length > 0) {
+        docs.forEach((doc) => {
+          let tr = document.createElement('tr');
+
+          tr.innerHTML = 
+            `<td>${doc.data.fname}</td>
+            <td>${doc.data.lname}</td>
+            <td>${doc.id}</td>
+            <td>${doc.data.status}</td>
+            <td></td>`;
+
+          tbody.appendChild(tr);
+        });
+      } else {
+        document.getElementById('no-data-div').style.display = 'flex';
+      }
+    }
+
+    filterMembers = (value) => {
+      let div = document.getElementById('no-data-div');
+      div.style.display = 'none';
+      let results = members.filter(member => member.name.toLowerCase().includes(value.toLowerCase()));
+
+      return results;
+    }
+
+    search.onkeyup = () => {
+      if(search.value != '') {
+        let docs = filterMembers(search.value);
+
+        renderNewData(docs);
+      } else {
+        renderData();
+      }
+    }
+  </script>
+</body>
 </html>

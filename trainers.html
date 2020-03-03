@@ -475,6 +475,11 @@
    <script src='js/init.js'></script>
 
    <script>
+    // para mo sulod ang picture sa circle
+        var loadFile = function(event) {
+        var image = document.getElementById('output');
+        image.src = URL.createObjectURL(event.target.files[0]);
+    };
     
      
      
@@ -515,6 +520,12 @@
     });
 
  
+    // const loader = document.getElementById('loader');
+    // const loaderchild = document.getElementById('loaderchild');
+    // window.onload = () => {
+    //   loader.style.display = 'block';
+    // }
+
     let sortActive = document.getElementById('sort-active');
     let sortBoth = document.getElementById('sort-both');
     let sortInactive = document.getElementById('sort-inactive');
@@ -706,7 +717,7 @@ renderData = ({id, doc}) => {
       let status = document.getElementById("view-status");
       let span = document.getElementById('viewfname-span');
       
-  
+
       db.collection("trainers").doc(dataid).get().then(function(doc) {
         span.textContent = doc.data().fname;
         viewId.value = dataid;

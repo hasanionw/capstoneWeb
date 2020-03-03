@@ -105,17 +105,21 @@
         justify-content: center;
         height: 375px;
         width: 100%;
-        position: absolute;
+        position: absolute; 
+      }
+
+      .loader-spinner {
+        border: 4px solid #f3f3f3; /* Light grey */
+        border-top: 4px solid #DF3A01; /* Blue */
+        border-radius: 50%;
+        width: 30px;
+        height: 3t0px;
+        animation: spin 2s linear infinite;
       }
     </style>
   </head>
 
   <body class='grey lighten-3' >
-    <div class="loaderparent" id="loader">
-      <div class="loader" id="loaderchild">
-        <div class="loader-spinner"></div>
-      </div>
-    </div>
     <header>  
       <nav class="navbar fixed-top navbar-light bg-darkgrey" >
         <div class="container-fluid" >
@@ -180,7 +184,7 @@
                   </select>
                 </div>
                 <div class="card-body card-bodyzz table-responsive p-0" style="height: 375px">
-                  <div class="no-data-div" id="no-data">
+                  <div class="no-data-div text-muted" id="no-data">
                     No data!
                   </div>
                   <table class="table">
@@ -422,6 +426,7 @@
       db.collection('payments')
       .where('dateOfPayment', '<', timestamp.fromDate(new Date()))
       .where('dateOfPayment', '>', today)
+      .orderBy('dateOfPayment', 'desc')
       .get().then((snapshot) => {
         if(snapshot.docs.length > 0) {
           snapshot.forEach((doc) => {
@@ -456,7 +461,7 @@
               tableLoader.style.display = 'none';
             } else {
               tableLoader.style.display = 'none';
-              noDate.style.display = 'flex';
+              noData.style.display = 'flex';
             }
           });
         } else if(sortDate.value == 'Today') {

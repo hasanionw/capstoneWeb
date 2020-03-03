@@ -15,6 +15,10 @@
   <link href="css/theme-colors.css" rel="stylesheet">
 
   <style>
+    body::-webkit-scrollbar {
+      width: 0 !important;
+    }
+
     .john label {
       font-family: Helvetica;
       font-size: 18px;
@@ -96,15 +100,16 @@
       justify-content: center;
       flex-direction: column;
     }
+
+    .no-data-div {
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
   </style>
 </head>
 
 <body class='grey lighten-3'>
-  <div class="loaderparent" id="loader">
-    <div class="loader" id="loaderchild">
-      <div class="loader-spinner"></div>
-    </div>
-  </div>
   <header>   
     <nav class="navbar fixed-top navbar-light bg-darkgrey" >
       <div class="container-fluid" >
@@ -163,10 +168,7 @@
             </div>
             <div>
               <div class="d-flex justify-content-center">
-                <input type="search"  placeholder="Search member here..." aria-label="Search" class="form-control" id="search-member">
-                <button class="btn btn-orange btn-sm my-0 p" type="submit" id="search-member-btn">
-                  <i class="fas fa-search" ></i>
-                </button>
+                <input type="text" placeholder="Search member here..." class="form-control" id="search-member">
               </div>
             </div>
           </div>
@@ -185,6 +187,14 @@
 
               </tbody>
             </table>
+            <div id="no-data-div" class="no-data-div my-3 text-muted">
+              No data!
+            </div>
+            <div class="table-parent my-5" id="table-loader">
+              <div class="table-loader">
+                <div class="loader-spinner"></div>
+              </div>
+            </div>
           </div>
           <div class="card-footer"></div>
         </div>
@@ -203,10 +213,7 @@
                 </h3>
                 <div>
                   <div class="d-flex justify-content-center">
-                    <input type="search"  placeholder="Search walk-in here..." aria-label="Search" class="form-control">
-                    <button class="btn btn-orange btn-sm my-0 p" type="submit">
-                      <i class="fas fa-search" ></i>
-                    </button>
+                    <input type="text" placeholder="Search walk-in here..." id="search-walkin" class="form-control">
                   </div>
                 </div>
               </div>
@@ -223,7 +230,16 @@
     
                   </tbody>
                 </table>
+                <div id="no-data-div-walkin" class="no-data-div my-3 text-muted">
+                  No data!
+                </div>
+                <div class="table-parent my-5" id="table-loader-walkin">
+                  <div class="table-loader">
+                    <div class="loader-spinner"></div>
+                  </div>
+                </div>
               </div>
+              <div class="card-footer"></div>
             </div>
           </div>
         </div>
@@ -248,14 +264,22 @@
 
                   </tbody>
                 </table>
+                <div id="no-data-div-programs" class="no-data-div my-5 text-muted">
+                  No data!
+                </div>
+                <div class="table-parent my-5" id="table-loader-programs">
+                  <div class="table-loader">
+                    <div class="loader-spinner"></div>
+                  </div>
+                </div>
               </div>
+              <div class="card-footer"></div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </main>
-
 
   <!-- MODALS HERE -->
   <!-- Add member modal -->
@@ -573,9 +597,7 @@
 
   <!-- MODAL TOGGLERS -->
   <a data-toggle='modal' data-target='#updateModal' style="display: none" id="showUpdateModal"></a>
-  <a data-toggle='modal' data-target='#payment-modal' style="display: none" id="showPaymentModal"></a>
   <a data-toggle='modal' data-target='#new-member-code' style="display: none" id="showNewMemberCode"></a>
-  <a data-toggle='modal' data-target='#view-member-modal' style="display: none" id="viewMemberModal"></a>
   <a data-toggle='modal' data-target='#add-member' style="display: none" id="addMemberModal"></a>
 
   <script type='text/javascript' src='js/jquery-3.4.1.min.js'></script>
@@ -598,90 +620,26 @@
   <!-- Local script -->
   <script src='js/init.js'></script>
 
-  <!-- Functions -->
+  <!-- MEMBER Functions -->
   <script>
     // Global Variables
+    const members = [];
     const qrcode = new QRCode("view-qrcode", {
       height: 90,
       width: 90
     });
 
-    const loader = document.getElementById('loader');
-    const loaderchild = document.getElementById('loaderchild');
+    let regTableLoader = document.getElementById('table-loader');
+    let walkTableLoader = document.getElementById('table-loader-walkin');
+    let progTableLoader = document.getElementById('table-loader-programs');
     window.onload = () => {
-      loader.style.display = 'block';
+      regTableLoader.style.display = 'flex';
+      walkTableLoader.style.display = 'flex';
+      progTableLoader.style.display = 'flex';
     }
-
-    let addBtn = document.getElementById('add-new-member-btn'); 
-    let updateFromView = document.getElementById('update-member-from-view-modal');
-    let button = document.getElementById('addMemberBtn');
-    let addMemberModal = document.getElementById('add-member');
-    let sortPaid = document.getElementById('sort-paid');
-    let sortBoth = document.getElementById('sort-both');
-    let sortExpired = document.getElementById('sort-expired');
-    let tbody = document.getElementById('tbody');
-
-    // Sorting by PAID
-    sortPaid.onclick = () => {
-      tbody.innerHTML = '';
-      sortBoth.classList.add('btn-outline-orange');
-      sortBoth.classList.remove('btn-orange');
-      sortExpired.classList.add('btn-outline-orange');
-      sortExpired.classList.remove('btn-orange');
-      sortPaid.classList.add('btn-orange');
-      sortPaid.classList.remove('btn-outline-orange');
-
-      db.collection('members').where('memberType', '==', 'Regular').where('status', '==', 'Paid').orderBy('dateAdded', 'desc').get().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          renderData({id: doc.id, doc: doc.data()});
-        });
-      });
-    }
-
-    // Sorting by BOTH
-    sortBoth.onclick = () => {
-      tbody.innerHTML = '';
-      sortBoth.classList.add('btn-orange');
-      sortBoth.classList.remove('btn-outline-orange');
-      sortExpired.classList.add('btn-outline-orange');
-      sortExpired.classList.remove('btn-orange');
-      sortPaid.classList.add('btn-outline-orange');
-      sortPaid.classList.remove('btn-orange');
-
-      db.collection('members').where('memberType', '==', 'Regular').orderBy('dateAdded', 'desc').get().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          renderData({id: doc.id, doc: doc.data()});
-        });
-      });
-    }
-
-    // Sorting by EXPIRED
-    sortExpired.onclick = () => {
-      tbody.innerHTML = '';
-      sortBoth.classList.add('btn-outline-orange');
-      sortBoth.classList.remove('btn-orange');
-      sortExpired.classList.add('btn-orange');
-      sortExpired.classList.remove('btn-outline-orange');
-      sortPaid.classList.add('btn-outline-orange');
-      sortPaid.classList.remove('btn-orange');
-
-      db.collection('members').where('memberType', '==', 'Regular').where('status', '==', 'Expired').orderBy('dateAdded', 'desc').get().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          renderData({id: doc.id, doc: doc.data()});
-        });
-      });
-    }
-
-    // User Token Checking
-    auth.onAuthStateChanged(function(user) {
-      let span = document.getElementById('username');
-
-      if(user) {
-        span.textContent = user.email;
-      }
-    });
 
     // Add Member Modal
+    let addBtn = document.getElementById('add-new-member-btn'); 
     addBtn.onclick = () => {
       document.getElementById('addMemberModal').click();
 
@@ -696,8 +654,9 @@
       }
     }
 
-    // Submit by 'ENTER' button
-    addMemberModal.addEventListener('keyup', (evt) => {
+     // Submit by 'ENTER' button
+     let addMemberModal = document.getElementById('add-member');
+     addMemberModal.addEventListener('keyup', (evt) => {
       if(evt.keyCode == 13) {
         button.click();
       } else if(evt.keyCode == 27) {
@@ -720,6 +679,7 @@
     }
 
     // Adding Members to Firebase
+    let button = document.getElementById('addMemberBtn');
     button.onclick = () => {
       let fname = document.getElementById('fName').value;
       let lname = document.getElementById('lName').value;
@@ -779,39 +739,37 @@
               address: address,
               email: email,
               program: program,
-              birthdate: firebase.firestore.Timestamp.fromDate(new Date(birthdate))
+              birthdate: new Date(birthdate)
             }).then(() => {
-              member.get().then((snapshot) => {
-                snapshot.forEach((doc) => {
-                  if(doc.data().memberType == 'Regular') {
-                    member.get().then((snapshot) => {
-                      snapshot.forEach((doc) => {
-                        document.getElementById('new-member-name').textContent = `${doc.data().fname} ${doc.data().lname}`;
-                        document.getElementById('new-member-uid').textContent = doc.id;
-                        new QRCode('qrcode', {
-                          text: `${doc.data().fname} ${doc.data().lname}`,
-                          height: 100,
-                          width: 100
-                        });
+              db.collection('members').orderBy('dateAdded', 'desc').get().then((snapshot) => {
+                let doc = snapshot.docs[0];
+                if(doc.data().memberType == 'Regular') {
+                  member.get().then((snapshot) => {
+                    snapshot.forEach((doc) => {
+                      document.getElementById('new-member-name').textContent = `${doc.data().fname} ${doc.data().lname}`;
+                      document.getElementById('new-member-uid').textContent = doc.id;
+                      new QRCode('qrcode', {
+                        text: doc.id,
+                        height: 100,
+                        width: 100
                       });
-                    }).then(() => {
-                      document.getElementById('close-modal').click();
-                      
-                      document.getElementById('showNewMemberCode').click();
-                      document.onclick = (e) => {
-                        let x = e.target.id;
-                        if(x != "new-member-body" && x != "new-member-name" && x != "new-member-uid" && x != "new-member-small") {
-                          window.location.reload();
-                        }
-                      }
                     });
-                  } else {
-                    alert('Successfully added new walk-in!');
-                    window.location.reload();
-                  }
-                });
+                  }).then(() => {
+                    document.getElementById('close-modal').click();
+                    document.getElementById('showNewMemberCode').click();
+                    document.onclick = (e) => {
+                      let x = e.target.id;
+                      if(x != "new-member-body" && x != "new-member-name" && x != "new-member-uid" && x != "new-member-small") {
+                        window.location.reload();
+                      }
+                    }
+                  });
+                } else {
+                  alert('Successfully added new walk-in!');
+                  window.location.reload();
+                }
               });
-            }).catch(function(error) {
+            }).catch((error) => {
               alert(error.message);
             });
           }
@@ -819,13 +777,246 @@
       }
     }
 
-    // Pressing 'UPDATE' on View Member Modal
-    updateFromView.onclick = () => {
-      let x = document.getElementById('close-view-modal').click();
-      let uid = document.getElementById('view-uid');
-      updateMember(uid);
+    // Display Regular Members
+    renderRegular = () => {
+      regTableLoader.style.display = 'none';
+      document.getElementById('no-data-div').style.display = 'none';
+      let tbody = document.getElementById('tbody');
+      tbody.innerHTML = ``;
+      let regs = members.filter(mem => mem.data.memberType == 'Regular');
+
+      if(regs.length > 0) {
+        regs.forEach((reg) => {
+          let tr = document.createElement('tr');
+          tr.setAttribute('data-id', reg.id);
+          tr.innerHTML = 
+            `<td>${reg.data.fname}</td>
+            <td>${reg.data.lname}</td>
+            <td>
+              <span class="hidden" id="${reg.id}-span"></span>
+              <a>
+                <small id='${reg.id}-small' onclick='showID("${reg.id}")'>
+                  <i data-toggle="tooltip" data-placement="top" title="Show ${reg.data.fname}"  class="fas fa-eye"></i>
+                </small>
+              </a>
+            </td>
+            <td>${reg.data.status}</td>
+            <td>
+              <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
+              <a class='btn-link text-orange' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${reg.data.fname}" data-placement="top"></i></a>
+            <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>  
+            </td>`;
+
+          tbody.appendChild(tr);
+        });
+      } else {
+        document.getElementById('no-data-div').style.display = 'flex';
+      }
     }
 
+    renderNewRegs = (docs) => {
+      let tbody = document.getElementById('tbody');
+      tbody.innerHTML = ``;
+
+      if(docs.length > 0) {
+        docs.forEach((doc) => {
+          let tr = document.createElement('tr');
+          tr.setAttribute('data-id', doc.id);
+
+          tr.innerHTML = 
+            `<td>${doc.data.fname}</td>
+            <td>${doc.data.lname}</td>
+            <td>
+              <span class="hidden" id="${doc.id}-span"></span>
+              <a>
+                <small id='${doc.id}-small' onclick='showID("${doc.id}")'>
+                  <i data-toggle="tooltip" data-placement="top" title="Show ${doc.data.fname}"  class="fas fa-eye"></i>
+                </small>
+              </a>  
+            </td>
+            <td>${doc.data.status}</td>
+            <td>
+              <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
+              <a class='btn-link text-orange' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data.fname}" data-placement="top"></i></a>
+              <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>  
+            </td>`;
+
+          tbody.appendChild(tr);
+        });
+      } else {
+        document.getElementById('no-data-div').style.display = 'flex';
+      }
+    }
+
+    filterRegs = (value) => {
+      document.getElementById('no-data-div').style.display = 'none';
+      return results = members.filter(member => member.fullName.toLowerCase().includes(value.toLowerCase()) && member.data.memberType == 'Regular');
+    }
+
+    // Searching Regular Members
+    let searchReg = document.getElementById('search-member');
+    searchReg.onkeyup = () => {
+      if(searchReg.value != '') {
+        let docs = filterRegs(searchReg.value);
+        renderNewRegs(docs);
+      } else {
+        renderRegular();
+      }
+    }
+    searchReg.value.onchange = () => {
+      if(searchReg.value == '') {
+        renderRegular();
+      }
+    }
+
+    renderNewWalks = (docs) => {
+      let tbody = document.getElementById('tbody-walk-in');
+      tbody.innerHTML = ``;
+
+      if(docs.length > 0) {
+        docs.forEach((doc) => {
+          let tr = document.createElement('tr');
+          tr.setAttribute('data-id', doc.id);
+
+          tr.innerHTML = 
+            `<td>${doc.data.fname}</td>
+            <td>${doc.data.lname}</td>
+            <td>
+              <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
+              <a class='btn-link text-orange' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data.fname}" data-placement="top"></i></a>
+              <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>  
+            </td>`;
+
+          tbody.appendChild(tr);
+        });
+      } else {
+        document.getElementById('no-data-div-walkin').style.display = 'flex';
+      }
+    }
+
+    filterWalks = (value) => {
+      document.getElementById('no-data-div-walkin').style.display = 'none';
+      return results = members.filter(member => member.fullName.toLowerCase().includes(value.toLowerCase()) && member.data.memberType == 'Walk-in');
+    }
+
+    // Searching Walk-in Members
+    let searchWalk = document.getElementById('search-walkin');
+    searchWalk.onkeyup = () => {
+      if(searchWalk.value != '') {
+        let docs = filterWalks(searchWalk.value);
+        renderNewWalks(docs);
+      } else {
+        renderWalkin();
+      }
+    }
+
+    // Display Walkin Members
+    renderWalkin = () => {
+      walkTableLoader.style.display = 'none';
+      document.getElementById('no-data-div-walkin').style.display = 'none';
+      let tbody = document.getElementById('tbody-walk-in');
+      tbody.innerHTML = ``;
+      let walks = members.filter(mem => mem.data.memberType == 'Walk-in');
+
+      if(walks.length > 0) {
+        walks.forEach((walk) => {
+          let tr = document.createElement('tr');
+          tr.setAttribute('data-id', walk.id);
+          tr.innerHTML = 
+            `<td>${walk.data.fname}</td>
+            <td>${walk.data.lname}</td>
+            <td>
+              <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
+              <a class='btn-link text-orange' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${walk.data.fname}" data-placement="top"></i></a>
+              <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>  
+            </td>`;
+
+          tbody.appendChild(tr);
+        });
+      } else {
+        document.getElementById('no-data-div-walkin').style.display = 'flex';
+      }
+    }
+
+    // View Member Modal
+    viewMember = (tr) => {
+      let id = tr.getAttribute('data-id');
+     
+      let res = members.filter(m => m.id == id);
+      let doc = res[0];
+      let data = doc.data;
+
+      let name = document.getElementById('view-name');
+      let email = document.getElementById('view-email');
+      let phone = document.getElementById('view-phone');
+      let sex = document.getElementById('view-sex');
+      let memberType = document.getElementById('view-memberType');
+      let annualStart = document.getElementById('view-annualStart');
+      let monthlyStart = document.getElementById('view-monthlyStart');
+      let monthlyEnd = document.getElementById('view-monthlyEnd');
+      let rate = document.getElementById('view-monthlyRate');
+      let status = document.getElementById('view-status');
+      let program = document.getElementById('view-program');
+      let address = document.getElementById('view-address');
+      let uid = document.getElementById('view-uid');
+
+      document.getElementById('view-member-name').textContent = data.fname;
+      uid.value = doc.id;
+      uid.setAttribute('data-id', doc.id);
+      name.value = doc.fullName;
+      email.value = data.email;
+      phone.value = data.phone;
+      sex.value = data.sex;
+      memberType.value = data.memberType;
+
+      if(data.memberType == 'Walk-in') {
+        document.getElementById('flexLa').style.display = 'none';
+        status.value = 'N/A';
+        program.value = 'N/A';
+        rate.value = '50';
+
+        monthlyStart.parentNode.style.display = 'none';
+        annualStart.parentNode.style.display = 'none';
+        monthlyEnd.parentNode.style.display = 'none';
+      } else {
+        let ms = data.monthlyStart.toDate();
+        let me = data.monthlyEnd.toDate();
+        let as = data.annualStart.toDate();
+
+        document.getElementById('flexLa').style.display = 'flex';
+        monthlyStart.value = `${months[ms.getMonth()]} ${ms.getDate()}, ${ms.getFullYear()}`;
+        annualStart.value = `${months[as.getMonth()]} ${as.getDate()}, ${as.getFullYear()}`;
+        monthlyEnd.value = `${months[me.getMonth()]} ${me.getDate()}, ${me.getFullYear()}`;
+        status.value = data.status;
+        program.value = data.program;
+        rate.value = data.monthlyRate;
+
+        monthlyStart.parentNode.style.display = 'block';
+        annualStart.parentNode.style.display = 'block';
+        monthlyEnd.parentNode.style.display = 'block';
+      }
+      
+      address.value = data.address;
+      qrcode.makeCode(id);
+    }
+
+    // Toggling Regular Member UID Visibility
+    showID = (id) => {
+      let span = document.getElementById(`${id}-span`);
+      let small = document.getElementById(`${id}-small`);
+
+      if(span.classList.contains('hidden')) {
+        small.innerHTML = ' <i class="fas fa-eye-slash"></i>';
+        span.textContent = id;
+        span.classList.remove('hidden');
+      } else {
+        small.innerHTML = ' <i  class="fas fa-eye"></i>';
+        span.classList.add('hidden');
+        span.textContent = '';
+      } 
+    }
+
+    //************ PAYMENTS ************//
     // Event Listener to #payment-desc in Payment Modal
     paymentDescChange = () => {
       let paymentDesc = document.getElementById('payment-desc').value;
@@ -864,313 +1055,38 @@
       change.value = x-y;
     });
 
-    // Toggling Member UID visibility
-    showID = (id) => {
-      let span = document.getElementById(`${id}-span`);
-      let small = document.getElementById(`${id}-small`);
-
-      if(span.classList.contains('hidden')) {
-        small.innerHTML = ' <i class="fas fa-eye"></i>';
-        span.textContent = id;
-        span.classList.remove('hidden');
-      } else {
-        small.innerHTML = '<i class="fas fa-eye"></i>';
-        span.classList.add('hidden');
-        span.textContent = '';
-      }
-    }
-
-    // Rendering Data for View Member Modal 
-    viewMember = (tr) => {
-      let id = tr.getAttribute('data-id');
-     
-      db.collection('members').doc(id).get().then((doc) => {
-        document.getElementById('view-member-name').textContent = doc.data().fname;
-
-        let name = document.getElementById('view-name');
-        let email = document.getElementById('view-email');
-        let phone = document.getElementById('view-phone');
-        let sex = document.getElementById('view-sex');
-        let memberType = document.getElementById('view-memberType');
-        let annualStart = document.getElementById('view-annualStart');
-        let monthlyStart = document.getElementById('view-monthlyStart');
-        let monthlyEnd = document.getElementById('view-monthlyEnd');
-        let rate = document.getElementById('view-monthlyRate');
-        let status = document.getElementById('view-status');
-        let program = document.getElementById('view-program');
-        let address = document.getElementById('view-address');
-        let uid = document.getElementById('view-uid');
-
-        uid.value = id;
-        uid.setAttribute('data-id', id);
-        name.value = `${doc.data().fname} ${doc.data().lname}`;
-        email.value = doc.data().email;
-        phone.value = doc.data().phone;
-        sex.value = doc.data().sex;
-        memberType.value = doc.data().memberType;
-        
-        if(doc.data().memberType == 'Walk-in') {
-          document.getElementById('flexLa').style.display = 'none';
-          monthlyStart.value = 'N/A';
-          annualStart.value = 'N/A';
-          monthlyEnd.value = 'N/A';
-          status.value = 'N/A';
-          program.value = 'N/A';
-          rate.value = '50';
-
-          monthlyStart.parentNode.style.display = 'none';
-          annualStart.parentNode.style.display = 'none';
-          monthlyEnd.parentNode.style.display = 'none';
-        } else {
-          let ms = doc.data().monthlyStart.toDate();
-          let me = doc.data().monthlyEnd.toDate();
-          let as = doc.data().annualStart.toDate();
-          let ae = doc.data().annualEnd.toDate();
-
-          document.getElementById('flexLa').style.display = 'flex';
-          monthlyStart.value = `${months[ms.getMonth()]}. ${ms.getDate()}, ${ms.getFullYear()}`;
-          annualStart.value = `${months[as.getMonth()]}. ${as.getDate()}, ${as.getFullYear()}`;
-          monthlyEnd.value = `${months[me.getMonth()]}. ${me.getDate()}, ${me.getFullYear()}`;
-          status.value = doc.data().status;
-          program.value = doc.data().program;
-          rate.value = doc.data().monthlyRate;
-
-          monthlyStart.parentNode.style.display = 'block';
-          annualStart.parentNode.style.display = 'block';
-          monthlyEnd.parentNode.style.display = 'block';
-        }
-        
-        address.value = doc.data().address;
-        qrcode.makeCode(id);
-      }).then(() => {
-        document.getElementById('viewMemberModal').click();
-      });
-    }
-
-    // Rendering Data for Regular Member Card
-    renderData = ({id, doc}) => {
-      let tbody = document.getElementById('tbody');
-      let tr = document.createElement('tr');
-      let td = document.createElement('td');
-
-      tr.setAttribute('data-id', id);
-      tr.innerHTML = 
-      `<td>${doc.fname}</td>
-      <td>${doc.lname}</td>
-      <td>
-        <span class="hidden" id="${id}-span"></span>
-        <a>
-          <small id='${id}-small' onclick='showID("${id}")'
-           data-toggle="tooltip" title="Show ${doc.fname}'s UID" data-placement="top">
-           <i class="fas fa-eye"></i></small>
-        </a>
-      </td>
-      <td>${doc.status}</td>
-      <td>
-        <a class='btn-link text-darkgrey' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
-        <a class='btn-link text-orange' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.fname}" data-placement="top"></i></a>
-        <a class='btn-link text-success' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
-      </td>`;
-      tbody.appendChild(tr);
-
-      let tt = $('[data-toggle="tooltip"]').tooltip();
-      tt.click(function() {
-        tt.tooltip("hide");
-      });
-    }
-
-    // Querying Regular Members
-    db.collection('members').where('memberType', '==', 'Regular').orderBy('dateAdded', 'desc').get().then((snapshot) => {
-      snapshot.forEach((doc) => {
-        renderData({id: doc.id, doc: doc.data()});
-      });
-      // document.getElementById('loader').style.display = 'none';
-    });
-
-    // Rendering Data for Walk-in Member Card
-    renderWalkin = ({id, doc}) => {
-      let tbody = document.getElementById('tbody-walk-in');
-      let tr = document.createElement('tr');
-      let td = document.createElement('td');
-
-      tr.setAttribute('data-id', id);
-      tr.innerHTML = 
-      `<td>${doc.fname}</td>
-      <td>${doc.lname}</td>
-      <td>
-        <a class='btn-link text-darkgrey' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px' style='color: #DF3A01'></i></a>
-        <a class="btn-link text-orange mx-1" onclick='updateMember(this.parentNode.parentNode)'>
-          <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.fname}" style="font-size: 20px"></i>
-        </a>
-        <a class='btn-link text-success' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>
-      </td>`;
-      tbody.appendChild(tr);
-
-      let tt = $('[data-toggle="tooltip"]').tooltip();
-      tt.click(function() {
-        tt.tooltip("hide");
-      });
-    }
-
-    // Querying Walk-in Members
-    db.collection('members').where('memberType', '==', 'Walk-in').orderBy('dateAdded', 'desc').get().then((snapshot) => {
-      snapshot.forEach((doc) => {
-        renderWalkin({id: doc.id, doc: doc.data()});
-      });
-
-      loader.style.display = 'none';
-    }).catch((err) => {
-      loader.style.display = 'none';
-      alert(`ERROR: ${err.message}`);
-    });
-
-    // Rendering Data for Update Member Modal
-    updateMember = (tr) => {
-      let updateFname = document.getElementById('updateFname');
-      let updateLname = document.getElementById('updateLname');
-      let updateDate = document.getElementById('updateDateAdded');
-      let updateUID = document.getElementById('updateUID');
-      let updateType = document.getElementById('updateType');
-      let updateProgram = document.getElementById('updateProgram');
-      let span = document.getElementById('fname-span');
-      let dataId = tr.getAttribute('data-id');
-
-      db.collection('members').doc(dataId).get().then((doc) => {
-        span.textContent = doc.data().fname;
-        updateFname.value = doc.data().fname;
-        updateLname.value = doc.data().lname;
-        updateDate.value = doc.data().dateAdded;
-        updateType.value = doc.data().memberType;
-        updateProgram.value = doc.data().program;
-        updateUID.value = doc.id;
-      }).then(() => {
-        document.getElementById('showUpdateModal').click();
-
-        let memberType = document.getElementById('updateType');
-        let programDiv = document.getElementById('update-program-div');
-
-        if(memberType.value == 'Walk-in') {
-          programDiv.style.visibility = 'hidden';
-        } else {
-          programDiv.style.visibility = 'visible';
-        }
-
-        memberType.onchange = () => {
-          if(memberType.value == 'Walk-in') {
-            programDiv.style.visibility = 'hidden';
-          } else {
-            programDiv.style.visibility = 'visible';
-          }
-        }
-        
-        document.getElementById('updateBtn').addEventListener('click', () => {
-          let status = document.getElementById('updateStatus');
-          let program = document.getElementById('updateProgram');
-          let rate;
-
-          if(memberType.value == 'Regular') {
-            rate = 750;
-          } else {
-            rate = 50;
-            program.value = 'N/A';
-          }
-
-          console.log(program.value);
-
-          let id = document.getElementById('updateUID').value;
-          db.collection('members').doc(id).update({
-            memberType: memberType.value,
-            status: status.value,
-            monthlyRate: rate,
-            program: program.value
-          }).then(() => {
-            alert('Successfully updated member!');
-            window.location.reload();
-          }).catch((error) => {
-            alert(`Error: ${error.message}`);
-          });
-        });
-      });
-    }
-
-    // Search member
-    document.getElementById("search-member-btn").addEventListener("click", () => {
-      let search = document.getElementById('search-member').value;
-      
-      if(search.indexOf(' ') > 0) {
-        let space = search.indexOf(' ');
-        let firstWord = search.slice(0, space);
-        let firstWordLet = firstWord.slice(0, 1).toUpperCase();
-        let firstWordRest = firstWord.slice(1, firstWord.length).toLowerCase();
-        firstWord = firstWordLet + firstWordRest;
-        let secondWord = search.slice(space, search.length);
-        let secondWordLet = secondWord.slice(1, 2).toUpperCase();
-        let secondWordRest = secondWord.slice(2, secondWord.length).toLowerCase();
-        secondWord = secondWordLet + secondWordRest;
-
-        finalSearch = `${firstWord} ${secondWord}`;
-      } else {
-        let firstLetter = search.slice(0, 1).toUpperCase();
-        let rest = search.slice(1, search.length).toLowerCase();
-
-        finalSearch = `${firstLetter}${rest}`;
-      }
-
-      db.collection('members').where('fname', '==', finalSearch).where('memberType', '==', 'Regular').get().then((snapshot) => {
-        if(snapshot.docs.length > 0) {
-          let tbody = document.getElementById('tbody');
-          tbody.innerHTML = '';
-          snapshot.forEach((doc) => {
-            members.push(doc.data());
-          });
-          console.log(members);
-        } else {
-          db.collection('members').where('lname', '==', finalSearch).where('memberType', '==', 'Regular').get().then((snapshot) => {
-            if(snapshot.docs.length > 0) {
-              let tbody = document.getElementById('tbody');
-              tbody.innerHTML = '';
-              snapshot.forEach((doc) => {
-                renderData(doc);
-              });
-            } else {
-              tbody.innerHTML = 'no data!';
-            }
-          });
-        }
-      });
-    });
-
-    // Add payment
-    addPayment = (tr) => {
+     // Add payment
+     addPayment = (tr) => {
       let id = tr.getAttribute('data-id');
       let uid = document.getElementById('payment-uid');
       uid.value = id;
       let name = document.getElementById('payment-name');
       let span = document.getElementById('payment-fname-span');
 
-      db.collection('members').doc(id).get().then((doc) => {
-        let fullName = `${doc.data().fname} ${doc.data().lname}`;
-        let select = document.getElementById('payment-desc');
-        let amount = document.getElementById('payment-amount');
+      let res = members.filter(m => m.id == id);
+      let mem = res[0];
+      let data = mem.data;
 
-        span.textContent = doc.data().fname 
-        name.value = fullName;
+      span.textContent = data.fname;
+      name.value = mem.fullName;
 
-        if(doc.data().memberType == 'Walk-in') {
-          select.innerHTML = '<option value="Walk-in Fee">Walk-in</option>';
-          select.setAttribute('disabled', 'disabled');
-          amount.removeAttribute('value');
-          amount.value = 50;
-        } else {
-          select.innerHTML = 
-            `<option value="Monthly Subscription">Monthly Subscription</option>
-            <option value="Annual Subscription">Annual Subscription</option>`;
-          select.removeAttribute('disabled');
+      let select = document.getElementById('payment-desc');
+      let amount = document.getElementById('payment-amount');
+      
+      if(data.memberType == 'Walk-in') {
+        select.innerHTML = '<option value="Walk-in Fee">Walk-in</option>';
+        select.setAttribute('disabled', 'disabled');
+        amount.removeAttribute('value');
+        amount.value = 50;
+      } else {
+        select.innerHTML = 
+          `<option value="Monthly Subscription">Monthly Subscription</option>
+          <option value="Annual Subscription">Annual Subscription</option>`;
+        select.removeAttribute('disabled');
           amount.value = 750;
-        }
-      }).then(() => {
-        document.getElementById('showPaymentModal').click();
-      });
+      }
+
+      // document.getElementById('showPaymentModal').click();
 
       document.getElementById('add-payment-btn').addEventListener('click', () => {
         let amount = document.getElementById('payment-amount').value;
@@ -1204,58 +1120,66 @@
         });
       });
     }
+  </script>
 
-    // Programs Section
+  <!-- PROGRAM Functions -->
+  <script>
     const programs = [];
 
     renderPrograms = () => {
-      programs.forEach((doc) => {
-        // For Program Card
-        let tbody = document.getElementById('program-tbody');
-        let tr = document.createElement('tr');
+      progTableLoader.style.display = 'none';
+      let tbody = document.getElementById('program-tbody');
 
-        tr.innerHTML = 
-          `<td>${doc.data().programName}</td>
-          <td>
-            <a class='btn-link text-darkgrey' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px' style='color: #DF3A01'></i></a>
-            <a class="btn-link text-orange mx-1" onclick='updateMember(this.parentNode.parentNode)'>
-              <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${doc.data().programName}" style="font-size: 20px"></i>
-            </a>
-          </td>`;
+      if(programs.length > 0) {
+        programs.forEach((prog) => {
+          let tr = document.createElement('tr');
+          tr.setAttribute('data-id', prog.id)
 
-        tbody.appendChild(tr);
+          tr.innerHTML = 
+            `<td>${prog.data.programName}</td>
+            <td>
+              <a class='btn-link text-darkgrey' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px' style='color: #DF3A01'></i></a>
+              <a class="btn-link text-orange mx-1" onclick='updateMember(this.parentNode.parentNode)'>
+                <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${prog.data.programName}" style="font-size: 20px"></i>
+              </a>  
+            </td>`;
 
-        // For Add Members Modal
-        let select = document.getElementById('program');
-        let option = document.createElement('option');
+          tbody.appendChild(tr);
 
-        option.innerHTML = doc.data().programName;
-        option.setAttribute('value', doc.data().programName)
-        select.appendChild(option);
+          // For Add Member Modal
+          let select = document.getElementById('program');
+          let option = document.createElement('option');
 
-        // For Update Members Modal
-        let select2 = document.getElementById('updateProgram');
-        let option2 = document.createElement('option');
-
-        option2.innerHTML = doc.data().programName;
-        option2.setAttribute('value', doc.data().programName)
-        select2.appendChild(option2);
-      });
-    }
-
-    // Program Query
-    db.collection('programs')
-      .orderBy('programName', 'asc')
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          programs.push(doc);
+          option.innerHTML = prog.data.programName;
+          option.setAttribute('value', prog.data.programName)
+          select.appendChild(option);
         });
-      }).then(() => {
-        renderPrograms();
-      }).catch((err) => {
-        console.log(`ERROR: ${err.message}`);
+      } else {
+        document.getElementById('no-data-div-programs').style.display = 'flex';
+      }
+    }
+  </script>
+
+  <!-- Firebase Queries -->
+  <script>
+    // ALL Members
+    db.collection('members').orderBy('dateAdded', 'desc').get().then((snapshot) => {
+      snapshot.forEach((doc) => {
+        members.push({id: doc.id, data: doc.data(), fullName: `${doc.data().fname} ${doc.data().lname}`})
       });
+    }).then(() => {
+      renderRegular();
+      renderWalkin();
+    });
+
+    // ALL Programs
+    db.collection('programs').get().then((snapshot) => {
+      snapshot.forEach((doc) => {
+        programs.push({id: doc.id, data: doc.data()});
+      })
+    }).then(() => {
+      renderPrograms();
+    });
 
    // logout script
    document.getElementById("logoutBtn").addEventListener("click", function() {
