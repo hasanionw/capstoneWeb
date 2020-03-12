@@ -244,18 +244,5 @@
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
 <script src="js/init.js"></script>
 
-<script>
-	
-firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    // User is signed in.
-	window.location.href = "dashboard.html";
-  } else {
-	  alert("You're not login");
-  }
-});
-
-</script>
-
 </body>
 </html>

@@ -849,7 +849,7 @@
     }
 
     filterRegs = (value) => {
-      document.getElementById('no-data-div').style.display = 'none';
+      let results;
       return results = members.filter(member => member.fullName.toLowerCase().includes(value.toLowerCase()) && member.data.memberType == 'Regular');
     }
 
