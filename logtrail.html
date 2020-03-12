@@ -21,6 +21,85 @@
 <style>
   
 
+
+        .card-bodyzz::-webkit-scrollbar {
+    width: 0;
+  }
+      
+  input[type=text], input[type=date] {
+  
+    height: 45px;
+  } 
+
+  .train select{
+    height: 45px;
+  
+  }
+
+  .bot button{
+    background-color:#DF3A01;
+    color:white;
+  } 
+  .bot{
+    height:70px;
+    background-color:honeydew;
+  }
+
+  .viewbutton input[type="text"]{
+    width:220px;
+  }
+
+  .card-bodyzz {  
+    max-height: 325px;
+    overflow-y: auto;
+  }
+
+  .flexHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  table > thead > tr > th {
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    
+    
+  }
+  
+  th, td, tr{
+    text-align: center;
+  }
+
+  
+  .table-loader {
+        width: 100%;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .table-parent {
+        display: none;
+      }
+
+      .no-data-div {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        height: 375px;
+        width: 100%;
+        position: absolute;
+      }
+      
+
 </style>
 </head>
 
@@ -79,6 +158,90 @@
 
   </header>
   <!--Main Navigation-->
+  
+  <main class="pt-5 mx-lg-5" >
+    <div class="container-fluid mt-5">
+
+
+    <div class="container-fluid mt-5">
+      <br>
+      <div class='card'>
+        <div class='card-content'>
+            <div class='card-header flexHeader'>
+            <h3 class='card-title'>
+              <span class="add-trainer mx-2" data-toggle="tooltip" data-placement="top" title="Add new trainer"></span>
+              Logtrail
+            </h3>
+            <select id="sortDate" class="form-control" style="width: 20%">
+              <option value="Today" selected>Today</option>
+              <option value="Yesterday">Yesterday</option>
+              <option value="Last 7 days">Last 7 days</option>
+              <option value="Last 30 days">Last 30 days</option>
+              <option value="All-time">All-time</option>
+            </select> 
+            <div>
+              <div class="d-flex justify-content-center">
+                <input type="text" id="search-trainers" placeholder="Search Admin here..." aria-label="Search" class="form-control" id="#">
+                
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div id='card-body' class='card-body table-responsive p-0 card-bodyzz'>  
+            
+            <table class='table table-hover'>
+              <thead>
+                <tr>
+                  
+                  <th>Admin</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+
+                <tr>
+                  <td>klintjohn60@gmail.com</td>
+                  <td>February 27, 2019</td>
+                  <td>Added a member</td>
+                </tr> 
+                <tr>
+                  <td>klintjohn60@gmail.com</td>
+                  <td>February 27, 2020</td>
+                  <td>update a member</td>
+                </tr>
+                <tr>
+                  <td>weinnandhasanion.com</td>
+                  <td>March 10, 2020</td>
+                  <td>Added a new item in inventory</td>
+                </tr>
+                <tr>
+                  <td>weinnandhasanion.com</td>
+                  <td>April 14, 2020</td>
+                  <td>Added a payment in member</td>
+                </tr>
+               
+              </thead>
+              <tbody id='tbody'>
+
+              </tbody>
+            </table>
+            <div class="table-parent my-5" id="table-loader">
+              <div class="table-loader">
+                <div class="loader-spinner"></div>
+              </div>
+            </div>
+          
+        </div>
+          </div>
+        </div>
+      </div>
+
+  </main>
+
+  
+
+  
+
 
   <script type="text/javascript">
     new WOW().init();
@@ -125,6 +288,12 @@
         span.textContent = user.email;
       }
     })
+
+
+
+
+
+
   </script>
 
   <!--Google Maps-->

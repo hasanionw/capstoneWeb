@@ -21,10 +21,18 @@ function signUp(){
 	var signUp_email = document.getElementById("signUp_email");
 	var signUp_password = document.getElementById("signUp_password");
 
-	auth.createUserWithEmailAndPassword(signUp_email.value, signUp_password.value).catch(function(error){
+  auth.createUserWithEmailAndPassword(signUp_email.value, signUp_password.value)
+  .then(() => {
+    alert('Registered successfully!');
+    auth.signOut().then(() => {
+      window.location.reload();
+    })
+  })
+  .catch(function(error){
     alert("Error! "+error.message)
   });
-  window.location.href = "index.html";
+
+  // window.location.reload();
 }
 
 

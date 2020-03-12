@@ -73,11 +73,7 @@
   </head>
 
   <body class="grey lighten-3" >
-    <div class="loaderparent" id="loader">
-      <div class="loader" id="loaderchild">
-        <div class="loader-spinner"></div>
-      </div>
-    </div>
+   
     <!--Main Navigation-->
     <header>
       <nav class="navbar fixed-top navbar-light bg-darkgrey" >
@@ -144,9 +140,8 @@
               <button type="button" id="sort-temporary" class="btn btn-sm btn-outline-orange">TEMPORARY</button>
             </div>
             <form class="d-flex justify-content-center">
-              <input type="search" placeholder="Search promo name" aria-label="Search" class="form-control">
-              <button class="btn btn-orange btn-sm my-0 p" type="submit">
-                <i class="fas fa-search" ></i>
+              <input type="text" placeholder="Search promo name" id="search-promos" aria-label="Search" class="form-control">
+             
               </button>
             </form>
           </div>
@@ -170,14 +165,19 @@
                 <img src="blank.png" id="output" alt="" style="height: 100%; width: 100%; object-fit: cover;">
                 
               </div>
-              <p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>
-              <p><label for="file" style="cursor: pointer;"><i  data-toggle="tooltip" data-placement="top" title="Add item picture" style="font-size: 35px; color:teal;" class="fas fa-plus-circle"></i></label></p>
-    
+              
+              <p><input type="file" value="upload" id="fileButton" accept="image/*" name="image"   onchange="loadFile(event)" style="display: none;"></p>
+              <p><label for="fileButton" style="cursor: pointer;"><i  data-toggle="tooltip" data-placement="top" title="Add inventory picture" style="font-size: 35px;color:teal;" class="fas fa-plus-circle"></i></label></p>
+               
+             
               <div class="col-sm-6" style="position: relative; left: 35px;">
                 <label>Promo Name</label>
                 <input type="text" id="promoname" class="form-control" required placeholder="Promo Name">
               </div>
-    
+
+              <div class="col-sm-6" style="position: relative; right: 40px; top: 10px;">
+              <progress  value="0" max="100" id="uploader">0%</progress>
+              </div>
             </div>
             
             <div class="form-group">
@@ -232,8 +232,8 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header"style="background-color:#DF3A01;">
-            <h3 class="modal-title" style="color:white;">Update<span id="fname-span"></span></h3>
-            <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
+            <h3 class="modal-title" style="color:white;">display<span id="fname-span"></span></h3>
+            <button type='button' class='close' id='close-display' data-dismiss='modal'>&times;</button>
           </div>
           <div class="modal-body">
             <div class="form-group">
@@ -275,67 +275,62 @@
 
 
     
-<div class="modal fade" id="update">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header"style="background-color:#DF3A01;">
-        <h3 class="modal-title" style="color:white;">Update <span id="promoname-span"></span></h3>
-  
-        <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <div class="form-row">
-            <div class="col-sm-6">
-              <label>Promo Name</label>
-              <input type="text" class="form-control" id="updatepromoname" disabled>
-             
-            </div>
-            <div class="col-sm-6">
-              <label>Update Amount</label>
-              <input type="text" class="form-control" id="updateamount" >
-            </div>
-        
-            <div class="col-sm-6 my-2">
-              <label>Update Starting Date</label>
-              <input type="text" class="form-control  " id="updatestart" disabled>
-              <input type="date" class="form-control   " id="updatestart" >
-            </div>
 
-            <div class="col-sm-6 my-2">
-              <label>Update Edning Date</label>
-              <input type="text" class="form-control  " id="updateend" disabled>
-              <input type="date" class="form-control" id="updateend" >
-            </div>
+    <div class="modal fade" id="update">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header"style="background-color:#DF3A01;">
+            <h3 class="modal-title" style="color:white;">Update <span id="promoname-span"></span></h3>
+            <button type='button' class='close' id='close-display' data-dismiss='modal'>&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <div class="form-row">
+                <div class="col-sm-6">
+                  <label>Promo Name</label>
+                  <input type="text" required class="form-control" disabled id="updatename" placeholder="Promo Name"  >
+                </div>
+                <div class="col-sm-6 ">
+                  <label>Update Amount</label>
+                  <input  type="text" class="form-control" id="updateamount" >
+                </div>
+                
+                <div class="col-sm-6 my-2">
+                  <label>Update Starting Date</label>
+                  
+                  <input type="date" class="form-control   " id="updatestart" >
+                </div>
+                <div class="col-sm-6 my-2">
+                  <label>Update Edning Date</label>
+                 
+                  <input type="date" class="form-control" id="updateend" >
+                </div>
+                
+                <div class="col-sm-4 my-2">
+                  <label>Update Status</label>
+                  <input type="text" class="form-control  " id="displaystat" disabled>              
+                </div>
 
-            
-            <div class="col-sm-6 my-2">
-              <label>Update Status</label>
-              <select id="updatestat" class="form-control">
-                <option value="Permanent" selected >Permanent</option>
-                <option value="Temporary" >Temporary</option>
-              </select>
+                <div class="col-sm-4 my-3">
+                  <label></label>
+                  <select id="updatestat" required class="form-control">
+                    <option value="Permanent" selected>Permanent</option>
+                    <option value="Temporary">Temporary</option>
+                  </select>
+                </div>
+                <div class="col-sm-3"></div>
+                <div class="col-sm-3">
+                  <label>Description</label>
+                  <textarea id="updatedescription" style="height: 150px; width: 440px;resize: none;" class="form-control"></textarea>
+                </div>
             </div>
-
-            <div class="col-sm-6 my-2"></div>
-           
-              <div class="col-sm-3">
-                <label>Description</label>
-                <textarea id="updatedescription" style="height: 150px; width: 440px;resize: none;" class="form-control"></textarea>
-              </div>
-             
-            </div>
-            
+          </div>
+          <div class="modal-footer"  style="height: 70px;">
+            <button class="btn" style="background-color:#DF3A01; color:white;" id="updateBtn">Update</button>
           </div>
         </div>
-      
-    
-      <div class="modal-footer"  style="height: 70px;">
-        <button class="btn" style="background-color:#DF3A01; color:white;" id="updateBtn">Update</button>
       </div>
     </div>
-  </div>
-</div>
     
     <!-- SCRIPTS -->
     <!-- JQuery -->
@@ -366,32 +361,51 @@
       // globals
       let button = document.getElementById('addBtn');
       const date = firebase.firestore.Timestamp;
-
+      const pro = [];
 
       
-    const loader = document.getElementById('loader');
-    const loaderchild = document.getElementById('loaderchild');
-    window.onload = () => {
-      loader.style.display = 'block';
+      filtering = (value) => {
+      let results;
+      return results = pro.filter(pro => pro.data.promoname.toLowerCase().includes(value.toLowerCase()) );
     }
 
+ // Searching promo
+ let searchPros = document.getElementById('search-promos');
+ searchPros.onkeyup = () => {
+      if(searchPros.value != '') {
+        let docs = filtering(searchPros.value);
+        sortingPro(docs);
+      } else {
+        renderCard();
+      }
+    }
+    searchPros.value.onchange = () => {
+      if(searchPros.value == '') {
+        renderCard();
+      }
+    }
 
-
-      renderCard = ({id, data}) => {
+     
+renderCard = () => {
         let promoCont = document.getElementById('promo-cont');
+        promoCont.innerHTML = '';
+
+        pro.forEach((pro) => {
+
         let card = document.createElement('div');
+        card.setAttribute('data-id',pro.id);
         card.classList.add('card', 'promo-cards', 'mx-3', 'my-3');
-        card.setAttribute('data-id', id)
         card.innerHTML = 
           `<img src="blank.png" class="card-img-top">
+          
           <div class="card-body">
-            <h3 class="card-title font-weight-bold text-orange">${data.promoname}</h3>
-            <h6 class="card-subtitle text-muted font-weight-bold">${data.stat}</h6>
-            <p class="card-text mt-2">${data.description}</p>
+            <h3 class="card-title font-weight-bold text-orange">${pro.data.promoname}</h3>
+            <h6 class="card-subtitle text-muted font-weight-bold">${pro.data.stat}</h6>
+            <p class="card-text mt-2">${pro.data.description}</p>
           </div>
+
           <div class="card-footer">
             <button class="btn btn-sm btn-orange">View details</button>
-          
             <i onclick='deletepromos(this.parentNode.parentNode)'
              data-toggle="tooltip" data-placement="top" title="Delete Card"
              class="far fa-trash-alt my-2" style="font-size: 25px; float: right; color: #DF3A01" ></i>
@@ -403,25 +417,71 @@
           </div>`;
         promoCont.appendChild(card);
 
-       
-
-      let tt = $('[data-toggle="tooltip"]').tooltip();
-      tt.click(function() {
-        tt.tooltip("hide");
       });
 
-      
-
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
       }
+
+  sortingPro = (docs) => {
+    let promoCont = document.getElementById('promo-cont');
+    promoCont.innerHTML = '';
+
+      if(docs.length > 0){
+      docs.forEach((doc) => {
+          let card = document.createElement('div');
+        card.classList.add('card', 'promo-cards', 'mx-3', 'my-3');
+        card.innerHTML = 
+        `<img src="blank.png" class="card-img-top">
+          
+          <div class="card-body">
+            <h3 class="card-title font-weight-bold text-orange">${doc.data.promoname}</h3>
+            <h6 class="card-subtitle text-muted font-weight-bold">${doc.data.stat}</h6>
+            <p class="card-text mt-2">${doc.data.description}</p>
+          </div>
+
+          <div class="card-footer">
+            <button class="btn btn-sm btn-orange">View details</button>
+            <i onclick='deletepromos(this.parentNode.parentNode)'
+             data-toggle="tooltip" data-placement="top" title="Delete Card"
+             class="far fa-trash-alt my-2" style="font-size: 25px; float: right; color: #DF3A01" ></i>
+
+            <a  onclick='updatefunction(this.parentNode.parentNode)' data-toggle='modal' data-target='#update'>
+             <i  data-toggle="tooltip" data-placement="top" title="Update Card" 
+             class="fas fa-pen mx-3 my-2"   style="font-size: 25px; float: right; color: #DF3A01" ></i></a>
+            
+          </div>`;
+
+          promoCont.appendChild(card);
+        });
+      } else {
+        promoCont.innerHTML = 'no data';
+      }
+        }
+
+
+      
+      db.collection('promos')
+      .where('dateAdded', '<', date.fromDate(new Date()))
+      .orderBy('dateAdded', 'desc').get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          
+          pro.push({id: doc.id, data: doc.data()});
+        });
+      }).then(() => {
+      renderCard();
+    });
+      
 
       let sortPermanent = document.getElementById('sort-permanent');
       let sortBoth = document.getElementById('sort-both');
       let sortTemporary = document.getElementById('sort-temporary');
-      let card = document.getElementById('promo-cont');
+     
 
       // Sorting by BOTH
       sortBoth.onclick = () => {
-        card.innerHTML = '';
+        
         sortBoth.classList.add('btn-orange');
         sortBoth.classList.remove('btn-outline-orange');
         sortTemporary.classList.add('btn-outline-orange');
@@ -429,33 +489,27 @@
         sortPermanent.classList.add('btn-outline-orange');
         sortPermanent.classList.remove('btn-orange');
 
-        db.collection('promos').orderBy('promoname', 'asc').get().then((snapshot) => {
-          snapshot.forEach((doc) => {
-            renderCard({id: doc.id, data: doc.data()});
-          });
-        });
+        renderCard();
       }
 
-      // Sorting by Weights
+      // Sorting by Permanent
       sortPermanent.onclick = () => {
-        card.innerHTML = '';
+     
         sortBoth.classList.add('btn-outline-orange');
         sortBoth.classList.remove('btn-orange');
         sortTemporary.classList.add('btn-outline-orange');
         sortTemporary.classList.remove('btn-orange');
         sortPermanent.classList.add('btn-orange');
         sortPermanent.classList.remove('btn-outline-orange');
+ 
+      let docs = pro.filter(i => i.data.stat == 'Permanent');
+      sortingPro(docs);
 
-        db.collection('promos').where('stat', '==', 'Permanent').orderBy('promoname', 'asc').get().then((snapshot) => {
-          snapshot.forEach((doc) => {
-            renderCard({id: doc.id, data: doc.data()});
-          });
-        });
       }
 
-      // Sorting by machines
+      // Sorting by Temporary
       sortTemporary.onclick = () => {
-        card.innerHTML = '';
+      
         sortBoth.classList.add('btn-outline-orange');
         sortBoth.classList.remove('btn-orange');
         sortTemporary.classList.add('btn-orange');
@@ -463,11 +517,8 @@
         sortPermanent.classList.add('btn-outline-orange');
         sortPermanent.classList.remove('btn-orange');
 
-        db.collection('promos').where('stat', '==', 'Temporary').orderBy('promoname', 'asc').get().then((snapshot) => {
-          snapshot.forEach((doc) => {
-            renderCard({id: doc.id, data: doc.data()});
-          });
-        });
+        let docs = pro.filter(i => i.data.stat == 'Temporary');
+        sortingPro(docs);
       }
 
     // delete card
@@ -554,14 +605,6 @@
         $('[data-toggle="tooltip"]').tooltip();
       });
 
-      db.collection('promos')
-      .where('dateAdded', '<', date.fromDate(new Date()))
-      .orderBy('dateAdded', 'desc').get().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          renderCard({id: doc.id, data: doc.data()});
-        });
-         document.getElementById('loader').style.display = 'none';
-      });
 
       // logout script
       document.getElementById("logoutBtn").addEventListener("click", function() {
@@ -585,55 +628,78 @@
       })
 
 
+     // para mo upload kag picture    
+var loadFile = function(event) {
+                  var image = document.getElementById('output');
+                  image.src = URL.createObjectURL(event.target.files[0]);
+              };
 
-      
-   // update function
-   function updatefunction(tr) {
-      let updatepromoname = document.getElementById('updatepromoname');
+    // Update Modal
+    updatefunction = (x) => {
+   
+      let id = x.getAttribute("data-id");
+      let qwe = pro.filter(pro => pro.id == id);
+      let er = qwe[0];
+      let data = er.data;
+
+      let displaystart = document.getElementById('displaystart');
+      let displayend = document.getElementById('displayend');
+      let displaystat = document.getElementById('displaystat');
+
+      let updatename = document.getElementById('updatename');
       let updateamount = document.getElementById('updateamount');
       let updatestart = document.getElementById('updatestart');
       let updateend = document.getElementById('updateend');
       let updatestat = document.getElementById('updatestat');
       let updatedescription = document.getElementById('updatedescription');
-      let span = document.getElementById('promoname-span');
-      let dataId = tr.getAttribute('data-id');
-    
+      let span = document.getElementById('promoname-span'); 
+ 
+      updateamount.value = data.amount;
+      updatestart.valueAsDate = new Date(data.start.toDate());
+      updateend.valueAsDate = new Date(data.end.toDate());
+      
+      displaystat.value = data.stat;
+      updatedescription.value = data.description;
 
-      db.collection('promos').doc(dataId).get().then(function(doc) {
-        span.textContent = doc.data().promoname; // firstname na mo display sa update modal
-        updatepromoname.value = doc.data().promoname;
-        updateamount.value = doc.data().amount;
-        updatestart.value = doc.data().start;
-        updateend.value = doc.data().end;
-        updatestat.value = doc.data().updatestat;
-        updatedescription.value = doc.data().description;
+  let updateBtn = document.getElementById('updateBtn');
+  updateBtn.onclick = () => {
+    db.collection('promos').doc(id).update({
+      amount: updateamount.value,
+      start: new Date(updatestart.value),
+      end: new Date(updateend.value),
+      stat: updatestat.value,
+      description: updatedescription.value
+
+    }).then(() => {
+      alert('Successfully updated promos!');
+      window.location.reload();
+    });
+  }
+}
+
+     // para mo upload kag picture
+    var uploader = document.getElementById('uploader');
+    var fileButton = document.getElementById('fileButton');
+   
+    fileButton.addEventListener('change', function(e){
+        var file = e.target.files[0];
+        var storageRef = firebase.storage().ref('promosimage/' + file.name);
+        var task = storageRef.put(file);
        
+        task.on('state_changed',
+            function progress(snapshot){
+                var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                uploader.value = percentage;
+            },
+            function error(err){
 
-     
-        document.getElementById('updateBtn').addEventListener('click', () => {
-          let amount = document.getElementById('updateamount').value;
-          let start = document.getElementById('updatestart').value;
-          let end = document.getElementById('updateend').value;
-          let stat = document.getElementById('updatestat').value;
-          let description = document.getElementById('updatedescription').value;
-          db.collection('promos').doc(doc.id).update({
-            amount: amount,
-            start: start,
-            end: end,
-            stat: stat,
-            description: description
-              
-          }).then(() => {
-            alert('Successfully updated Promo!');
-            window.location.reload();
-          }).catch((error) => {
-            alert(`Error: ${error.message}`);
-          });
-        });
-      });
-    }
-    
-    
+            },
+            function complete(){
+             alert('successfuly upload picture')
+            }  
+        );
+    });
+
 
     function securityReports() {
         

@@ -173,9 +173,8 @@
             </div>  
             <div>
               <div class="d-flex justify-content-center">
-                <input type="search"  placeholder="Search Trainer here..." aria-label="Search" class="form-control" id="#">
-                <button class="btn btn-orange btn-sm my-0 p" style=" color:white; height: 38px;" type="submit">
-                  <i   class="fas fa-search" ></i>
+                <input type="text" id="search-trainers" placeholder="Search Trainer here..." aria-label="Search" class="form-control" id="#">
+                
                 </button>
               </div>
             </div>
@@ -475,6 +474,9 @@
    <script src='js/init.js'></script>
 
    <script>
+     const tra = [];
+
+
     // para mo sulod ang picture sa circle
         var loadFile = function(event) {
         var image = document.getElementById('output');
@@ -514,7 +516,7 @@
 
             },
             function complete(){
-             
+             alert('successfuly upload picture')
             }  
         );
     });
@@ -541,11 +543,7 @@
       sortActive.classList.add('btn-outline-orange');
       sortActive.classList.remove('btn-orange');
 
-      db.collection('trainers').orderBy('fname', 'asc').get().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          renderData({id: doc.id, doc: doc.data()});
-        });
-      });
+      renderData();
     }
 
     
@@ -559,14 +557,13 @@
       sortActive.classList.add('btn-orange');
       sortActive.classList.remove('btn-outline-orange');
 
-      db.collection('trainers').where('status', '==', 'active').orderBy('fname', 'asc').get().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          renderData({id: doc.id, doc: doc.data()});
-        });
-      });
+     
+      let docs = tra.filter(i => i.doc.status == 'active');
+
+      sortingTra(docs);
     }
 
-    // Sorting by EXPIRED
+    // Sorting by INACTIVE
     sortInactive.onclick = () => {
       tbody.innerHTML = '';
       sortBoth.classList.add('btn-outline-orange');
@@ -576,11 +573,11 @@
       sortActive.classList.add('btn-outline-orange');
       sortActive.classList.remove('btn-orange');
 
-      db.collection('trainers').where('status', '==', 'inactive').orderBy('fname', 'asc').get().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          renderData({id: doc.id, doc: doc.data()});
-        });
-      });
+     
+
+      let docs = tra.filter(i => i.doc.status == 'inactive');
+
+      sortingTra(docs);
     }
 
 
@@ -631,7 +628,7 @@
             lname: lname,
             email: email,
             cellphoneNo: cellphoneNo,
-            birthdate: birthdate,
+            birthdate: new Date(birthdate),
             sex: sex,
             position: 'junior',
             address: address,
@@ -648,31 +645,54 @@
     });
 
    
+  filtering = (value) => {
+      let results;
+      return results = tra.filter(tra => tra.fullName.toLowerCase().includes(value.toLowerCase()) );
+    }
+
+  // Searching Inventory
+  let searchTra = document.getElementById('search-trainers');
+  searchTra.onkeyup = () => {
+      if(searchTra.value != '') {
+        let docs = filtering(searchTra.value);
+        sortingTra(docs);
+      } else {
+        renderData();
+      }
+    }
+    searchTra.value.onchange = () => {
+      if(searchTra.value == '') {
+        renderData();
+      }
+    }
+
 
 // display data in the table  
-renderData = ({id, doc}) => {
+renderData = () => {
       let tbody = document.getElementById('tbody');
-      let tr = document.createElement('tr');
+      tbody.innerHTML=''
 
-      tr.setAttribute('data-id',id);
+      tra.forEach((tra) => {
+      let tr = document.createElement('tr');
+      tr.setAttribute('data-id',tra.id);
       tr.innerHTML = 
-      `<td><span class="hidden" id="${id}-span"></span><a>
-      <small id='${id}-small' onclick='showID("${id}")'>
-      <i data-toggle="tooltip" data-placement="top" title="Show ${doc.fname}"  class="fas fa-eye"></i></small></a></td>
-      <td><b>${doc.fname}</b></td>
-      <td><b>${doc.lname}<b></td>
-      <td><b>${doc.status}<b></td>
-      <td><b>${doc.position}<b></td>
+      `<td><span class="hidden" id="${tra.id}-span"></span><a>
+      <small id='${tra.id}-small' onclick='showID("${tra.id}")'>
+      <i data-toggle="tooltip" data-placement="top" title="Show ${tra.doc.fname}"  class="fas fa-eye"></i></small></a></td>
+      <td><b>${tra.doc.fname}</b></td>
+      <td><b>${tra.doc.lname}<b></td>
+      <td><b>${tra.doc.status}<b></td>
+      <td><b>${tra.doc.position}<b></td>
       
 
       <td>
         <a id="usc" class='btn-link  edit' onclick='updatestat(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#update'>
-         <i class="fas fa-pen mx-1 " style='font-size: 20px; color:#DF3A01' data-toggle="tooltip" title="Update ${doc.fname}" data-placement="top"></i></a>
+         <i class="fas fa-pen mx-1 " style='font-size: 20px; color:#DF3A01' data-toggle="tooltip" title="Update ${tra.doc.fname}" data-placement="top"></i></a>
          
         <a class='btn-link' onclick='viewTrainers(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#displayallrecords'>
-         <i data-toggle="tooltip" data-placement="top" title="view ${doc.fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
+         <i data-toggle="tooltip" data-placement="top" title="view ${tra.doc.fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
       </td>`;
       tbody.appendChild(tr);
 
@@ -680,15 +700,54 @@ renderData = ({id, doc}) => {
       tt.click(function() {
         tt.tooltip("hide");
       });
-    
+      
+      } )
     }
+
+    sortingTra = (docs) => {
+      let tbody = document.getElementById('tbody');
+      tbody.innerHTML = '';
+
+      if(docs.length > 0){
+        tbody.innerHTML = '';
+      docs.forEach((doc) => {
+        let tr = document.createElement('tr');
+          tr.setAttribute('data-id', doc.id);
+          tr.innerHTML = 
+          `<td><span class="hidden" id="${doc.id}-span"></span><a>
+          <small id='${doc.id}-small' onclick='showID("${doc.id}")'>
+          <i data-toggle="tooltip" data-placement="top" title="Show ${doc.doc.fname}"  class="fas fa-eye"></i></small></a></td>
+          <td><b>${doc.doc.fname}</b></td>
+          <td><b>${doc.doc.lname}<b></td>
+          <td><b>${doc.doc.status}<b></td>
+          <td><b>${doc.doc.position}<b></td>
+
+          <td>
+            <a id="usc" class='btn-link  edit' onclick='updatestat(this.parentNode.parentNode)'
+            data-toggle='modal' data-target='#update'>
+            <i class="fas fa-pen mx-1 " style='font-size: 20px; color:#DF3A01' data-toggle="tooltip" title="Update ${doc.doc.fname}" data-placement="top"></i></a>
+            
+            <a class='btn-link' onclick='viewTrainers(this.parentNode.parentNode)'
+            data-toggle='modal' data-target='#displayallrecords'>
+            <i data-toggle="tooltip" data-placement="top" title="view ${doc.doc.fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
+          </td>`;
+
+          tbody.appendChild(tr);
+        });
+      } else {
+        tbody.innerHTML = 'no data';
+      }
+    }
+      
+    
   
     // Querying trainers
     db.collection('trainers').orderBy('fname', 'asc').get().then((snapshot) => {
       snapshot.forEach((doc) => {
-        renderData({id: doc.id, doc: doc.data()});
+       
+        tra.push({id: doc.id, doc: doc.data(), fullName: `${doc.data().fname} ${doc.data().lname}`})
       });
-
+      renderData();
       tableLoader.style.display = 'none';
     });
 
@@ -704,7 +763,14 @@ renderData = ({id, doc}) => {
        
 // show all the inputed data in the modal
     function viewTrainers(x) {
-      let dataid = x.getAttribute("data-id");
+      let id = x.getAttribute("data-id");
+
+      let res = tra.filter(tra => tra.id == id);
+      let kol = res[0];
+      let data = kol.doc;
+
+      let span = document.getElementById('viewfname-span');
+      
       let viewId = document.getElementById("view-id");
       let fname = document.getElementById("view-fname");
       let lname = document.getElementById("view-lname");
@@ -715,23 +781,21 @@ renderData = ({id, doc}) => {
       let address = document.getElementById("view-address");
       let position = document.getElementById("view-position");
       let status = document.getElementById("view-status");
-      let span = document.getElementById('viewfname-span');
-      
 
-      db.collection("trainers").doc(dataid).get().then(function(doc) {
-        span.textContent = doc.data().fname;
-        viewId.value = dataid;
-        fname.value = doc.data().fname;
-        lname.value = doc.data().lname;
-        email.value = doc.data().email;
-        phone.value = doc.data().phone;
-        birthdate.value = doc.data().birthdate;
-        sex.value = doc.data().sex;
-        address.value = doc.data().address;
-        position.value = doc.data().position;
-        status.value = doc.data().status;
-        
-      });
+      let bday = new Date(data.birthdate.toDate());
+     
+     
+      viewId.value = id;
+      fname.value = data.fname;
+      lname.value = data.lname;
+      email.value = data.email;
+      phone.value = data.cellphoneNo;
+      birthdate.value = `${months[bday.getMonth()]} ${bday.getDate()}, ${bday.getFullYear()}`;
+      sex.value = data.sex;
+      address.value = data.address;
+      position.value = data.position;
+      status.value = data.status;
+
     }
     
     // ID show and hide in the table
@@ -814,7 +878,7 @@ renderData = ({id, doc}) => {
 
     function securityReports() {
         
-        let password = prompt('security password');
+        let password = prompt('Security Password');
       if(password == '123')
       {
         window.location.href = "reports.html";
@@ -823,7 +887,7 @@ renderData = ({id, doc}) => {
 
     function securityLogtrail() {
       
-      let password = prompt('security password');
+      let password = prompt('Security Password');
     if(password == '123')
     {
       window.location.href = "logtrail.html";
