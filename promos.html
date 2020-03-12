@@ -297,18 +297,18 @@
                 
                 <div class="col-sm-6 my-2">
                   <label>Update Starting Date</label>
-                  <input type="text" class="form-control  " id="updatestart" disabled>
+                  
                   <input type="date" class="form-control   " id="updatestart" >
                 </div>
                 <div class="col-sm-6 my-2">
                   <label>Update Edning Date</label>
-                  <input type="text" class="form-control  " id="updateend" disabled>
+                 
                   <input type="date" class="form-control" id="updateend" >
                 </div>
                 
                 <div class="col-sm-4 my-2">
                   <label>Update Status</label>
-                  <input type="text" class="form-control  " id="updatestat" disabled>              
+                  <input type="text" class="form-control  " id="displaystat" disabled>              
                 </div>
 
                 <div class="col-sm-4 my-3">
@@ -634,59 +634,49 @@ var loadFile = function(event) {
                   image.src = URL.createObjectURL(event.target.files[0]);
               };
 
-      
-   // update function
-   function updatefunction(x) {
+    // Update Modal
+    updatefunction = (x) => {
+   
+      let id = x.getAttribute("data-id");
+      let qwe = pro.filter(pro => pro.id == id);
+      let er = qwe[0];
+      let data = er.data;
+
+      let displaystart = document.getElementById('displaystart');
+      let displayend = document.getElementById('displayend');
+      let displaystat = document.getElementById('displaystat');
+
       let updatename = document.getElementById('updatename');
       let updateamount = document.getElementById('updateamount');
       let updatestart = document.getElementById('updatestart');
       let updateend = document.getElementById('updateend');
       let updatestat = document.getElementById('updatestat');
       let updatedescription = document.getElementById('updatedescription');
-      let span = document.getElementById('promoname-span');
-      let id = x.getAttribute("data-id");
-      let qwe = pro.filter(pro => pro.id == id);
-      let er = qwe[0];
-      let data = er.data;
+      let span = document.getElementById('promoname-span'); 
+ 
+      updateamount.value = data.amount;
+      updatestart.valueAsDate = new Date(data.start.toDate());
+      updateend.valueAsDate = new Date(data.end.toDate());
+      
+      displaystat.value = data.stat;
+      updatedescription.value = data.description;
 
-      db.collection('promos').doc(id).get().then(function(doc) {
-        span.textContent = doc.data().promoname; // firstname na mo display sa update modal
-        updatename.value = doc.data().promoname;
-        updateamount.value = doc.data().amount;
-        updatestart.value = doc.data().start;
-        updatestat.value = doc.data().stat;
-        
-        let us = doc.data().start.toDate();
-        let ue = doc.data().end.toDate();
-        updatestart.value = `${months[us.getMonth()]}/${us.getDate()}/${us.getFullYear()}`;
-        updateend.value = `${months[ue.getMonth()]}/${ue.getDate()}/${ue.getFullYear()}`;
+  let updateBtn = document.getElementById('updateBtn');
+  updateBtn.onclick = () => {
+    db.collection('promos').doc(id).update({
+      amount: updateamount.value,
+      start: new Date(updatestart.value),
+      end: new Date(updateend.value),
+      stat: updatestat.value,
+      description: updatedescription.value
 
-        updatedescription.value = doc.data().description;
+    }).then(() => {
+      alert('Successfully updated promos!');
+      window.location.reload();
+    });
+  }
+}
 
-      document.getElementById('updateBtn').addEventListener('click', () => {
-          let amount = document.getElementById('updateamount').value;
-          let start = document.getElementById('updatestart').value;
-          let end = document.getElementById('updateend').value;
-          let stat = document.getElementById('updatestat').value;
-          let description = document.getElementById('updatedescription').value;
-
-          db.collection('promos').doc(doc.id).update({
-            amount: amount,
-            start: start,
-            end: end,
-            stat: stat,
-            description: description,
-                  
-          }).then(() => {
-            alert('Successfully updated Promo!');
-            window.location.reload();
-          }).catch((error) => {
-            alert(`Error: ${error.message}`);
-          });
-        });
-      });
-    }
-  
      // para mo upload kag picture
     var uploader = document.getElementById('uploader');
     var fileButton = document.getElementById('fileButton');

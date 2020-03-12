@@ -628,7 +628,7 @@
             lname: lname,
             email: email,
             cellphoneNo: cellphoneNo,
-            birthdate: birthdate,
+            birthdate: new Date(birthdate),
             sex: sex,
             position: 'junior',
             address: address,
@@ -781,14 +781,16 @@ renderData = () => {
       let address = document.getElementById("view-address");
       let position = document.getElementById("view-position");
       let status = document.getElementById("view-status");
-   
-      
+
+      let bday = new Date(data.birthdate.toDate());
+     
+     
       viewId.value = id;
       fname.value = data.fname;
       lname.value = data.lname;
       email.value = data.email;
-      phone.value = data.phone;
-      birthdate.value = data.birthdate;
+      phone.value = data.cellphoneNo;
+      birthdate.value = `${months[bday.getMonth()]} ${bday.getDate()}, ${bday.getFullYear()}`;
       sex.value = data.sex;
       address.value = data.address;
       position.value = data.position;

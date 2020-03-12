@@ -479,6 +479,7 @@ var loadFile = function(event) {
 renderCard = () => {
   let InventoryCont = document.getElementById('inventory-cont');
   InventoryCont.innerHTML = '';
+
         inv.forEach((inv) => {
           
           let card = document.createElement('div');
@@ -557,7 +558,7 @@ renderCard = () => {
       sortWeights.classList.add('btn-orange');
       sortWeights.classList.remove('btn-outline-orange');
 
-      let docs = inv.filter(i => i.doc.category == 'Cardio Equipment');
+      let docs = inv.filter(i => i.data.category == 'Cardio Equipment');
       sortingInv(docs);
 
     }
@@ -589,9 +590,9 @@ renderCard = () => {
         card.innerHTML = 
         `<img src="blank.png" class="card-img-top">
           <div class="card-body">
-            <h3 class="card-title font-weight-bold text-orange">${doc.doc.name}</h3>
-            <h6 class="card-subtitle text-muted font-weight-bold">${doc.doc.category}</h6>
-            <p class="card-text mt-2">${doc.doc.description}</p>
+            <h3 class="card-title font-weight-bold text-orange">${doc.data.name}</h3>
+            <h6 class="card-subtitle text-muted font-weight-bold">${doc.data.category}</h6>
+            <p class="card-text mt-2">${doc.data.description}</p>
           </div>
           <div class="card-footer">
             <button  onclick='viewInventory(this.parentNode.parentNode)'
