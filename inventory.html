@@ -558,7 +558,6 @@ renderCard = () => {
       sortWeights.classList.remove('btn-outline-orange');
 
       let docs = inv.filter(i => i.doc.category == 'Cardio Equipment');
-
       sortingInv(docs);
 
     }
@@ -573,8 +572,9 @@ renderCard = () => {
         sortWeights.classList.remove('btn-orange');
 
         let docs = inv.filter(i => i.doc.category == 'Weight Room Equipment');
-
         sortingInv(docs);
+
+
     }
 
 
@@ -608,6 +608,7 @@ renderCard = () => {
       }
     }
 
+    
     
 
     // display data by dateaAdded

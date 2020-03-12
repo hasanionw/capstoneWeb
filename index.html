@@ -178,6 +178,11 @@
 			background:#DC143C;
 		}
 
+		.buttons:hover {
+			cursor: pointer;
+			-webkit-filter: brightness(80%);
+			filter: brightness(80%);
+		}
 	</style>
 </head>
 <body>
@@ -204,7 +209,7 @@
 				<br>
 				<div class="group">
 					<center><button  style = "width: 100%; height: 50px; border-radius: 
-					25px;background-color: #DF3A01;color:white; border: none; font-family: arial; font-size: 20px; opacity: 0.9;" type="button" onclick="signIn()" id="signIn"> LOGIN </button></center><br>
+					25px;background-color: #DF3A01;color:white; border: none; font-family: arial; font-size: 20px; opacity: 0.9;" type="button" class="buttons" onclick="signIn()" id="signIn"> LOGIN </button></center><br>
 					
 
 				</div>
@@ -226,12 +231,9 @@
 				
 				<br>
 				<div class="group">
-					
 					<center><button style = "width: 100%; height: 50px; border-radius: 
-					25px;background-color: #DF3A01;color:white; border: none; font-family: arial; font-size: 20px;opacity: 0.9;" type="button" class="btn btn-success" onclick="signUp()" id="signUp"> REGISTER</button></center>
+					25px;background-color: #DF3A01;color:white; border: none; font-family: arial; font-size: 20px;opacity: 0.9;" type="button" class="btn btn-success buttons" onclick="signUp()" id="signUp"> REGISTER</button></center>
 				</div>
-				
-				
 			</div>
 		</div>
 	</div>
@@ -243,6 +245,17 @@
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
 <script src="js/init.js"></script>
+
+<script>
+	
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+	window.location.href = "dashboard.html";
+  }
+});
+
+</script>
 
 </body>
 </html>
