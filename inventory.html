@@ -91,12 +91,6 @@
 </head>
 
 <body class="grey lighten-3" >
-  <div class="loaderparent" id="loader">
-    <div class="loader" id="loaderchild">
-      <div class="loader-spinner"></div>
-    </div>
-  </div>
-
   <!--Main Navigation-->
   <header>
 
@@ -412,14 +406,6 @@
 
 
    <script>
-
-const loader = document.getElementById('loader');
-    const loaderchild = document.getElementById('loaderchild');
-    window.onload = () => {
-      loader.style.display = 'block';
-    }
-   
- 
 // creating a data 
     var button = document.getElementById('addBtn');
 
@@ -565,7 +551,6 @@ renderCard = ({id, data}) => {
        
         renderCard({id: doc.id, data: doc.data()});
       });
-          document.getElementById('loader').style.display = 'none';
     });
 
 

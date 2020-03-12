@@ -112,7 +112,7 @@ button.onclick = () => {
           fname: fname,
           lname: lname,
           memberType: memberType,
-          status: 'N/A',
+          status: 'Unpaid',
           sex: sex,
           dateAdded: firebase.firestore.Timestamp.fromDate(new Date()),
           phone: phone,
@@ -401,6 +401,8 @@ updateMember = (tr) => {
   let memberType = document.getElementById('updateType');
   let status = document.getElementById('updateStatus');
 
+  let d = data.dateAdded.toDate();
+
   fname.value = data.fname;
   lname.value = data.lname;
   uid.value = id;
@@ -411,7 +413,7 @@ updateMember = (tr) => {
     option.setAttribute('value', p.data.programName);
     program.appendChild(option);
   });
-  dateAdded.value = data.dateAdded;
+  dateAdded.value = `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
   memberType.value = data.memberType;
   status.value = data.status;
 
