@@ -21,6 +21,10 @@
     color: #565656 !important;
 }
 
+.text-red {
+    color: red !important;
+}
+
 .bg-darkgrey {
     background-color: #565656 !important;
     color: white !important;
@@ -75,4 +79,23 @@
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* Pagination */
+.pagination {
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 0 !important;
+}
+
+.pagination .page-item .page-link {
+    border-style: solid;
+    border-width: 1px !important;
+    border-color: lightgrey;
+}
+
+.flex-this {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
