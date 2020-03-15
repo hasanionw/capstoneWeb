@@ -572,7 +572,7 @@ renderCard = () => {
         sortWeights.classList.add('btn-outline-orange');
         sortWeights.classList.remove('btn-orange');
 
-        let docs = inv.filter(i => i.doc.category == 'Weight Room Equipment');
+        let docs = inv.filter(i => i.data.category == 'Weight Room Equipment');
         sortingInv(docs);
 
 

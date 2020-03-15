@@ -209,6 +209,46 @@
         </div>
       </div>
 
+
+
+      <div class="container-fluid mt-5">
+
+        <br>
+        <div class='card'>
+          <div class='card-content'>
+            
+             
+          
+            
+            <div id='card-body' class='card-body table-responsive p-0 card-bodyzz'>  
+              
+              <table class='table table-hover'>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>FIRSTNAME</th>
+                    <th>LASTNAME</th>
+                    <th>STATUS</th>
+                    <th>POSITION</th>
+                    <th>ACTION</th>
+                    
+                  </tr>
+                </thead>
+                <tbody id='tbody2'>
+  
+                </tbody>
+              </table>
+              <div class="table-parent my-5" id="table-loader">
+                <div class="table-loader">
+                  <div class="loader-spinner"></div>
+                </div>
+              </div>
+            
+          </div>
+            </div>
+          </div>
+        </div>
+
     
 
 <div id="display" class="modal fade" role="dialog" >
@@ -226,7 +266,9 @@
        <table width = "100%" >
         
          </table>
-
+         <div id="no-data-div" class="no-data-div my-3 text-muted">
+          No data!
+        </div>
       </div>
     
     </div>
@@ -558,7 +600,7 @@
       sortActive.classList.remove('btn-outline-orange');
 
      
-      let docs = tra.filter(i => i.doc.status == 'active');
+      let docs = tra.filter(t => t.doc.status == 'active' && t.doc.chat == 'online');
 
       sortingTra(docs);
     }
@@ -575,13 +617,12 @@
 
      
 
-      let docs = tra.filter(i => i.doc.status == 'inactive');
+      let docs = tra.filter(t => t.doc.status == 'inactive' && t.doc.chat == 'online');
 
       sortingTra(docs);
     }
 
-
-
+   
 
     // creating a data 
     var button = document.getElementById('addtrainer');
@@ -630,6 +671,7 @@
             cellphoneNo: cellphoneNo,
             birthdate: new Date(birthdate),
             sex: sex,
+            chat: 'online',
             position: 'junior',
             address: address,
             status: 'active'
@@ -666,16 +708,20 @@
       }
     }
 
-
 // display data in the table  
 renderData = () => {
       let tbody = document.getElementById('tbody');
-      tbody.innerHTML=''
+      document.getElementById('no-data-div').style.display = 'none';
 
-      tra.forEach((tra) => {
+      tbody.innerHTML='';
+      let chat = tra.filter(tra => tra.doc.chat == 'online');
+
+      if(chat.length > 0) {
+      chat.forEach((tra) => {
       let tr = document.createElement('tr');
       tr.setAttribute('data-id',tra.id);
       tr.innerHTML = 
+
       `<td><span class="hidden" id="${tra.id}-span"></span><a>
       <small id='${tra.id}-small' onclick='showID("${tra.id}")'>
       <i data-toggle="tooltip" data-placement="top" title="Show ${tra.doc.fname}"  class="fas fa-eye"></i></small></a></td>
@@ -683,17 +729,21 @@ renderData = () => {
       <td><b>${tra.doc.lname}<b></td>
       <td><b>${tra.doc.status}<b></td>
       <td><b>${tra.doc.position}<b></td>
-      
-
+    
       <td>
-        <a id="usc" class='btn-link  edit' onclick='updatestat(this.parentNode.parentNode)'
+        <a  class='btn-link  edit' onclick='updatestat(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#update'>
          <i class="fas fa-pen mx-1 " style='font-size: 20px; color:#DF3A01' data-toggle="tooltip" title="Update ${tra.doc.fname}" data-placement="top"></i></a>
          
         <a class='btn-link' onclick='viewTrainers(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#displayallrecords'>
          <i data-toggle="tooltip" data-placement="top" title="view ${tra.doc.fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
-      </td>`;
+     
+         <i id="delete" onclick='deletetrainers(this.parentNode.parentNode)'
+             data-toggle="tooltip" data-placement="top" title="Delete ${tra.doc.fname}"
+             class="far fa-trash-alt mx-4" style="font-size: 20px; color: #DF3A01" ></i>
+
+       </td>`;
       tbody.appendChild(tr);
 
       let tt = $('[data-toggle="tooltip"]').tooltip();
@@ -701,12 +751,19 @@ renderData = () => {
         tt.tooltip("hide");
       });
       
-      } )
-    }
+      });
+    } else {
+    document.getElementById('no-data-div').style.display = 'flex';
+  }
+  }
+
+
 
     sortingTra = (docs) => {
       let tbody = document.getElementById('tbody');
+     
       tbody.innerHTML = '';
+
 
       if(docs.length > 0){
         tbody.innerHTML = '';
@@ -730,7 +787,12 @@ renderData = () => {
             <a class='btn-link' onclick='viewTrainers(this.parentNode.parentNode)'
             data-toggle='modal' data-target='#displayallrecords'>
             <i data-toggle="tooltip" data-placement="top" title="view ${doc.doc.fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
-          </td>`;
+          
+            <i id="delete" onclick='deletetrainers(this.parentNode.parentNode)'
+             data-toggle="tooltip" data-placement="top" title="Delete ${doc.doc.fname}"
+             class="far fa-trash-alt mx-4" style="font-size: 20px; color: #DF3A01" ></i>
+
+            </td>`;
 
           tbody.appendChild(tr);
         });
