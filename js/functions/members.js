@@ -170,60 +170,29 @@ renderRegular = (list) => {
   let tbody = document.getElementById('tbody');
   tbody.innerHTML = ``;
 
-  list.forEach((reg) => {
-    let tr = document.createElement('tr');
-    tr.setAttribute('data-id', reg.id);
-    tr.innerHTML = 
-      `<td>${reg.data.lname}</td>
-      <td>${reg.data.fname}</td>
-      <td>
-        <span class="hidden" id="${reg.id}-span"></span>
-        <a>
-          <small id='${reg.id}-small' onclick='showID("${reg.id}")'>
-            <i data-toggle="tooltip" data-placement="top" title="Show ${reg.data.fname}"  class="fas fa-eye"></i>
-          </small>
-        </a>
-      </td>
-      <td>${reg.data.status}</td>
-      <td>
-        <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
-        <a class='btn-link text-orange' data-toggle='modal' data-target='#updateModal' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${reg.data.fname}" data-placement="top"></i></a>
-        <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>  
-        <a class='btn-link text-red' data-toggle='modal' data-target='#payment-modal' onclick='deleteMember(this.parentNode.parentNode)'><i class='fas fa-trash-alt mx-1' style='font-size: 20px'></i></a>  
-      </td>`;
-
-    tbody.appendChild(tr);
-  });
-
-}
-
-renderNewSearch = (docs) => {
-  let tbody = document.getElementById('tbody');
-  tbody.innerHTML = ``;
-
-  if(docs.length > 0) {
-    docs.forEach((doc) => {
+  if(list.length > 0) {
+    list.forEach((reg) => {
       let tr = document.createElement('tr');
-      tr.setAttribute('data-id', doc.id);
-
+      tr.setAttribute('data-id', reg.id);
       tr.innerHTML = 
-        `<td>${doc.data.lname}</td>
-        <td>${doc.data.fname}</td>
+        `<td>${reg.data.lname}</td>
+        <td>${reg.data.fname}</td>
         <td>
-          <span class="hidden" id="${doc.id}-span"></span>
+          <span class="hidden" id="${reg.id}-span"></span>
           <a>
-            <small id='${doc.id}-small' onclick='showID("${doc.id}")'>
-              <i data-toggle="tooltip" data-placement="top" title="Show ${doc.data.fname}"  class="fas fa-eye"></i>
+            <small id='${reg.id}-small' onclick='showID("${reg.id}")'>
+              <i data-toggle="tooltip" data-placement="top" title="Show ${reg.data.fname}"  class="fas fa-eye"></i>
             </small>
-          </a>  
+          </a>
         </td>
-        <td>${doc.data.status}</td>
+        <td>${reg.data.status}</td>
         <td>
           <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
-          <a class='btn-link text-orange' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data.fname}" data-placement="top"></i></a>
+          <a class='btn-link text-orange' data-toggle='modal' data-target='#updateModal' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${reg.data.fname}" data-placement="top"></i></a>
           <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>  
+          <a class='btn-link text-red' data-toggle='modal' data-target='#payment-modal' onclick='deleteMember(this.parentNode.parentNode)'><i class='fas fa-trash-alt mx-1' style='font-size: 20px'></i></a>  
         </td>`;
-
+  
       tbody.appendChild(tr);
     });
   } else {
@@ -231,23 +200,34 @@ renderNewSearch = (docs) => {
   }
 }
 
-filterRegs = (value) => {
-  document.getElementById('no-data-div').style.display = 'none';
-  return results = members.filter(member => member.fullName.toLowerCase().includes(value.toLowerCase()) && member.data.memberType == 'Regular');
+buildNewTable = (val) => {
+  let res = members.filter(m => m.fullName.toLowerCase().includes(val.toLowerCase()) && m.data.memberType == 'Regular');
+  let state = {
+    page: 1,
+    rows: 5
+  }
+
+  let data = pagination(res, state.page, state.rows);
+  let list = data.querySet;
+  let pagi_no = data.pages;  
+  let pageSpan = document.getElementById('page');
+
+  if(data.pages > 0) {
+    pageSpan.innerText = `Page: ${state.page} of ${data.pages}`;
+  } else {
+    pageSpan.innerText = `Page: 0 of 0`;
+  }
+
+  putPagination(pagi_no);
+  renderRegular(list);
 }
 
 // Searching Regular Members
 let searchReg = document.getElementById('search-member');
 searchReg.onkeyup = () => {
   if(searchReg.value != '') {
-    let docs = filterRegs(searchReg.value);
-    renderNewSearch(docs);
+    buildNewTable(searchReg.value);
   } else {
-    buildTable();
-  }
-}
-searchReg.value.onchange = () => {
-  if(searchReg.value == '') {
     buildTable();
   }
 }
@@ -670,7 +650,11 @@ buildTable = () => {
   let pagi_no = data.pages;  
   let pageSpan = document.getElementById('page');
 
-  pageSpan.innerText = `Page: ${state.page}`;
+  if(data.pages > 0) {
+    pageSpan.innerText = `Page: ${state.page} of ${data.pages}`;
+  } else {
+    pageSpan.innerText = `Page: 0 of 0`;
+  }
 
   // walkin
   let walks = members.filter(m => m.data.memberType == 'Walk-in');
@@ -679,7 +663,7 @@ buildTable = () => {
   let wpagi_no = walkData.pages;
   let walkPageSpan = document.getElementById('walk-page');
 
-  walkPageSpan.innerText = `Page: ${state.wpage}`;
+  walkPageSpan.innerText = `Page: ${state.wpage} of ${walkData.pages}`;
 
   putPagination(pagi_no);
   putWalkPagination(wpagi_no);
