@@ -25,6 +25,10 @@
       position: relative;
     }
 
+    .table {
+      margin-bottom: 0 !important;
+    }
+
     table > thead > tr > th {
       font-weight: bold;
       text-transform: uppercase;
@@ -39,7 +43,6 @@
     }
 
     .card-bodyzz {
-      max-height: 325px;
       overflow-y: auto;
     }
 
@@ -176,9 +179,9 @@
             <table class='table table-hover'>
               <thead>
                 <tr>
-                  <th>First name</th>
                   <th>Last name</th>
-                  <th>Unique ID</th>
+                  <th>First name</th>
+                  <th>Activation Code</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -196,7 +199,14 @@
               </div>
             </div>
           </div>
-          <div class="card-footer"></div>
+          <div class="card-footer flex-this">
+            <small id="page"></small>
+            <nav aria-label="Page navigation example">
+              <ul class="pagination" id="pagination">
+
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
     </div>
@@ -239,7 +249,14 @@
                   </div>
                 </div>
               </div>
-              <div class="card-footer"></div>
+              <div class="card-footer flex-this">
+                <small id="walk-page"></small>
+                <nav aria-label="Page navigation example">
+                  <ul class="pagination" id="walk-pagination">
+    
+                  </ul>
+                </nav>
+              </div>
             </div>
           </div>
         </div>
@@ -520,13 +537,17 @@
             </div>
             <div class="form-group">
               <div class="form-row">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                   <label>UID</label>
                   <input type="text" class="form-control" id="view-uid" disabled>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                   <label>Name</label>
                   <input type="text" class="form-control" id="view-name" disabled>
+                </div>
+                <div class="col-sm-4">
+                  <label>Member since</label>
+                  <input type="text" class="form-control" id="view-dateAdded" disabled>
                 </div>
               </div>
             </div>

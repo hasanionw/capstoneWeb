@@ -9,6 +9,7 @@ auth.onAuthStateChanged((user) => {
 
 // Global Variables
 const members = [];
+
 const qrcode = new QRCode("view-qrcode", {
   height: 90,
   width: 90
@@ -112,15 +113,15 @@ button.onclick = () => {
           fname: fname,
           lname: lname,
           memberType: memberType,
-          status: 'N/A',
+          status: 'Unpaid',
           sex: sex,
           dateAdded: firebase.firestore.Timestamp.fromDate(new Date()),
           phone: phone,
           monthlyRate: monthlyRate,
-          annualStart: new Date(annualStart),
-          annualEnd: calculateExpiry({date: annualStart, isMonth: false}),
-          monthlyStart: new Date(monthlyStart),
-          monthlyEnd: calculateExpiry({date: monthlyStart, isMonth: true}),
+          annualStart: null,
+          annualEnd: null,
+          monthlyStart: null,
+          monthlyEnd: null,
           address: address,
           email: email,
           program: program,
@@ -163,43 +164,40 @@ button.onclick = () => {
 }
 
 // Display Regular Members
-renderRegular = () => {
+renderRegular = (list) => {
   regTableLoader.style.display = 'none';
   document.getElementById('no-data-div').style.display = 'none';
   let tbody = document.getElementById('tbody');
   tbody.innerHTML = ``;
-  let regs = members.filter(mem => mem.data.memberType == 'Regular');
 
-  if(regs.length > 0) {
-    regs.forEach((reg) => {
-      let tr = document.createElement('tr');
-      tr.setAttribute('data-id', reg.id);
-      tr.innerHTML = 
-        `<td>${reg.data.fname}</td>
-        <td>${reg.data.lname}</td>
-        <td>
-          <span class="hidden" id="${reg.id}-span"></span>
-          <a>
-            <small id='${reg.id}-small' onclick='showID("${reg.id}")'>
-              <i data-toggle="tooltip" data-placement="top" title="Show ${reg.data.fname}"  class="fas fa-eye"></i>
-            </small>
-          </a>
-        </td>
-        <td>${reg.data.status}</td>
-        <td>
-          <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
-          <a class='btn-link text-orange' data-toggle='modal' data-target='#updateModal' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${reg.data.fname}" data-placement="top"></i></a>
+  list.forEach((reg) => {
+    let tr = document.createElement('tr');
+    tr.setAttribute('data-id', reg.id);
+    tr.innerHTML = 
+      `<td>${reg.data.lname}</td>
+      <td>${reg.data.fname}</td>
+      <td>
+        <span class="hidden" id="${reg.id}-span"></span>
+        <a>
+          <small id='${reg.id}-small' onclick='showID("${reg.id}")'>
+            <i data-toggle="tooltip" data-placement="top" title="Show ${reg.data.fname}"  class="fas fa-eye"></i>
+          </small>
+        </a>
+      </td>
+      <td>${reg.data.status}</td>
+      <td>
+        <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
+        <a class='btn-link text-orange' data-toggle='modal' data-target='#updateModal' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${reg.data.fname}" data-placement="top"></i></a>
         <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>  
-        </td>`;
+        <a class='btn-link text-red' data-toggle='modal' data-target='#payment-modal' onclick='deleteMember(this.parentNode.parentNode)'><i class='fas fa-trash-alt mx-1' style='font-size: 20px'></i></a>  
+      </td>`; 
 
-      tbody.appendChild(tr);
-    });
-  } else {
-    document.getElementById('no-data-div').style.display = 'flex';
-  }
+    tbody.appendChild(tr);
+  });
+
 }
 
-renderNewRegs = (docs) => {
+renderNewSearch = (docs) => {
   let tbody = document.getElementById('tbody');
   tbody.innerHTML = ``;
 
@@ -209,8 +207,8 @@ renderNewRegs = (docs) => {
       tr.setAttribute('data-id', doc.id);
 
       tr.innerHTML = 
-        `<td>${doc.data.fname}</td>
-        <td>${doc.data.lname}</td>
+        `<td>${doc.data.lname}</td>
+        <td>${doc.data.fname}</td>
         <td>
           <span class="hidden" id="${doc.id}-span"></span>
           <a>
@@ -243,14 +241,14 @@ let searchReg = document.getElementById('search-member');
 searchReg.onkeyup = () => {
   if(searchReg.value != '') {
     let docs = filterRegs(searchReg.value);
-    renderNewRegs(docs);
+    renderNewSearch(docs);
   } else {
-    renderRegular();
+    buildTable();
   }
 }
 searchReg.value.onchange = () => {
   if(searchReg.value == '') {
-    renderRegular();
+    buildTable();
   }
 }
 
@@ -291,17 +289,16 @@ searchWalk.onkeyup = () => {
     let docs = filterWalks(searchWalk.value);
     renderNewWalks(docs);
   } else {
-    renderWalkin();
+    buildTable();
   }
 }
 
 // Display Walkin Members
-renderWalkin = () => {
+renderWalkin = (walks) => {
   walkTableLoader.style.display = 'none';
   document.getElementById('no-data-div-walkin').style.display = 'none';
   let tbody = document.getElementById('tbody-walk-in');
   tbody.innerHTML = ``;
-  let walks = members.filter(mem => mem.data.memberType == 'Walk-in');
 
   if(walks.length > 0) {
     walks.forEach((walk) => {
@@ -344,6 +341,9 @@ viewMember = (tr) => {
   let program = document.getElementById('view-program');
   let address = document.getElementById('view-address');
   let uid = document.getElementById('view-uid');
+  let dateAdded = document.getElementById('view-dateAdded');
+
+  memsince = new Date(data.dateAdded.toDate());
 
   document.getElementById('view-member-name').textContent = data.fname;
   uid.value = doc.id;
@@ -353,6 +353,7 @@ viewMember = (tr) => {
   phone.value = data.phone;
   sex.value = data.sex;
   memberType.value = data.memberType;
+  dateAdded.value = `${months[memsince.getMonth()]} ${memsince.getDate()}, ${memsince.getFullYear()}`;
 
   if(data.memberType == 'Walk-in') {
     document.getElementById('flexLa').style.display = 'none';
@@ -363,6 +364,14 @@ viewMember = (tr) => {
     monthlyStart.parentNode.style.display = 'none';
     annualStart.parentNode.style.display = 'none';
     monthlyEnd.parentNode.style.display = 'none';
+  } else if(data.annualStart == null || data.monthlyStart == null || data.monthlyEnd == null) {
+    monthlyStart.value = "N/A";
+    annualStart.value = "N/A";
+    monthlyEnd.value = "N/A";
+
+    rate.value = data.monthlyRate;
+    status.value = data.status;
+    program.value = data.program;
   } else {
     let ms = data.monthlyStart.toDate();
     let me = data.monthlyEnd.toDate();
@@ -401,6 +410,8 @@ updateMember = (tr) => {
   let memberType = document.getElementById('updateType');
   let status = document.getElementById('updateStatus');
 
+  let d = data.dateAdded.toDate();
+
   fname.value = data.fname;
   lname.value = data.lname;
   uid.value = id;
@@ -411,7 +422,7 @@ updateMember = (tr) => {
     option.setAttribute('value', p.data.programName);
     program.appendChild(option);
   });
-  dateAdded.value = data.dateAdded;
+  dateAdded.value = `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
   memberType.value = data.memberType;
   status.value = data.status;
 
@@ -585,13 +596,12 @@ renderPrograms = () => {
 
 // Firebase Queries 
 // ALL Members
-db.collection('members').orderBy('dateAdded', 'desc').get().then((snapshot) => {
+db.collection('members').orderBy('lname', 'asc').get().then((snapshot) => {
   snapshot.forEach((doc) => {
     members.push({id: doc.id, data: doc.data(), fullName: `${doc.data().fname} ${doc.data().lname}`})
   });
 }).then(() => {
-  renderRegular();
-  renderWalkin();
+  buildTable();
 });
 
 // ALL Programs
@@ -628,4 +638,91 @@ function securityLogtrail() {
   if(password == '123') {
     window.location.href = "logtrail.html";
   } 
+}
+
+// PAGINATION
+let state = {
+  page: 1,
+  rows: 5,
+  wpage: 1,
+  wrows: 3
+}
+
+pagination = (querySet, page, rows) => {
+  let trimStart = (page - 1) * rows;
+  let trimEnd = trimStart + rows;
+
+  let trimmedData = querySet.slice(trimStart, trimEnd);
+
+  let pages = Math.ceil(querySet.length / rows)
+
+  return {
+    querySet: trimmedData,
+    pages: pages
+  }
+}
+
+buildTable = () => {
+  // regular
+  let regs = members.filter(m => m.data.memberType == 'Regular');
+  let data = pagination(regs, state.page, state.rows);
+  let list = data.querySet;
+  let pagi_no = data.pages;  
+  let pageSpan = document.getElementById('page');
+
+  pageSpan.innerText = `Page: ${state.page}`;
+
+  // walkin
+  let walks = members.filter(m => m.data.memberType == 'Walk-in');
+  let walkData = pagination(walks, state.wpage, state.wrows);
+  let walklist = walkData.querySet;
+  let wpagi_no = walkData.pages;
+  let walkPageSpan = document.getElementById('walk-page');
+
+  walkPageSpan.innerText = `Page: ${state.wpage}`;
+
+  putPagination(pagi_no);
+  putWalkPagination(wpagi_no);
+  renderRegular(list);
+  renderWalkin(walklist);
+}
+
+putPagination = (no) => {
+  let pagination = document.getElementById('pagination');
+  pagination.innerHTML = ``;
+  for(let i = 1; i <= no; i++) {
+    let li = document.createElement('li');
+    li.classList.add('page-item');
+    li.innerHTML = `<a class="page-link" onclick="changeTablePage(this)" data-id="${i}">${i}</a>`;
+    pagination.appendChild(li);
+  }
+}
+
+putWalkPagination = (no) => {
+  let pagination = document.getElementById('walk-pagination');
+  pagination.innerHTML = ``;
+  for(let i = 1; i <= no; i++) {
+    let li = document.createElement('li');
+    li.classList.add('page-item');
+    li.innerHTML = `<a class="page-link" onclick="changeWalkTablePage(this)" data-id="${i}">${i}</a>`;
+    pagination.appendChild(li);
+  }
+}
+
+changeTablePage = (li) => {
+  let page = li.getAttribute('data-id');
+  let pageSpan = document.getElementById('page');
+
+  state.page = page;
+  pageSpan.innerHTML = `Page: ${page}`;
+  buildTable();
+}
+
+changeWalkTablePage = (li) => {
+  let page = li.getAttribute('data-id');
+  let pageSpan = document.getElementById('walk-page');
+
+  state.wpage = page;
+  pageSpan.innerHTML = `Page: ${page}`;
+  buildTable();
 }
