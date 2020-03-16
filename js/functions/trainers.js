@@ -14,7 +14,7 @@ const storageImage = storage.ref('trainerimages')
     let tableLoader = document.getElementById('table-loader');
     const noData = document.getElementById('no-data');
     window.onload = () => {
-    tableLoader.style.display = 'block';
+    
     }
   
     // para mo upload kag picture
@@ -47,38 +47,37 @@ const storageImage = storage.ref('trainerimages')
 
     
     // Sorting by ACTIVE
-    sortActive.onclick = () => {
-      tbody.innerHTML = '';
-      sortBoth.classList.add('btn-outline-orange');
-      sortBoth.classList.remove('btn-orange');
-      sortInactive.classList.add('btn-outline-orange');
-      sortInactive.classList.remove('btn-orange');
-      sortActive.classList.add('btn-orange');
-      sortActive.classList.remove('btn-outline-orange');
+sortActive.onclick = () => {
+  tbody.innerHTML = '';
+  sortBoth.classList.add('btn-outline-orange');
+  sortBoth.classList.remove('btn-orange');
+  sortInactive.classList.add('btn-outline-orange');
+  sortInactive.classList.remove('btn-orange');
+  sortActive.classList.add('btn-orange');
+  sortActive.classList.remove('btn-outline-orange');
 
-     
-      let docs = tra.filter(i => i.doc.status == 'active');
+ 
+  let docs = tra.filter(t => t.doc.status == 'active' && t.doc.chat == 'able');
 
-      sortingTra(docs);
-    }
+  sortingTra(docs);
+}
 
-    // Sorting by INACTIVE
-    sortInactive.onclick = () => {
-      tbody.innerHTML = '';
-      sortBoth.classList.add('btn-outline-orange');
-      sortBoth.classList.remove('btn-orange');
-      sortInactive.classList.add('btn-orange');
-      sortInactive.classList.remove('btn-outline-orange');
-      sortActive.classList.add('btn-outline-orange');
-      sortActive.classList.remove('btn-orange');
+// Sorting by INACTIVE
+sortInactive.onclick = () => {
+  tbody.innerHTML = '';
+  sortBoth.classList.add('btn-outline-orange');
+  sortBoth.classList.remove('btn-orange');
+  sortInactive.classList.add('btn-orange');
+  sortInactive.classList.remove('btn-outline-orange');
+  sortActive.classList.add('btn-outline-orange');
+  sortActive.classList.remove('btn-orange');
 
-     
+ 
 
-      let docs = tra.filter(i => i.doc.status == 'inactive');
+  let docs = tra.filter(t => t.doc.status == 'inactive' && t.doc.chat == 'able');
 
-      sortingTra(docs);
-    }
-
+  sortingTra(docs);
+}
 
 
 
@@ -120,7 +119,7 @@ const storageImage = storage.ref('trainerimages')
 
       trainer.get().then(function(snapshot) {
         if(snapshot.docs.length > 0) {
-          alert('Error: Member already exists!');
+          alert('Error: Trainer already exists!');
         } else {
           trainers.add({
             fname: fname,
@@ -129,7 +128,8 @@ const storageImage = storage.ref('trainerimages')
             cellphoneNo: cellphoneNo,
             birthdate: new Date(birthdate),
             sex: sex,
-            position: 'junior',
+            position: 'junior',           
+            chat: 'able',
             address: address,
             status: 'active',
             dateAdded: new Date()
@@ -198,39 +198,135 @@ const storageImage = storage.ref('trainerimages')
 
 // display data in the table  
 renderData = () => {
-      let tbody = document.getElementById('tbody');
-      tbody.innerHTML=''
+  let tbody = document.getElementById('tbody');
+  tbody.innerHTML='';
+  let chat = tra.filter(tra => tra.doc.chat == 'able');
 
-      tra.forEach((tra) => {
+  if(chat.length > 0) {
+  chat.forEach((tra) => {
+  let tr = document.createElement('tr');
+  tr.setAttribute('data-id',tra.id);
+  tr.innerHTML = 
+
+  `<td><span class="hidden" id="${tra.id}-span"></span><a>
+  <small id='${tra.id}-small' onclick='showID("${tra.id}")'>
+  <i data-toggle="tooltip" data-placement="top" title="Show ${tra.doc.fname}"  class="fas fa-eye"></i></small></a></td>
+  <td><b>${tra.doc.fname}</b></td>
+  <td><b>${tra.doc.lname}<b></td>
+  <td><b>${tra.doc.status}<b></td>
+  <td><b>${tra.doc.position}<b></td>
+
+  <td>
+    <a  class='btn-link  edit' onclick='updatestat(this.parentNode.parentNode)'
+     data-toggle='modal' data-target='#update'>
+     <i class="fas fa-pen mx-1 " style='font-size: 20px; color:#DF3A01' data-toggle="tooltip" title="Update ${tra.doc.fname}" data-placement="top"></i></a>
+     
+    <a class='btn-link' onclick='viewTrainers(this.parentNode.parentNode)'
+     data-toggle='modal' data-target='#displayallrecords'>
+     <i data-toggle="tooltip" data-placement="top" title="view ${tra.doc.fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
+ 
+     <i id="deletebtn" onclick='deleteTable1(this.parentNode.parentNode)'
+         data-toggle="tooltip" data-placement="top" title="Delete ${tra.doc.fname}"
+         class="far fa-trash-alt mx-4" style="font-size: 20px; color: #DF3A01" ></i>
+
+   </td>`;
+  tbody.appendChild(tr);
+
+  let tt = $('[data-toggle="tooltip"]').tooltip();
+  tt.click(function() {
+    tt.tooltip("hide");
+  });
+  
+  });
+} else {
+document.getElementById('no-data-div').style.display = 'flex';
+}
+}
+
+
+
+renderDelete = () => {
+  document.getElementById('no-data-div-walkin').style.display = 'none';
+  let tbody = document.getElementById('tbody-walk-in');
+  let chat = tra.filter(tra => tra.doc.chat == 'disable');
+  tbody.innerHTML = ``;
+
+  if(chat.length > 0) {
+    chat.forEach((tra) => {
       let tr = document.createElement('tr');
-      tr.setAttribute('data-id',tra.id);
+      tr.setAttribute('data-id', tra.id);
       tr.innerHTML = 
-      `<td><span class="hidden" id="${tra.id}-span"></span><a>
-      <small id='${tra.id}-small' onclick='showID("${tra.id}")'>
-      <i data-toggle="tooltip" data-placement="top" title="Show ${tra.doc.fname}"  class="fas fa-eye"></i></small></a></td>
-      <td><b>${tra.doc.fname}</b></td>
-      <td><b>${tra.doc.lname}<b></td>
-      <td><b>${tra.doc.status}<b></td>
-      <td><b>${tra.doc.position}<b></td>
-      
-
-      <td>
-        <a id="usc" class='btn-link  edit' onclick='updatestat(this.parentNode.parentNode)'
+        `<td><b>${tra.doc.fname}</b></td>
+        <td><b>${tra.doc.lname}<b></td>
+        <td>
+        <a class='btn-link  edit' onclick='updatestat(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#update'>
          <i class="fas fa-pen mx-1 " style='font-size: 20px; color:#DF3A01' data-toggle="tooltip" title="Update ${tra.doc.fname}" data-placement="top"></i></a>
          
-         <a class='btn-link' onclick='viewTrainers(this.parentNode.parentNode)'>
+        <a class='btn-link' onclick='viewTrainers(this.parentNode.parentNode)'
+         data-toggle='modal' data-target='#displayallrecords'>
          <i data-toggle="tooltip" data-placement="top" title="view ${tra.doc.fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
-      </td>`;
+     
+         <i id="deleteBtn" onclick='deleteTable2(this.parentNode.parentNode)'
+             data-toggle="tooltip" data-placement="top" title="Delete ${tra.doc.fname}"
+             class="far fa-trash-alt mx-4" style="font-size: 20px; color: #DF3A01" ></i>
+    
+       </td>`;
+
       tbody.appendChild(tr);
 
-      let tt = $('[data-toggle="tooltip"]').tooltip();
-      tt.click(function() {
-        tt.tooltip("hide");
-      });
       
-      } )
-    }
+  let tt = $('[data-toggle="tooltip"]').tooltip();
+  tt.click(function() {
+    tt.tooltip("hide");
+  });
+
+    });
+  } else {
+    document.getElementById('no-data-div-walkin').style.display = 'flex';
+  }
+}
+
+//deleted Trainers nga table 
+function deleteTable2(tr) {
+  let dataId = tr.getAttribute('data-id');
+  let agree = confirm("are you sure you want to recover trainer?");
+  
+  if(agree === true) {
+    db.collection('trainers').doc(dataId).update({
+      chat: 'able'
+    })
+    .then(() => {
+      alert('Successfully Recover Trainer!');
+      window.location.reload();
+    })
+    .catch((error) => {
+      alert(`Error: ${error.message}`);
+    });
+  }
+}
+
+
+  //deleted Trainers nga table 
+function deleteTable1(tr) {
+
+  let dataId = tr.getAttribute('data-id');
+
+  document.getElementById('deletebtn').addEventListener('click', () => {
+
+      db.collection('trainers').doc(dataId).update({
+        chat: 'disable'
+     
+      }).then(() => {
+        alert('Successfully Delete Trainer!');
+        window.location.reload();
+      })
+        .catch((error) => {
+        alert(`Error: ${error.message}`);
+      });
+    });
+  
+}
 
     sortingTra = (docs) => {
       let tbody = document.getElementById('tbody');
@@ -257,7 +353,12 @@ renderData = () => {
             
             <a class='btn-link' onclick='viewTrainers(this.parentNode.parentNode)'>
             <i data-toggle="tooltip" data-placement="top" title="view ${doc.doc.fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
-          </td>`;
+         
+            <i id="delete" onclick='deletetrainers(this.parentNode.parentNode)'
+            data-toggle="tooltip" data-placement="top" title="Delete ${doc.doc.fname}"
+            class="far fa-trash-alt mx-4" style="font-size: 20px; color: #DF3A01" ></i>
+         
+            </td>`;
 
           tbody.appendChild(tr);
         });
@@ -275,7 +376,8 @@ renderData = () => {
         tra.push({id: doc.id, doc: doc.data(), fullName: `${doc.data().fname} ${doc.data().lname}`})
       });
       renderData();
-      tableLoader.style.display = 'none';
+      renderDelete();
+     
     });
 
 

@@ -232,44 +232,35 @@ searchReg.onkeyup = () => {
   }
 }
 
-renderNewWalks = (docs) => {
-  let tbody = document.getElementById('tbody-walk-in');
-  tbody.innerHTML = ``;
-
-  if(docs.length > 0) {
-    docs.forEach((doc) => {
-      let tr = document.createElement('tr');
-      tr.setAttribute('data-id', doc.id);
-
-      tr.innerHTML = 
-        `<td>${doc.data.fname}</td>
-        <td>${doc.data.lname}</td>
-        <td>
-          <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
-          <a class='btn-link text-orange' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data.fname}" data-placement="top"></i></a>
-          <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>  
-        </td>`;
-
-      tbody.appendChild(tr);
-    });
-  } else {
-    document.getElementById('no-data-div-walkin').style.display = 'flex';
+buildNewWalkTable = (val) => {
+  let res = members.filter(m => m.fullName.toLowerCase().includes(val.toLowerCase()) && m.data.memberType == 'Walk-in');
+  let state = {
+    page: 1,
+    rows: 3
   }
-}
 
-filterWalks = (value) => {
-  document.getElementById('no-data-div-walkin').style.display = 'none';
-  return results = members.filter(member => member.fullName.toLowerCase().includes(value.toLowerCase()) && member.data.memberType == 'Walk-in');
+  let data = pagination(res, state.page, state.rows);
+  let list = data.querySet;
+  let pagi_no = data.pages;  
+  let pageSpan = document.getElementById('walk-page');
+
+  if(data.pages > 0) {
+    pageSpan.innerText = `Page: ${state.page} of ${data.pages}`;
+  } else {
+    pageSpan.innerText = `Page: 0 of 0`;
+  }
+
+  putWalkPagination(pagi_no);
+  renderWalkin(list);
 }
 
 // Searching Walk-in Members
 let searchWalk = document.getElementById('search-walkin');
 searchWalk.onkeyup = () => {
   if(searchWalk.value != '') {
-    let docs = filterWalks(searchWalk.value);
-    renderNewWalks(docs);
+    buildNewWalkTable(searchWalk.value);
   } else {
-    buildTable();
+    buildWalkTable();
   }
 }
 
@@ -582,6 +573,7 @@ db.collection('members').orderBy('lname', 'asc').get().then((snapshot) => {
   });
 }).then(() => {
   buildTable();
+  buildWalkTable();
 });
 
 // ALL Programs
@@ -643,8 +635,8 @@ pagination = (querySet, page, rows) => {
 }
 
 buildTable = () => {
-  // regular
-  let regs = members.filter(m => m.data.memberType == 'Regular');
+  let val = document.getElementById('search-member').value;
+  let regs = members.filter(m => m.data.memberType == 'Regular' && m.fullName.toLowerCase().includes(val.toLowerCase()));
   let data = pagination(regs, state.page, state.rows);
   let list = data.querySet;
   let pagi_no = data.pages;  
@@ -656,8 +648,13 @@ buildTable = () => {
     pageSpan.innerText = `Page: 0 of 0`;
   }
 
-  // walkin
-  let walks = members.filter(m => m.data.memberType == 'Walk-in');
+  putPagination(pagi_no);
+  renderRegular(list);
+}
+
+buildWalkTable = () => {
+  let val = document.getElementById('search-walkin').value;
+  let walks = members.filter(m => m.data.memberType == 'Walk-in' && m.fullName.toLowerCase().includes(val.toLowerCase()));
   let walkData = pagination(walks, state.wpage, state.wrows);
   let walklist = walkData.querySet;
   let wpagi_no = walkData.pages;
@@ -665,9 +662,7 @@ buildTable = () => {
 
   walkPageSpan.innerText = `Page: ${state.wpage} of ${walkData.pages}`;
 
-  putPagination(pagi_no);
   putWalkPagination(wpagi_no);
-  renderRegular(list);
   renderWalkin(walklist);
 }
 
@@ -708,5 +703,5 @@ changeWalkTablePage = (li) => {
 
   state.wpage = page;
   pageSpan.innerHTML = `Page: ${page}`;
-  buildTable();
+  buildWalkTable();
 }
