@@ -179,21 +179,33 @@ sortInactive.onclick = () => {
       return results = tra.filter(tra => tra.fullName.toLowerCase().includes(value.toLowerCase()) );
     }
 
-  // Searching Inventory
+
+
+
+
+
+  // Searching Trainers
   let searchTra = document.getElementById('search-trainers');
+  
+
   searchTra.onkeyup = () => {
       if(searchTra.value != '') {
         let docs = filtering(searchTra.value);
         sortingTra(docs);
       } else {
         renderData();
+       
       }
     }
     searchTra.value.onchange = () => {
       if(searchTra.value == '') {
         renderData();
+      
       }
     }
+
+
+    
 
 
 // display data in the table  
@@ -227,7 +239,7 @@ renderData = () => {
  
      <i id="deletebtn" onclick='deleteTable1(this.parentNode.parentNode)'
          data-toggle="tooltip" data-placement="top" title="Delete ${tra.doc.fname}"
-         class="far fa-trash-alt mx-4" style="font-size: 20px; color: #DF3A01" ></i>
+         class="far fa-trash-alt mx-4" style="cursor:pointer; font-size: 20px; color: #DF3A01" ></i>
 
    </td>`;
   tbody.appendChild(tr);
@@ -258,19 +270,17 @@ renderDelete = () => {
       tr.innerHTML = 
         `<td><b>${tra.doc.fname}</b></td>
         <td><b>${tra.doc.lname}<b></td>
+        <td>Error</td>
         <td>
-        <a class='btn-link  edit' onclick='updatestat(this.parentNode.parentNode)'
-         data-toggle='modal' data-target='#update'>
-         <i class="fas fa-pen mx-1 " style='font-size: 20px; color:#DF3A01' data-toggle="tooltip" title="Update ${tra.doc.fname}" data-placement="top"></i></a>
-         
+       
         <a class='btn-link' onclick='viewTrainers(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#displayallrecords'>
          <i data-toggle="tooltip" data-placement="top" title="view ${tra.doc.fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
      
          <i id="deleteBtn" onclick='deleteTable2(this.parentNode.parentNode)'
-             data-toggle="tooltip" data-placement="top" title="Delete ${tra.doc.fname}"
-             class="far fa-trash-alt mx-4" style="font-size: 20px; color: #DF3A01" ></i>
-    
+             data-toggle="tooltip" data-placement="top" title="Recover ${tra.doc.fname}"
+             class="fas fa-undo-alt mx-4" style="cursor:pointer; font-size: 20px; color: #32CD32" ></i>
+            
        </td>`;
 
       tbody.appendChild(tr);
@@ -287,7 +297,39 @@ renderDelete = () => {
   }
 }
 
+// Show Deleted Table
+document.getElementById('showCalc').addEventListener('click', () => {
+  let calc = document.getElementById('calculator');
+  if(calc.style.display == 'none') {
+    calc.style.display = 'block';
+    document.getElementById('showCalc').innerHTML = '<span data-toggle="tooltip" data-placement="top" title="List of Deleted Trainer"><i class="far fa-trash-alt "></i><span>';
+  } 
 
+  let tt = $('[data-toggle="tooltip"]').tooltip();
+  tt.click(function() {
+    tt.tooltip("hide");
+  });
+
+});
+
+
+// Hide Deleted Table
+document.getElementById('remove').addEventListener('click', () => {
+  let calc = document.getElementById('calculator');
+  if(calc.style.display == 'none') {
+    calc.style.display = 'block';
+    document.getElementById('showCalc').innerHTML ;
+  } else {
+    calc.style.display = 'none';
+    document.getElementById('showCalc').innerHTML ;
+  }
+
+  let tt = $('[data-toggle="tooltip"]').tooltip();
+  tt.click(function() {
+    tt.tooltip("hide");
+  });
+
+});
 
 
 //deleted Trainers nga table 
@@ -296,8 +338,8 @@ function deleteTable2(tr) {
   let dataId = tr.getAttribute('data-id');
   let agree = confirm("are you sure you want to recover trainer?");
   
-  document.getElementById('deleteBtn').addEventListener('click', () => {
-    
+  
+      if(agree === true){
       db.collection('trainers').doc(dataId).update({
         chat: 'able'
      
@@ -308,7 +350,8 @@ function deleteTable2(tr) {
         .catch((error) => {
         alert(`Error: ${error.message}`);
       });
-    });
+      }
+   
   
   }
 
@@ -317,9 +360,9 @@ function deleteTable2(tr) {
 function deleteTable1(tr) {
 
   let dataId = tr.getAttribute('data-id');
-
-  document.getElementById('deletebtn').addEventListener('click', () => {
-
+  let agree = confirm("are you sure you want to delete trainer?");
+ 
+    if(agree === true){
       db.collection('trainers').doc(dataId).update({
         chat: 'disable'
      
@@ -330,8 +373,7 @@ function deleteTable1(tr) {
         .catch((error) => {
         alert(`Error: ${error.message}`);
       });
-    });
-  
+    }
 }
 
     sortingTra = (docs) => {
@@ -415,10 +457,10 @@ function deleteTable1(tr) {
       let address = document.getElementById("view-address");
       let position = document.getElementById("view-position");
       let status = document.getElementById("view-status");
-
+      let chat = document.getElementById("view-chat");
       let bday = new Date(data.birthdate.toDate());
      
-     
+      span.textContent = data.fname; 
       viewId.value = id;
       fname.value = data.fname;
       lname.value = data.lname;
@@ -429,9 +471,11 @@ function deleteTable1(tr) {
       address.value = data.address;
       position.value = data.position;
       status.value = data.status;
+      chat.value = data.chat;
 
       storageImage.child(`${id}.jpg`).getDownloadURL().then(function(url) {    
         // Or inserted into an <img> element:
+      
         var img = document.getElementById('trainer-pp');
         img.src = url;
       })
@@ -450,11 +494,11 @@ function deleteTable1(tr) {
       let small = document.getElementById(`${id}-small`);
 
       if(span.classList.contains('hidden')) {
-        small.innerHTML = ' <i class="fas fa-eye-slash"></i>';
+        small.innerHTML = ' <i class="far fa-trash-alt "></i>';
         span.textContent = id;
         span.classList.remove('hidden');
       } else {
-        small.innerHTML = ' <i  class="fas fa-eye"></i>';
+        small.innerHTML = ' <i  class="far fa-trash-alt ></i>';
         span.classList.add('hidden');
         span.textContent = '';
       } 

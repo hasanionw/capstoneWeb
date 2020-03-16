@@ -19,9 +19,9 @@
   <link href="css/theme-colors.css" rel="stylesheet">
 
 <style>
-  .card-bodyzz::-webkit-scrollbar {
-    width: 0;
-  }
+  body::-webkit-scrollbar {
+      width: 0 !important;
+    }
       
   input[type=text], input[type=date] {
   
@@ -164,13 +164,17 @@
             <h3 class='card-title'>
               <span class="add-trainer" data-toggle="tooltip" data-placement="top" title="Add new trainer">
                 <i style="color:#DF3A01;"  data-toggle="modal" data-target="#add" class="fas fa-plus mr-2"></i></span>
-              Trainers
+                
+                Trainers
             </h3>
             <div class="btn-group" role="group" aria-label="Basic example">
               <button type="button" id="sort-active" class="btn btn-sm btn-outline-orange">ACTIVE</button>
               <button type="button" id="sort-both" class="btn btn-sm btn-orange">Both</button>
               <button type="button" id="sort-inactive" class="btn btn-sm btn-outline-orange">INACTIVE</button>
             </div>  
+
+            <a href="#"  style="font-size:30px; color:#DF3A01;"><span id="showCalc"><i   data-toggle="tooltip" data-placement="top" title="List of Deleted Trainer" class="far fa-trash-alt "></i></span></a>
+
             <div>
               <div class="d-flex justify-content-center">
                 <input type="text" id="search-trainers" placeholder="Search Trainer here..." aria-label="Search" class="form-control" id="#">
@@ -206,8 +210,9 @@
         </div>
       </div>
 
+      
 
-      <div class="container-fluid mt-4 mb-3">
+      <div class="container-fluid mt-4 mb-3" id="calculator" style="display: none">
         <div class="row">
           <div class="col-sm-7">
             <div class='card'>
@@ -218,7 +223,8 @@
                   </h3>
                   <div>
                     <div class="d-flex justify-content-center">
-                      <input type="text" placeholder="Search Trainer here..." id="search-walkin" class="form-control">
+                      <input type="text" placeholder="Search Trainer here..." id="search-delete" class="form-control mx-3">
+                      <i id="remove" data-toggle="tooltip" data-placement="top" title="Close" style="cursor:pointer; color:#DF3A01;font-size:30px;" class="far fa-times-circle my-2"></i>
                     </div>
                   </div>
                 </div>
@@ -227,7 +233,8 @@
                     <thead>
                       <tr>
                         <th>First name</th>
-                        <th>Last name</th>
+                        <th>Last name</th> 
+                        <th>Date deleted</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -235,9 +242,9 @@
       
                     </tbody>
                   </table>
-                  <div id="no-data-div-walkin" class="no-data-div my-3 text-muted">
-                    No data!
-                  </div>
+                    <div id="no-data-div-walkin" class="no-data-div my-3 text-muted">
+                      No data!
+                    </div>
                   <div class="table-parent my-5" id="table-loader-walkin">
                     <div class="table-loader">
                       <div class="loader-spinner"></div>
@@ -426,9 +433,11 @@
               <label>Status</label>
               <input type="text" class="form-control" id="view-status" disabled>
             </div>
+            <div class="col-sm-6">
+              <label>Account</label>
+              <input type="text"  class="form-control" id="view-chat" disabled>
+            </div>
 
-           
-           
           </div>
           </div>
         </div>
