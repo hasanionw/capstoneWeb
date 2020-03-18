@@ -334,7 +334,6 @@ document.getElementById('remove').addEventListener('click', () => {
 
 //deleted Trainers nga table 
 function deleteTable2(tr) {
-
   let dataId = tr.getAttribute('data-id');
   let agree = confirm("are you sure you want to recover trainer?");
   

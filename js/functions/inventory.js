@@ -57,15 +57,12 @@ const date = firebase.firestore.Timestamp;
 
      // para mo upload kag picture    
 var loadFile = function(event) {
-                  var image = document.getElementById('output');
-                  image.src = URL.createObjectURL(event.target.files[0]);
-              };
-
-         
-              
+    var image = document.getElementById('output');
+    image.src = URL.createObjectURL(event.target.files[0]);
+};
 
 renderCard = () => {
-  let InventoryCont = document.getElementById('inventory-cont');
+  let inventoryCont = document.getElementById('inventory-cont');
 
   let status = inv.filter(i => i.data.status == 'active');
 
@@ -73,40 +70,30 @@ renderCard = () => {
 
   if(status.length > 0) {
     status.forEach((inv) => {
-          
-          let card = document.createElement('div');
-          card.setAttribute('data-id',inv.id);
-        card.classList.add('card', 'inventory-cards', 'mx-3', 'my-3');
-        card.innerHTML = 
+      let card = document.createElement('div');
+      card.setAttribute('data-id',inv.id);
+      card.classList.add('card', 'inventory-cards', 'mx-3', 'my-3');
+      card.innerHTML = 
         `<img src="blank.png" class="card-img-top">
-          <div class="card-body">
-            <h3 class="card-title font-weight-bold text-orange">${inv.data.name}</h3>
-            <h6 class="card-subtitle text-muted font-weight-bold">${inv.data.category}</h6>
-            <p class="card-text mt-2">${inv.data.description}</p>
-          </div>
-          <div class="card-footer">
-            <button   onclick='viewInventory(this.parentNode.parentNode)'
-         data-toggle='modal' data-target='#displayallrecords' class="btn btn-sm btn-orange ">details</button>  
-         
-         <button  onclick='updatefunction(this.parentNode.parentNode)'
-         data-toggle='modal' data-target='#update'  class="btn btn-sm btn-orange">UPDATE</button>
-          
-          <i onclick='deleteInv(this.parentNode.parentNode)'
-             data-toggle="tooltip" data-placement="top" title="Delete Card"
-             class="far fa-trash-alt my-2" style="font-size: 25px; float: right; color: #DF3A01" ></i>
-            </div>
-          
-          `;
+        <div class="card-body">
+          <h3 class="card-title font-weight-bold text-orange">${inv.data.name}</h3>
+          <h6 class="card-subtitle text-muted font-weight-bold">${inv.data.category}</h6>
+          <p class="card-text mt-2">${inv.data.description}</p>
+        </div>
+        <div class="card-footer">
+          <button   onclick='viewInventory(this.parentNode.parentNode)' data-toggle='modal' data-target='#displayallrecords' class="btn btn-sm btn-orange ">details</button>  
+          <button  onclick='updatefunction(this.parentNode.parentNode)' data-toggle='modal' data-target='#update'  class="btn btn-sm btn-orange">UPDATE</button>
+          <i onclick='deleteInv(this.parentNode.parentNode)' data-toggle="tooltip" data-placement="top" title="Delete Card" class="far fa-trash-alt my-2" style="font-size: 25px; float: right; color: #DF3A01" ></i>
+        </div>`;
+      inventoryCont.appendChild(card);
+    });
 
-          InventoryCont.appendChild(card);
-        });
-
-        let tt = $('[data-toggle="tooltip"]').tooltip();
-  tt.click(function() {
-    tt.tooltip("hide");
-  })
+    let tt = $('[data-toggle="tooltip"]').tooltip();
+    tt.click(function() {
+      tt.tooltip("hide");
+    });
   }
-  }
+}
 
 
 

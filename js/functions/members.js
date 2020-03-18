@@ -9,11 +9,12 @@ auth.onAuthStateChanged((user) => {
 
 // Global Variables
 const members = [];
-
+let valid = true;
 const qrcode = new QRCode("view-qrcode", {
   height: 90,
   width: 90
 });
+const waitModal = document.getElementById('waitModal');
 
 let regTableLoader = document.getElementById('table-loader');
 let walkTableLoader = document.getElementById('table-loader-walkin');
@@ -67,44 +68,33 @@ calculateExpiry = ({date, isMonth}) => {
 // Adding Members to Firebase
 let button = document.getElementById('addMemberBtn');
 button.onclick = () => {
-  let fname = document.getElementById('fName').value;
-  let lname = document.getElementById('lName').value;
-  let email = document.getElementById('email').value;
-  let memberType = document.getElementById('memberType').value;
-  let modal = document.getElementById('close-modal');
-  let sex = document.getElementById('sex').value;
-  let phone = document.getElementById('phone').value;
-  let address = document.getElementById('address').value;
-  let program = document.getElementById('program').value;
-  let birthdate = document.getElementById('birthdate').value;
-  let monthlyRate;
+  valid = checkValidityAll();
+  if(valid == true) {
+    waitModal.click();
+    let fname = document.getElementById('fName').value;
+    let lname = document.getElementById('lName').value;
+    let email = document.getElementById('email').value;
+    let memberType = document.getElementById('memberType').value;
+    let sex = document.getElementById('sex').value;
+    let phone = document.getElementById('phone').value;
+    let address = document.getElementById('address').value;
+    let program = document.getElementById('program').value;
+    let birthdate = document.getElementById('birthdate').value;
+    let monthlyRate;
 
-  if(memberType == 'Regular') {
-    monthlyRate = 750;
-  } else {
-    monthlyRate = '';
-  }
+    if(memberType == 'Regular') {
+      monthlyRate = 750;
+    } else {
+      monthlyRate = null;
+    }
 
-  let date = new Date();
-  let annualStart = `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-  let monthlyStart = `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+    let date = new Date();
+    let annualStart = `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+    let monthlyStart = `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 
-  let members = db.collection('members');
-  let member = members.where('fname', '==', fname).where('lname', '==', lname);
+    let members = db.collection('members');
+    let member = members.where('fname', '==', fname).where('lname', '==', lname).where('email', '==', email);
 
-  if(fname === '') {
-    alert('ERROR: First name is required!');
-  } else if(lname === '') {
-    alert('ERROR: Last name is required!');
-  } else if(email === '') {
-    alert('ERROR: Email is required!');
-  } else if(address === '') {
-    alert('ERROR: Address is required!');
-  } else if(sex === '') {
-    alert('ERROR: Sex is required!');
-  } else if(phone === '') {
-    alert('ERROR: Cellphone number is required!');
-  } else {
     member.get().then((snapshot) => {
       if(snapshot.docs.length > 0) {
         alert('ERROR: Member already exists!');
@@ -141,6 +131,7 @@ button.onclick = () => {
                   });
                 });
               }).then(() => {
+                waitModal.click();
                 document.getElementById('close-modal').click();
                 document.getElementById('showNewMemberCode').click();
                 document.onclick = (e) => {
@@ -151,11 +142,13 @@ button.onclick = () => {
                 }
               });
             } else {
+              waitModal.click();
               alert('Successfully added new walk-in!');
               window.location.reload();
             }
           });
         }).catch((error) => {
+          waitModal.click();
           alert(error.message);
         });
       }
@@ -170,60 +163,29 @@ renderRegular = (list) => {
   let tbody = document.getElementById('tbody');
   tbody.innerHTML = ``;
 
-  list.forEach((reg) => {
-    let tr = document.createElement('tr');
-    tr.setAttribute('data-id', reg.id);
-    tr.innerHTML = 
-      `<td>${reg.data.lname}</td>
-      <td>${reg.data.fname}</td>
-      <td>
-        <span class="hidden" id="${reg.id}-span"></span>
-        <a>
-          <small id='${reg.id}-small' onclick='showID("${reg.id}")'>
-            <i data-toggle="tooltip" data-placement="top" title="Show ${reg.data.fname}"  class="fas fa-eye"></i>
-          </small>
-        </a>
-      </td>
-      <td>${reg.data.status}</td>
-      <td>
-        <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
-        <a class='btn-link text-orange' data-toggle='modal' data-target='#updateModal' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${reg.data.fname}" data-placement="top"></i></a>
-        <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>  
-        <a class='btn-link text-red' data-toggle='modal' data-target='#payment-modal' onclick='deleteMember(this.parentNode.parentNode)'><i class='fas fa-trash-alt mx-1' style='font-size: 20px'></i></a>  
-      </td>`; 
-
-    tbody.appendChild(tr);
-  });
-
-}
-
-renderNewSearch = (docs) => {
-  let tbody = document.getElementById('tbody');
-  tbody.innerHTML = ``;
-
-  if(docs.length > 0) {
-    docs.forEach((doc) => {
+  if(list.length > 0) {
+    list.forEach((reg) => {
       let tr = document.createElement('tr');
-      tr.setAttribute('data-id', doc.id);
-
+      tr.setAttribute('data-id', reg.id);
       tr.innerHTML = 
-        `<td>${doc.data.lname}</td>
-        <td>${doc.data.fname}</td>
+        `<td>${reg.data.lname}</td>
+        <td>${reg.data.fname}</td>
         <td>
-          <span class="hidden" id="${doc.id}-span"></span>
+          <span class="hidden" id="${reg.id}-span"></span>
           <a>
-            <small id='${doc.id}-small' onclick='showID("${doc.id}")'>
-              <i data-toggle="tooltip" data-placement="top" title="Show ${doc.data.fname}"  class="fas fa-eye"></i>
+            <small id='${reg.id}-small' onclick='showID("${reg.id}")'>
+              <i data-toggle="tooltip" data-placement="top" title="Show ${reg.data.fname}"  class="fas fa-eye"></i>
             </small>
-          </a>  
+          </a>
         </td>
-        <td>${doc.data.status}</td>
+        <td>${reg.data.status}</td>
         <td>
           <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
-          <a class='btn-link text-orange' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data.fname}" data-placement="top"></i></a>
+          <a class='btn-link text-orange' data-toggle='modal' data-target='#updateModal' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${reg.data.fname}" data-placement="top"></i></a>
           <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>  
+          <a class='btn-link text-red' onclick='deleteMember(this.parentNode.parentNode)'><i class='fas fa-trash-alt mx-1' style='font-size: 20px'></i></a>  
         </td>`;
-
+  
       tbody.appendChild(tr);
     });
   } else {
@@ -231,65 +193,91 @@ renderNewSearch = (docs) => {
   }
 }
 
-filterRegs = (value) => {
-  document.getElementById('no-data-div').style.display = 'none';
-  return results = members.filter(member => member.fullName.toLowerCase().includes(value.toLowerCase()) && member.data.memberType == 'Regular');
+// DELETE MEMBER FUNCTION
+deleteMember = (tr) => {
+  let x = confirm('Are you sure you want to delete?');
+  
+  if(x === true) {
+    let id = tr.getAttribute('data-id');
+    waitModal.click();
+    
+    db.collection('members').doc(id).update({
+      isDeleted: true,
+      dateDeleted: new Date()
+    })
+    .then(() => {
+      waitModal.click();
+      $("#wait").on("hidden.bs.modal", () => {
+        alert("Successfully deleted member!");
+        window.location.reload();
+      });
+    });
+  }
+}
+
+// end of delete
+
+buildNewTable = (val) => {
+  let res = members.filter(m => m.fullName.toLowerCase().includes(val.toLowerCase()) && m.data.memberType == 'Regular');
+  let state = {
+    page: 1,
+    rows: 5
+  }
+
+  let data = pagination(res, state.page, state.rows);
+  let list = data.querySet;
+  let pagi_no = data.pages;  
+  let pageSpan = document.getElementById('page');
+
+  if(data.pages > 0) {
+    pageSpan.innerText = `Page: ${state.page} of ${data.pages}`;
+  } else {
+    pageSpan.innerText = `Page: 0 of 0`;
+  }
+
+  putPagination(pagi_no);
+  renderRegular(list);
 }
 
 // Searching Regular Members
 let searchReg = document.getElementById('search-member');
 searchReg.onkeyup = () => {
   if(searchReg.value != '') {
-    let docs = filterRegs(searchReg.value);
-    renderNewSearch(docs);
+    buildNewTable(searchReg.value);
   } else {
     buildTable();
   }
 }
-searchReg.value.onchange = () => {
-  if(searchReg.value == '') {
-    buildTable();
+
+buildNewWalkTable = (val) => {
+  let res = members.filter(m => m.fullName.toLowerCase().includes(val.toLowerCase()) && m.data.memberType == 'Walk-in');
+  let state = {
+    page: 1,
+    rows: 3
   }
-}
 
-renderNewWalks = (docs) => {
-  let tbody = document.getElementById('tbody-walk-in');
-  tbody.innerHTML = ``;
+  let data = pagination(res, state.page, state.rows);
+  let list = data.querySet;
+  let pagi_no = data.pages;  
+  let pageSpan = document.getElementById('walk-page');
 
-  if(docs.length > 0) {
-    docs.forEach((doc) => {
-      let tr = document.createElement('tr');
-      tr.setAttribute('data-id', doc.id);
-
-      tr.innerHTML = 
-        `<td>${doc.data.fname}</td>
-        <td>${doc.data.lname}</td>
-        <td>
-          <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
-          <a class='btn-link text-orange' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${doc.data.fname}" data-placement="top"></i></a>
-          <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>  
-        </td>`;
-
-      tbody.appendChild(tr);
-    });
+  if(data.pages > 0) {
+    pageSpan.innerText = `Page: ${state.page} of ${data.pages}`;
   } else {
-    document.getElementById('no-data-div-walkin').style.display = 'flex';
+    pageSpan.innerText = `Page: 0 of 0`;
   }
-}
 
-filterWalks = (value) => {
-  document.getElementById('no-data-div-walkin').style.display = 'none';
-  return results = members.filter(member => member.fullName.toLowerCase().includes(value.toLowerCase()) && member.data.memberType == 'Walk-in');
+  putWalkPagination(pagi_no);
+  renderWalkin(list);
 }
 
 // Searching Walk-in Members
 let searchWalk = document.getElementById('search-walkin');
 searchWalk.onkeyup = () => {
   if(searchWalk.value != '') {
-    let docs = filterWalks(searchWalk.value);
-    renderNewWalks(docs);
+    buildNewWalkTable(searchWalk.value);
   } else {
-    buildTable();
+    buildWalkTable();
   }
 }
 
@@ -311,6 +299,7 @@ renderWalkin = (walks) => {
           <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
           <a class='btn-link text-orange' data-toggle='modal' data-target='#updateModal' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${walk.data.fname}" data-placement="top"></i></a>
           <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>  
+          <a class='btn-link text-red' onclick='deleteMember(this.parentNode.parentNode)'><i class='fas fa-trash-alt mx-1' style='font-size: 20px'></i></a>  
         </td>`;
 
       tbody.appendChild(tr);
@@ -428,13 +417,18 @@ updateMember = (tr) => {
 
   let updateBtn = document.getElementById('updateBtn');
   updateBtn.onclick = () => {
+    waitModal.click();
     db.collection('members').doc(id).update({
       memberType: memberType.value,
       status: status.value,
       program: program.value
     }).then(() => {
-      alert('Successfully updated member!');
-      window.location.reload();
+      waitModal.click();
+      document.getElementById('close-updateModal').click();
+      $("#updateModal").on('hidden.bs.modal', () => {
+        alert('Successfully updated member!');
+        window.location.reload();
+      });
     });
   }
 }
@@ -453,6 +447,155 @@ showID = (id) => {
     span.classList.add('hidden');
     span.textContent = '';
   } 
+}
+
+// PAGINATION
+let state = {
+  page: 1,
+  rows: 5,
+  wpage: 1,
+  wrows: 3
+}
+
+pagination = (querySet, page, rows) => {
+  let trimStart = (page - 1) * rows;
+  let trimEnd = trimStart + rows;
+
+  let trimmedData = querySet.slice(trimStart, trimEnd);
+
+  let pages = Math.ceil(querySet.length / rows)
+
+  return {
+    querySet: trimmedData,
+    pages: pages
+  }
+}
+
+buildTable = () => {
+  let val = document.getElementById('search-member').value;
+  let regs = members.filter(m => m.data.memberType == 'Regular' && m.fullName.toLowerCase().includes(val.toLowerCase()) && m.data.isDeleted != true);
+  let data = pagination(regs, state.page, state.rows);
+  let list = data.querySet;
+  let pagi_no = data.pages;  
+  let pageSpan = document.getElementById('page');
+
+  if(data.pages > 0) {
+    pageSpan.innerText = `Page: ${state.page} of ${data.pages}`;
+  } else {
+    pageSpan.innerText = `Page: 0 of 0`;
+  }
+
+  putPagination(pagi_no);
+  renderRegular(list);
+}
+
+buildWalkTable = () => {
+  let val = document.getElementById('search-walkin').value;
+  let walks = members.filter(m => m.data.memberType == 'Walk-in' && m.fullName.toLowerCase().includes(val.toLowerCase()) && m.data.isDeleted != true);
+  let walkData = pagination(walks, state.wpage, state.wrows);
+  let walklist = walkData.querySet;
+  let wpagi_no = walkData.pages;
+  let walkPageSpan = document.getElementById('walk-page');
+
+  walkPageSpan.innerText = `Page: ${state.wpage} of ${walkData.pages}`;
+
+  putWalkPagination(wpagi_no);
+  renderWalkin(walklist);
+}
+
+putPagination = (no) => {
+  let pagination = document.getElementById('pagination');
+  pagination.innerHTML = ``;
+  for(let i = 1; i <= no; i++) {
+    let li = document.createElement('li');
+    li.classList.add('page-item');
+    li.innerHTML = `<a class="page-link" onclick="changeTablePage(this)" data-id="${i}">${i}</a>`;
+    pagination.appendChild(li);
+  }
+}
+
+putWalkPagination = (no) => {
+  let pagination = document.getElementById('walk-pagination');
+  pagination.innerHTML = ``;
+  for(let i = 1; i <= no; i++) {
+    let li = document.createElement('li');
+    li.classList.add('page-item');
+    li.innerHTML = `<a class="page-link" onclick="changeWalkTablePage(this)" data-id="${i}">${i}</a>`;
+    pagination.appendChild(li);
+  }
+}
+
+changeTablePage = (li) => {
+  let page = li.getAttribute('data-id');
+  let pageSpan = document.getElementById('page');
+
+  state.page = page;
+  pageSpan.innerHTML = `Page: ${page}`;
+  buildTable();
+}
+
+changeWalkTablePage = (li) => {
+  let page = li.getAttribute('data-id');
+  let pageSpan = document.getElementById('walk-page');
+
+  state.wpage = page;
+  pageSpan.innerHTML = `Page: ${page}`;
+  buildWalkTable();
+}
+
+// Render deleted members
+renderDel = () => {
+  let del = members.filter(m => m.data.isDeleted === true);
+  
+  if(del.length > 0) {
+    document.getElementById('no-data-div-deleted').style.display = 'none';
+    let delTbody = document.getElementById('view-deleted-tbody');
+    delTbody.innerHTML = ``;
+    del.forEach((doc) => {
+      let tr = document.createElement('tr');
+      tr.setAttribute('data-id', doc.id);
+
+      let add = new Date(doc.data.dateAdded.toDate());
+      let del = new Date(doc.data.dateDeleted.toDate());
+
+      tr.innerHTML = 
+        `<td>${doc.fullName}</td>
+        <td>${months[add.getMonth()]} ${add.getDate()}, ${add.getFullYear()}</td>
+        <td>${months[del.getMonth()]} ${del.getDate()}, ${del.getFullYear()}</td>
+        <td>
+          <a onclick="recover(this.parentNode.parentNode)">
+            <i class="fas fa-redo-alt text-success"></i>
+          </a>
+        </td>`;
+
+      delTbody.appendChild(tr);
+    });
+  } else {
+    document.getElementById('no-data-div-deleted').style.display = 'flex';
+  }
+}
+
+recover = (tr) => {
+  let x = confirm("Are you sure you want to recover?");
+
+  if(x === true) {
+    waitModal.click();
+    let id = tr.getAttribute('data-id');
+
+    db.collection('members').doc(id).update({
+      isDeleted: false
+    })
+    .then(() => {
+      waitModal.click();
+      $("#wait").on("hidden.bs.modal", () => {
+        $("#viewDeleted").click();
+        $("#view-deleted").on("hidden.bs.modal", () => {
+          alert('Successfully recovered member!');
+          window.location.reload();
+        });
+      });
+    });
+  }
 }
 
 //************ PAYMENTS ************//
@@ -487,15 +630,28 @@ document.getElementById('enterCalc').addEventListener('click', () => {
   let cash = document.getElementById('payment-cash');
   let change = document.getElementById('payment-change');
   let amount = document.getElementById('payment-amount');
+  
+  let val = parseInt(cash.value);
 
-  let x = parseInt(cash.value);
-  let y = parseInt(amount.value);
+  if(Number.isInteger(val) == true) {
+    if(val <= 0 || val >= 9999) {
+      alert('Please enter a valid amount!');
+    } else if(val < parseInt(amount.value)) {
+      alert('Insufficient cash!');
+    } else {
+      let x = val;
+      let y = parseInt(amount.value);
 
-  change.value = x-y;
+      change.value = `₱${x-y}.00`;
+    }
+  } else {
+    console.log(val)
+    alert('Please enter an appropriate amount!');
+  }
 });
 
  // Add payment
- addPayment = (tr) => {
+addPayment = (tr) => {
   let id = tr.getAttribute('data-id');
   let uid = document.getElementById('payment-uid');
   uid.value = id;
@@ -526,10 +682,9 @@ document.getElementById('enterCalc').addEventListener('click', () => {
   }
 
   document.getElementById('add-payment-btn').addEventListener('click', () => {
+    waitModal.click();
     let amount = document.getElementById('payment-amount').value;
     let paymentDesc = document.getElementById('payment-desc').value;
-
-    let date = new Date();
     
     addZero = (i) => {
       if (i < 10) {
@@ -552,8 +707,12 @@ document.getElementById('enterCalc').addEventListener('click', () => {
         status: 'Paid'
       });
     }).then(() => {
-      alert('Successfully added payment!');
-      window.location.reload();
+      waitModal.click();
+      $("#close-paymentModal").click();
+      $("#payment-modal").on("hidden.bs.modal", () => {
+        alert('Successfully added payment!');
+        window.location.reload();
+      });
     });
   });
 }
@@ -602,6 +761,8 @@ db.collection('members').orderBy('lname', 'asc').get().then((snapshot) => {
   });
 }).then(() => {
   buildTable();
+  buildWalkTable();
+  renderDel();
 });
 
 // ALL Programs
@@ -640,89 +801,245 @@ function securityLogtrail() {
   } 
 }
 
-// PAGINATION
-let state = {
-  page: 1,
-  rows: 5,
-  wpage: 1,
-  wrows: 3
-}
+// VALIDATION
 
-pagination = (querySet, page, rows) => {
-  let trimStart = (page - 1) * rows;
-  let trimEnd = trimStart + rows;
+checkIfValid = (e) => {
+  let empty = document.getElementById(`${e.id}-empty`);
+  if(e.id != 'address') {
+    let invalid = document.getElementById(`${e.id}-invalid`);
 
-  let trimmedData = querySet.slice(trimStart, trimEnd);
+    if(e.value == '') {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+    }
 
-  let pages = Math.ceil(querySet.length / rows)
-
-  return {
-    querySet: trimmedData,
-    pages: pages
+    if(parseInt(e.value) || e.value.match(/\d+/) != null) {
+      invalid.style.display = 'block';
+    } else {
+      invalid.style.display = 'none';
+    }
+  } else {
+    if(e.value == '') {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+    }
   }
 }
 
-buildTable = () => {
-  // regular
-  let regs = members.filter(m => m.data.memberType == 'Regular');
-  let data = pagination(regs, state.page, state.rows);
-  let list = data.querySet;
-  let pagi_no = data.pages;  
-  let pageSpan = document.getElementById('page');
+checkNumber = (e) => {
+  let empty = document.getElementById(`${e.id}-empty`);
+  let invalid = document.getElementById(`${e.id}-invalid`);
+  let length = document.getElementById(`${e.id}-length`);
+  if(e.value == '') {
+    empty.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    empty.style.display = 'none';
+  }
 
-  pageSpan.innerText = `Page: ${state.page}`;
-
-  // walkin
-  let walks = members.filter(m => m.data.memberType == 'Walk-in');
-  let walkData = pagination(walks, state.wpage, state.wrows);
-  let walklist = walkData.querySet;
-  let wpagi_no = walkData.pages;
-  let walkPageSpan = document.getElementById('walk-page');
-
-  walkPageSpan.innerText = `Page: ${state.wpage}`;
-
-  putPagination(pagi_no);
-  putWalkPagination(wpagi_no);
-  renderRegular(list);
-  renderWalkin(walklist);
-}
-
-putPagination = (no) => {
-  let pagination = document.getElementById('pagination');
-  pagination.innerHTML = ``;
-  for(let i = 1; i <= no; i++) {
-    let li = document.createElement('li');
-    li.classList.add('page-item');
-    li.innerHTML = `<a class="page-link" onclick="changeTablePage(this)" data-id="${i}">${i}</a>`;
-    pagination.appendChild(li);
+  if(e.value.match(/[a-zA-Z]/) != null) {
+    invalid.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    invalid.style.display = 'none';
+    if(empty.style.display == 'block' || invalid.style.display == 'block') {
+      length.style.display = 'none';
+    } else if(e.value.length != 11) {
+      length.style.display = 'block';
+      valid = false;
+    } else {
+      length.style.display = 'none';
+    }
   }
 }
 
-putWalkPagination = (no) => {
-  let pagination = document.getElementById('walk-pagination');
-  pagination.innerHTML = ``;
-  for(let i = 1; i <= no; i++) {
-    let li = document.createElement('li');
-    li.classList.add('page-item');
-    li.innerHTML = `<a class="page-link" onclick="changeWalkTablePage(this)" data-id="${i}">${i}</a>`;
-    pagination.appendChild(li);
+validateEmail = (email) => {
+  let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
+checkEmail = (e) => {
+  let empty = document.getElementById(`${e.id}-empty`);
+  let invalid = document.getElementById(`${e.id}-invalid`);
+
+  if(e.value == '') {
+    empty.style.display = 'block';
+    invalid.style.display = 'none';
+  } else {
+    empty.style.display = 'none';
+
+    if(!validateEmail(e.value)) {
+      invalid.style.display = 'block';
+    } else {
+      invalid.style.display = 'none';
+    }
   }
 }
 
-changeTablePage = (li) => {
-  let page = li.getAttribute('data-id');
-  let pageSpan = document.getElementById('page');
-
-  state.page = page;
-  pageSpan.innerHTML = `Page: ${page}`;
-  buildTable();
+checkDate = (e) => {
+  let invalid = document.getElementById(`${e.id}-invalid`);
+  let underage = document.getElementById(`${e.id}-underage`)
+  if(e.value == '') {
+    invalid.style.display = 'block';
+    underage.style.display = 'none';
+  } else {
+    let date = new Date(e.value);
+    if(date.getFullYear() >= new Date().getFullYear()) {
+      invalid.style.display = 'block';
+      underage.style.display = 'none';
+    } else {
+      if(date.getFullYear() > new Date().getFullYear() - 12) {
+        invalid.style.display = 'none';
+        underage.style.display = 'block';
+      } else if(date.getFullYear() < new Date('1920-01-01').getFullYear()) {
+        invalid.style.display = 'block';
+        underage.style.display = 'none';
+      } else {
+        invalid.style.display = 'none';
+        underage.style.display = 'none';
+      }
+    }
+  }
 }
 
-changeWalkTablePage = (li) => {
-  let page = li.getAttribute('data-id');
-  let pageSpan = document.getElementById('walk-page');
+checkValidityAll = () => {
+  // fname
+  let fname = document.getElementById('fName');
+  let fnameValid;
+  if(fname.value == '') {
+    document.getElementById(`fName-empty`).style.display = 'block';
+    fnameValid = false;
+  } else {
+    document.getElementById(`fName-empty`).style.display = 'none';
+    if(parseInt(fname.value) || fname.value.match(/\d+/) != null) {
+      document.getElementById(`fName-invalid`).style.display = 'block';
+      fnameValid = false;
+    } else {
+      document.getElementById(`fName-invalid`).style.display = 'none';
+      fnameValid = true;
+    }
+  }
 
-  state.wpage = page;
-  pageSpan.innerHTML = `Page: ${page}`;
-  buildTable();
+  // lname
+  let lname = document.getElementById('lName');
+  let lnameValid;
+  if(lname.value == '') {
+    document.getElementById(`lName-empty`).style.display = 'block';
+    lnameValid = false;
+  } else {
+    document.getElementById(`lName-empty`).style.display = 'none';
+    if(parseInt(lname.value) || lname.value.match(/\d+/) != null) {
+      document.getElementById(`lName-invalid`).style.display = 'block';
+      lnameValid = false;
+    } else {
+      document.getElementById(`lName-invalid`).style.display = 'none';
+      lnameValid = true;
+    }
+  }
+
+  // birthdate
+  let birthdate = document.getElementById('birthdate');
+  let invalid = document.getElementById(`birthdate-invalid`);
+  let underage = document.getElementById(`birthdate-underage`);
+  let birthdateValid;
+  if(birthdate.value == '') {
+    invalid.style.display = 'block';
+    underage.style.display = 'none';
+    birthdateValid = false;
+  } else {
+    let date = new Date(birthdate.value);
+    if(date.getFullYear() >= new Date().getFullYear()) {
+      invalid.style.display = 'block';
+      underage.style.display = 'none';
+      birthdateValid = false;
+    } else {
+      if(date.getFullYear() > new Date().getFullYear() - 12) {
+        invalid.style.display = 'none';
+        underage.style.display = 'block';
+        birthdateValid = false;
+      } else if(date.getFullYear() < new Date('1920-01-01').getFullYear()) {
+        invalid.style.display = 'block';
+        underage.style.display = 'none';
+        birthdateValid = false;
+      } else {
+        invalid.style.display = 'none';
+        underage.style.display = 'none';
+        birthdateValid = true;
+      }
+    }
+  }
+
+  // email
+  let email = document.getElementById('email');
+  let emptyEmail = document.getElementById(`email-empty`);
+  let invalidEmail = document.getElementById(`email-invalid`);
+  let emailValid;
+  if(email.value == '') {
+    emptyEmail.style.display = 'block';
+    invalidEmail.style.display = 'none';
+    emailValid = false;
+  } else {
+    emptyEmail.style.display = 'none';
+
+    if(!validateEmail(email.value)) {
+      invalidEmail.style.display = 'block';
+      emailValid = false;
+    } else {
+      invalidEmail.style.display = 'none';
+      emailValid = true;
+    }
+  }
+
+  // address
+  let address = document.getElementById('address');
+  let addressEmpty = document.getElementById('address-empty');
+  let addressValid;
+  if(address.value == '') {
+    addressEmpty.style.display = 'block';
+    addressValid = false;
+  } else {
+    addressEmpty.style.display = 'none';
+    addressValid = true;
+  }
+
+  // phone
+  let phone = document.getElementById('phone');
+  let phoneEmpty = document.getElementById(`phone-empty`);
+  let phoneInvalid = document.getElementById(`phone-invalid`);
+  let length = document.getElementById(`phone-length`);
+  let phoneValid;
+  if(phone.value == '') {
+    phoneEmpty.style.display = 'block';
+    length.style.display = 'none';
+    phoneValid = false;
+  } else {
+    phoneEmpty.style.display = 'none';
+    if(phone.value.match(/[a-zA-Z]/) != null) {
+      phoneInvalid.style.display = 'block';
+      length.style.display = 'none';
+      phoneValid = false;
+    } else {
+      phoneInvalid.style.display = 'none';
+      if(phoneEmpty.style.display == 'block' || phoneInvalid.style.display == 'block') {
+        length.style.display = 'none';
+      } else if(phone.value.length != 11) {
+        length.style.display = 'block';
+        phoneValid = false;
+      } else {
+        length.style.display = 'none';
+        phoneValid = true;
+      }
+    }
+  }
+
+  if(fnameValid == true 
+    && lnameValid == true
+    && birthdateValid == true
+    && emailValid == true
+    && addressValid == true
+    && phoneValid == true) {
+    return true;
+  }
 }
