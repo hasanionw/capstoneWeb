@@ -86,8 +86,8 @@ renderDelete = () => {
           <td>Error</td>
           <td>
          
-          <a class='btn-link' onclick='viewInventory(this.parentNode.parentNode)'
-           data-toggle='modal' data-target='#displayallrecords'>
+          <a class='btn-link' onclick='viewPromos(this.parentNode.parentNode)'
+           data-toggle='modal' data-target='#'>
            <i data-toggle="tooltip" data-placement="top" title="view ${pro.data.promoname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
        
            <i id="deleteBtn" onclick='recoverPro(this.parentNode.parentNode)'

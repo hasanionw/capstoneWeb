@@ -243,7 +243,7 @@ renderCard = () => {
       sortWeights.classList.add('btn-orange');
       sortWeights.classList.remove('btn-outline-orange');
 
-      let docs = inv.filter(i => i.data.category == 'Cardio Equipment' && i.data.status == 'active');
+      let docs = inv.filter(i => i.data.category == 'Cardio Machines' && i.data.status == 'active');
       sortingInv(docs);
 
     }

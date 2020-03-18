@@ -344,6 +344,8 @@ function deleteTable2(tr) {
         chat: 'able'
      
       }).then(() => {
+       
+        
         alert('Successfully Recover Trainer!');
         window.location.reload();
       })
