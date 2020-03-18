@@ -109,6 +109,19 @@
       justify-content: center;
       align-items: center;
     }
+
+    .validation {
+      display: none;
+      margin-left: 0 !important;
+    }
+
+    .wait-body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      border-radius: 25px;
+    }
   </style>
 </head>
 
@@ -157,6 +170,10 @@
 
   <main class='pt-5 mx-lg-5'>
     <div class='container-fluid mt-5'>
+      <button class="btn btn-sm btn-outline-orange mb-3" id="viewDeleted" data-toggle="modal" data-target="#view-deleted">
+        <i class="fas fa-eye mr-2"></i>
+        View Deleted Members
+      </button>
       <div class='card'>
         <div class='card-content'>
           <div class='card-header flexHeader'>
@@ -303,15 +320,20 @@
           <button type='button' class='close' id='close-modal' data-dismiss='modal'>&times;</button>
         </div>
         <div class='modal-body'>
+          <form>
           <div class="form-group">
             <div class="form-row">
               <div class="col-sm-6">
                 <label>First Name</label>
-                <input type="text" id="fName" class="form-control">
+                <input type="text" id="fName" class="form-control mb-1" onblur="checkIfValid(this)">
+                <small class="validation text-danger" id="fName-empty">Please fill out this field!</small>
+                <small class="validation text-danger" id="fName-invalid">Invalid input!</small>
               </div>
               <div class="col-sm-6">
                 <label>Last Name</label>
-                <input type="text" id="lName" class="form-control">
+                <input type="text" id="lName" class="form-control mb-1" onblur="checkIfValid(this)">  
+                <small class="validation text-danger" id="lName-empty">Please fill out this field!</small>
+                <small class="validation text-danger" id="lName-invalid">Invalid input!</small>
               </div>
             </div>
           </div>
@@ -326,11 +348,15 @@
               </div>
               <div class="col-sm-5">
                 <label>Birthdate</label>
-                <input type="date" id="birthdate" class="form-control">
+                <input type="date" id="birthdate" class="form-control mb-1" onblur="checkDate(this)">
+                <small class="validation text-danger" id="birthdate-invalid">Invalid birthdate!</small>
+                <small class="validation text-danger" id="birthdate-underage">Person must be at least 12 years old to join the gym!</small>
               </div>
               <div class="col-sm-5">
                 <label>Email</label>
-                <input type="email" class="form-control" id="email">
+                <input type="email" class="form-control mb-1" id="email" onblur="checkEmail(this)">
+                <small class="validation text-danger" id="email-empty">Please fill out this field!</small>
+                <small class="validation text-danger" id="email-invalid">Invalid email!</small>
               </div>
             </div>
           </div>
@@ -338,7 +364,8 @@
             <div class="form-row">
               <div class="col-sm-12">
                 <label>Address</label>
-                <input type="text" class="form-control" id="address">
+                <input type="text" class="form-control mb-1" id="address" oninput="checkIfValid(this)" onblur="checkIfValid(this)">
+                <small class="validation text-danger" id="address-empty">Please fill out this field!</small>
               </div>
             </div>
           </div>
@@ -346,7 +373,10 @@
             <div class="form-row">
               <div class="col-sm-4">
                 <label>Cellphone Number</label>
-                <input type="text" class="form-control" id="phone">
+                <input type="text" class="form-control mb-1" id="phone" onblur="checkNumber(this)">
+                <small class="validation text-danger" id="phone-empty">Please fill out this field!</small>
+                <small class="validation text-danger" id="phone-invalid">Invalid input!</small>
+                <small class="validation text-danger" id="phone-length">Phone number must contain 11 digits!</small>
               </div>
               <div class="col-sm-4">
                 <label>Membership type</label>
@@ -363,9 +393,11 @@
               </div>
             </div>
           </div>
+          <small><i>NOTE: All fields are <b>required</b>!</b></i></small>
         </div>
         <div class="modal-footer">
-          <button class='btn btn-orange' id='addMemberBtn'>Submit</button>
+          <button type="submit" class='btn btn-orange' id='addMemberBtn'>Submit</button>
+          </form>
         </div>
       </div>
     </div>
@@ -478,7 +510,7 @@
             <div class="form-row">
               <div class="col-sm-4">
                 <label>Cash</label>
-                <input type="text" class="form-control" id="payment-cash">
+                <input type="number" class="form-control" id="payment-cash">
               </div>
               <div class="col-sm-4">
                 <label>Change</label>
@@ -605,7 +637,51 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-orange" id="update-member-from-view-modal">Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View deleted member modal -->
+  <div class="modal fade" id="view-deleted">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-orange">
+          <h3 class="modal-title">Deleted Members</h3>
+        </div>
+        <div class="modal-body table-responsive p-0">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Date added</th>
+                <th>Date deleted</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="view-deleted-tbody">
+
+            </tbody>
+          </table>
+          <div id="no-data-div-deleted" class="no-data-div my-5 text-muted">
+            No data!
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-sm btn-orange" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="wait">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 25px">
+        <div class="modal-body wait-body bg-orange">
+          <p>Please wait...</p>
+          <div class="table-loader bg-orange">
+            <div class="loader-spinner"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -615,6 +691,7 @@
   <a data-toggle='modal' data-target='#updateModal' style="display: none" id="showUpdateModal"></a>
   <a data-toggle='modal' data-target='#new-member-code' style="display: none" id="showNewMemberCode"></a>
   <a data-toggle='modal' data-target='#add-member' style="display: none" id="addMemberModal"></a>
+  <a data-toggle='modal' data-target='#wait' style="display: none" id="waitModal"></a>
 
   <script type='text/javascript' src='js/jquery-3.4.1.min.js'></script>
   <script type='text/javascript' src='js/popper.min.js'></script>

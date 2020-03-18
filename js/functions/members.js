@@ -9,11 +9,12 @@ auth.onAuthStateChanged((user) => {
 
 // Global Variables
 const members = [];
-
+let valid = true;
 const qrcode = new QRCode("view-qrcode", {
   height: 90,
   width: 90
 });
+const waitModal = document.getElementById('waitModal');
 
 let regTableLoader = document.getElementById('table-loader');
 let walkTableLoader = document.getElementById('table-loader-walkin');
@@ -67,44 +68,33 @@ calculateExpiry = ({date, isMonth}) => {
 // Adding Members to Firebase
 let button = document.getElementById('addMemberBtn');
 button.onclick = () => {
-  let fname = document.getElementById('fName').value;
-  let lname = document.getElementById('lName').value;
-  let email = document.getElementById('email').value;
-  let memberType = document.getElementById('memberType').value;
-  let modal = document.getElementById('close-modal');
-  let sex = document.getElementById('sex').value;
-  let phone = document.getElementById('phone').value;
-  let address = document.getElementById('address').value;
-  let program = document.getElementById('program').value;
-  let birthdate = document.getElementById('birthdate').value;
-  let monthlyRate;
+  valid = checkValidityAll();
+  if(valid == true) {
+    waitModal.click();
+    let fname = document.getElementById('fName').value;
+    let lname = document.getElementById('lName').value;
+    let email = document.getElementById('email').value;
+    let memberType = document.getElementById('memberType').value;
+    let sex = document.getElementById('sex').value;
+    let phone = document.getElementById('phone').value;
+    let address = document.getElementById('address').value;
+    let program = document.getElementById('program').value;
+    let birthdate = document.getElementById('birthdate').value;
+    let monthlyRate;
 
-  if(memberType == 'Regular') {
-    monthlyRate = 750;
-  } else {
-    monthlyRate = '';
-  }
+    if(memberType == 'Regular') {
+      monthlyRate = 750;
+    } else {
+      monthlyRate = null;
+    }
 
-  let date = new Date();
-  let annualStart = `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-  let monthlyStart = `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+    let date = new Date();
+    let annualStart = `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+    let monthlyStart = `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 
-  let members = db.collection('members');
-  let member = members.where('fname', '==', fname).where('lname', '==', lname);
+    let members = db.collection('members');
+    let member = members.where('fname', '==', fname).where('lname', '==', lname).where('email', '==', email);
 
-  if(fname === '') {
-    alert('ERROR: First name is required!');
-  } else if(lname === '') {
-    alert('ERROR: Last name is required!');
-  } else if(email === '') {
-    alert('ERROR: Email is required!');
-  } else if(address === '') {
-    alert('ERROR: Address is required!');
-  } else if(sex === '') {
-    alert('ERROR: Sex is required!');
-  } else if(phone === '') {
-    alert('ERROR: Cellphone number is required!');
-  } else {
     member.get().then((snapshot) => {
       if(snapshot.docs.length > 0) {
         alert('ERROR: Member already exists!');
@@ -141,6 +131,7 @@ button.onclick = () => {
                   });
                 });
               }).then(() => {
+                waitModal.click();
                 document.getElementById('close-modal').click();
                 document.getElementById('showNewMemberCode').click();
                 document.onclick = (e) => {
@@ -151,11 +142,13 @@ button.onclick = () => {
                 }
               });
             } else {
+              waitModal.click();
               alert('Successfully added new walk-in!');
               window.location.reload();
             }
           });
         }).catch((error) => {
+          waitModal.click();
           alert(error.message);
         });
       }
@@ -190,7 +183,7 @@ renderRegular = (list) => {
           <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
           <a class='btn-link text-orange' data-toggle='modal' data-target='#updateModal' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${reg.data.fname}" data-placement="top"></i></a>
           <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>  
-          <a class='btn-link text-red' data-toggle='modal' data-target='#payment-modal' onclick='deleteMember(this.parentNode.parentNode)'><i class='fas fa-trash-alt mx-1' style='font-size: 20px'></i></a>  
+          <a class='btn-link text-red' onclick='deleteMember(this.parentNode.parentNode)'><i class='fas fa-trash-alt mx-1' style='font-size: 20px'></i></a>  
         </td>`;
   
       tbody.appendChild(tr);
@@ -199,6 +192,30 @@ renderRegular = (list) => {
     document.getElementById('no-data-div').style.display = 'flex';
   }
 }
+
+// DELETE MEMBER FUNCTION
+deleteMember = (tr) => {
+  let x = confirm('Are you sure you want to delete?');
+  
+  if(x === true) {
+    let id = tr.getAttribute('data-id');
+    waitModal.click();
+    
+    db.collection('members').doc(id).update({
+      isDeleted: true,
+      dateDeleted: new Date()
+    })
+    .then(() => {
+      waitModal.click();
+      $("#wait").on("hidden.bs.modal", () => {
+        alert("Successfully deleted member!");
+        window.location.reload();
+      });
+    });
+  }
+}
+
+// end of delete
 
 buildNewTable = (val) => {
   let res = members.filter(m => m.fullName.toLowerCase().includes(val.toLowerCase()) && m.data.memberType == 'Regular');
@@ -282,6 +299,7 @@ renderWalkin = (walks) => {
           <a class='btn-link text-darkgrey' data-toggle='modal' data-target='#view-member-modal' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px'></i></a>
           <a class='btn-link text-orange' data-toggle='modal' data-target='#updateModal' onclick='updateMember(this.parentNode.parentNode)'><i class="fas fa-pen mx-1" style='font-size: 20px' data-toggle="tooltip" title="Update ${walk.data.fname}" data-placement="top"></i></a>
           <a class='btn-link text-success' data-toggle='modal' data-target='#payment-modal' onclick='addPayment(this.parentNode.parentNode)'><i class='fas fa-money-bill-alt mx-1' style='font-size: 20px'></i></a>  
+          <a class='btn-link text-red' onclick='deleteMember(this.parentNode.parentNode)'><i class='fas fa-trash-alt mx-1' style='font-size: 20px'></i></a>  
         </td>`;
 
       tbody.appendChild(tr);
@@ -399,13 +417,18 @@ updateMember = (tr) => {
 
   let updateBtn = document.getElementById('updateBtn');
   updateBtn.onclick = () => {
+    waitModal.click();
     db.collection('members').doc(id).update({
       memberType: memberType.value,
       status: status.value,
       program: program.value
     }).then(() => {
-      alert('Successfully updated member!');
-      window.location.reload();
+      waitModal.click();
+      document.getElementById('close-updateModal').click();
+      $("#updateModal").on('hidden.bs.modal', () => {
+        alert('Successfully updated member!');
+        window.location.reload();
+      });
     });
   }
 }
@@ -423,192 +446,6 @@ showID = (id) => {
     small.innerHTML = ' <i  class="fas fa-eye"></i>';
     span.classList.add('hidden');
     span.textContent = '';
-  } 
-}
-
-//************ PAYMENTS ************//
-// Event Listener to #payment-desc in Payment Modal
-paymentDescChange = () => {
-  let paymentDesc = document.getElementById('payment-desc').value;
-  let amount = document.getElementById('payment-amount');
-
-  if(paymentDesc == 'Annual Subscription') {
-    amount.removeAttribute('value');
-    amount.value = '200';
-  } else if(paymentDesc == 'Monthly Subscription') {
-    amount.removeAttribute('value');
-    amount.value = '750';
-  }
-}
-
-// Show/Hide Payment Calculator
-document.getElementById('showCalc').addEventListener('click', () => {
-  let calc = document.getElementById('calculator');
-  if(calc.style.display == 'none') {
-    calc.style.display = 'block';
-    document.getElementById('showCalc').innerHTML = 'Hide Calculator';
-  } else {
-    calc.style.display = 'none';
-    document.getElementById('showCalc').innerHTML = 'Show Calculator';
-  }
-});
-
-// Calculating Change
-document.getElementById('enterCalc').addEventListener('click', () => {
-  let cash = document.getElementById('payment-cash');
-  let change = document.getElementById('payment-change');
-  let amount = document.getElementById('payment-amount');
-
-  let x = parseInt(cash.value);
-  let y = parseInt(amount.value);
-
-  change.value = x-y;
-});
-
- // Add payment
- addPayment = (tr) => {
-  let id = tr.getAttribute('data-id');
-  let uid = document.getElementById('payment-uid');
-  uid.value = id;
-  let name = document.getElementById('payment-name');
-  let span = document.getElementById('payment-fname-span');
-
-  let res = members.filter(m => m.id == id);
-  let mem = res[0];
-  let data = mem.data;
-
-  span.textContent = data.fname;
-  name.value = mem.fullName;
-
-  let select = document.getElementById('payment-desc');
-  let amount = document.getElementById('payment-amount');
-  
-  if(data.memberType == 'Walk-in') {
-    select.innerHTML = '<option value="Walk-in Fee">Walk-in</option>';
-    select.setAttribute('disabled', 'disabled');
-    amount.removeAttribute('value');
-    amount.value = 50;
-  } else {
-    select.innerHTML = 
-      `<option value="Monthly Subscription">Monthly Subscription</option>
-      <option value="Annual Subscription">Annual Subscription</option>`;
-    select.removeAttribute('disabled');
-      amount.value = 750;
-  }
-
-  document.getElementById('add-payment-btn').addEventListener('click', () => {
-    let amount = document.getElementById('payment-amount').value;
-    let paymentDesc = document.getElementById('payment-desc').value;
-
-    let date = new Date();
-    
-    addZero = (i) => {
-      if (i < 10) {
-        i = "0" + i;
-      }
-
-      return i;
-    }
-
-    let name = document.getElementById('payment-name').value;
-
-    db.collection('payments').add({
-      memberId: id,
-      amount: amount,
-      memberName: name,
-      paymentDesc: paymentDesc,
-      dateOfPayment: firebase.firestore.Timestamp.fromDate(new Date())
-    }).then(() => {
-      db.collection('members').doc(id).update({
-        status: 'Paid'
-      });
-    }).then(() => {
-      alert('Successfully added payment!');
-      window.location.reload();
-    });
-  });
-}
-
-//  PROGRAM Functions 
-const programs = [];
-
-renderPrograms = () => {
-  progTableLoader.style.display = 'none';
-  let tbody = document.getElementById('program-tbody');
-
-  if(programs.length > 0) {
-    programs.forEach((prog) => {
-      let tr = document.createElement('tr');
-      tr.setAttribute('data-id', prog.id)
-
-      tr.innerHTML = 
-        `<td>${prog.data.programName}</td>
-        <td>
-          <a class='btn-link text-darkgrey' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px' style='color: #DF3A01'></i></a>
-          <a class="btn-link text-orange mx-1" onclick='updateMember(this.parentNode.parentNode)'>
-            <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${prog.data.programName}" style="font-size: 20px"></i>
-          </a>  
-        </td>`;
-
-      tbody.appendChild(tr);
-
-      // For Add Member Modal
-      let select = document.getElementById('program');
-      let option = document.createElement('option');
-
-      option.innerHTML = prog.data.programName;
-      option.setAttribute('value', prog.data.programName)
-      select.appendChild(option);
-    });
-  } else {
-    document.getElementById('no-data-div-programs').style.display = 'flex';
-  }
-}
-
-// Firebase Queries 
-// ALL Members
-db.collection('members').orderBy('lname', 'asc').get().then((snapshot) => {
-  snapshot.forEach((doc) => {
-    members.push({id: doc.id, data: doc.data(), fullName: `${doc.data().fname} ${doc.data().lname}`})
-  });
-}).then(() => {
-  buildTable();
-  buildWalkTable();
-});
-
-// ALL Programs
-db.collection('programs').get().then((snapshot) => {
-  snapshot.forEach((doc) => {
-    programs.push({id: doc.id, data: doc.data()});
-  })
-}).then(() => {
-  renderPrograms();
-});
-
-// logout script
-document.getElementById("logoutBtn").addEventListener("click", function() {
-  var x = confirm("Are you sure?");
-  if(x === true){
-    firebase.auth().signOut().then(function() {
-      alert("Logout successful!");
-      window.location.href = "index.html";
-    }).catch(function() {
-      alert("Failed to log out!");
-    })
-  }
-});
-
-function securityReports() {
-  let password = prompt('security password');
-  if(password == '123') {
-    window.location.href = "reports.html";
-  }
-}
-
-function securityLogtrail() {
-  let password = prompt('security password');
-  if(password == '123') {
-    window.location.href = "logtrail.html";
   } 
 }
 
@@ -636,7 +473,7 @@ pagination = (querySet, page, rows) => {
 
 buildTable = () => {
   let val = document.getElementById('search-member').value;
-  let regs = members.filter(m => m.data.memberType == 'Regular' && m.fullName.toLowerCase().includes(val.toLowerCase()));
+  let regs = members.filter(m => m.data.memberType == 'Regular' && m.fullName.toLowerCase().includes(val.toLowerCase()) && m.data.isDeleted != true);
   let data = pagination(regs, state.page, state.rows);
   let list = data.querySet;
   let pagi_no = data.pages;  
@@ -654,7 +491,7 @@ buildTable = () => {
 
 buildWalkTable = () => {
   let val = document.getElementById('search-walkin').value;
-  let walks = members.filter(m => m.data.memberType == 'Walk-in' && m.fullName.toLowerCase().includes(val.toLowerCase()));
+  let walks = members.filter(m => m.data.memberType == 'Walk-in' && m.fullName.toLowerCase().includes(val.toLowerCase()) && m.data.isDeleted != true);
   let walkData = pagination(walks, state.wpage, state.wrows);
   let walklist = walkData.querySet;
   let wpagi_no = walkData.pages;
@@ -704,4 +541,505 @@ changeWalkTablePage = (li) => {
   state.wpage = page;
   pageSpan.innerHTML = `Page: ${page}`;
   buildWalkTable();
+}
+
+// Render deleted members
+renderDel = () => {
+  let del = members.filter(m => m.data.isDeleted === true);
+  
+  if(del.length > 0) {
+    document.getElementById('no-data-div-deleted').style.display = 'none';
+    let delTbody = document.getElementById('view-deleted-tbody');
+    delTbody.innerHTML = ``;
+    del.forEach((doc) => {
+      let tr = document.createElement('tr');
+      tr.setAttribute('data-id', doc.id);
+
+      let add = new Date(doc.data.dateAdded.toDate());
+      let del = new Date(doc.data.dateDeleted.toDate());
+
+      tr.innerHTML = 
+        `<td>${doc.fullName}</td>
+        <td>${months[add.getMonth()]} ${add.getDate()}, ${add.getFullYear()}</td>
+        <td>${months[del.getMonth()]} ${del.getDate()}, ${del.getFullYear()}</td>
+        <td>
+          <a onclick="recover(this.parentNode.parentNode)">
+            <i class="fas fa-redo-alt text-success"></i>
+          </a>
+        </td>`;
+
+      delTbody.appendChild(tr);
+    });
+  } else {
+    document.getElementById('no-data-div-deleted').style.display = 'flex';
+  }
+}
+
+recover = (tr) => {
+  let x = confirm("Are you sure you want to recover?");
+
+  if(x === true) {
+    waitModal.click();
+    let id = tr.getAttribute('data-id');
+
+    db.collection('members').doc(id).update({
+      isDeleted: false
+    })
+    .then(() => {
+      waitModal.click();
+      $("#wait").on("hidden.bs.modal", () => {
+        $("#viewDeleted").click();
+        $("#view-deleted").on("hidden.bs.modal", () => {
+          alert('Successfully recovered member!');
+          window.location.reload();
+        });
+      });
+    });
+  }
+}
+
+//************ PAYMENTS ************//
+// Event Listener to #payment-desc in Payment Modal
+paymentDescChange = () => {
+  let paymentDesc = document.getElementById('payment-desc').value;
+  let amount = document.getElementById('payment-amount');
+
+  if(paymentDesc == 'Annual Subscription') {
+    amount.removeAttribute('value');
+    amount.value = '200';
+  } else if(paymentDesc == 'Monthly Subscription') {
+    amount.removeAttribute('value');
+    amount.value = '750';
+  }
+}
+
+// Show/Hide Payment Calculator
+document.getElementById('showCalc').addEventListener('click', () => {
+  let calc = document.getElementById('calculator');
+  if(calc.style.display == 'none') {
+    calc.style.display = 'block';
+    document.getElementById('showCalc').innerHTML = 'Hide Calculator';
+  } else {
+    calc.style.display = 'none';
+    document.getElementById('showCalc').innerHTML = 'Show Calculator';
+  }
+});
+
+// Calculating Change
+document.getElementById('enterCalc').addEventListener('click', () => {
+  let cash = document.getElementById('payment-cash');
+  let change = document.getElementById('payment-change');
+  let amount = document.getElementById('payment-amount');
+  
+  let val = parseInt(cash.value);
+
+  if(Number.isInteger(val) == true) {
+    if(val <= 0 || val >= 9999) {
+      alert('Please enter a valid amount!');
+    } else if(val < parseInt(amount.value)) {
+      alert('Insufficient cash!');
+    } else {
+      let x = val;
+      let y = parseInt(amount.value);
+
+      change.value = `₱${x-y}.00`;
+    }
+  } else {
+    console.log(val)
+    alert('Please enter an appropriate amount!');
+  }
+});
+
+ // Add payment
+addPayment = (tr) => {
+  let id = tr.getAttribute('data-id');
+  let uid = document.getElementById('payment-uid');
+  uid.value = id;
+  let name = document.getElementById('payment-name');
+  let span = document.getElementById('payment-fname-span');
+
+  let res = members.filter(m => m.id == id);
+  let mem = res[0];
+  let data = mem.data;
+
+  span.textContent = data.fname;
+  name.value = mem.fullName;
+
+  let select = document.getElementById('payment-desc');
+  let amount = document.getElementById('payment-amount');
+  
+  if(data.memberType == 'Walk-in') {
+    select.innerHTML = '<option value="Walk-in Fee">Walk-in</option>';
+    select.setAttribute('disabled', 'disabled');
+    amount.removeAttribute('value');
+    amount.value = 50;
+  } else {
+    select.innerHTML = 
+      `<option value="Monthly Subscription">Monthly Subscription</option>
+      <option value="Annual Subscription">Annual Subscription</option>`;
+    select.removeAttribute('disabled');
+      amount.value = 750;
+  }
+
+  document.getElementById('add-payment-btn').addEventListener('click', () => {
+    waitModal.click();
+    let amount = document.getElementById('payment-amount').value;
+    let paymentDesc = document.getElementById('payment-desc').value;
+    
+    addZero = (i) => {
+      if (i < 10) {
+        i = "0" + i;
+      }
+
+      return i;
+    }
+
+    let name = document.getElementById('payment-name').value;
+
+    db.collection('payments').add({
+      memberId: id,
+      amount: amount,
+      memberName: name,
+      paymentDesc: paymentDesc,
+      dateOfPayment: firebase.firestore.Timestamp.fromDate(new Date())
+    }).then(() => {
+      db.collection('members').doc(id).update({
+        status: 'Paid'
+      });
+    }).then(() => {
+      waitModal.click();
+      $("#close-paymentModal").click();
+      $("#payment-modal").on("hidden.bs.modal", () => {
+        alert('Successfully added payment!');
+        window.location.reload();
+      });
+    });
+  });
+}
+
+//  PROGRAM Functions 
+const programs = [];
+
+renderPrograms = () => {
+  progTableLoader.style.display = 'none';
+  let tbody = document.getElementById('program-tbody');
+
+  if(programs.length > 0) {
+    programs.forEach((prog) => {
+      let tr = document.createElement('tr');
+      tr.setAttribute('data-id', prog.id)
+
+      tr.innerHTML = 
+        `<td>${prog.data.programName}</td>
+        <td>
+          <a class='btn-link text-darkgrey' onclick='viewMember(this.parentNode.parentNode)'><i class="fas fa-eye mx-1" style='font-size: 20px' style='color: #DF3A01'></i></a>
+          <a class="btn-link text-orange mx-1" onclick='updateMember(this.parentNode.parentNode)'>
+            <i class="fas fa-pen" data-toggle="tooltip" data-placement="top" title="Update ${prog.data.programName}" style="font-size: 20px"></i>
+          </a>  
+        </td>`;
+
+      tbody.appendChild(tr);
+
+      // For Add Member Modal
+      let select = document.getElementById('program');
+      let option = document.createElement('option');
+
+      option.innerHTML = prog.data.programName;
+      option.setAttribute('value', prog.data.programName)
+      select.appendChild(option);
+    });
+  } else {
+    document.getElementById('no-data-div-programs').style.display = 'flex';
+  }
+}
+
+// Firebase Queries 
+// ALL Members
+db.collection('members').orderBy('lname', 'asc').get().then((snapshot) => {
+  snapshot.forEach((doc) => {
+    members.push({id: doc.id, data: doc.data(), fullName: `${doc.data().fname} ${doc.data().lname}`})
+  });
+}).then(() => {
+  buildTable();
+  buildWalkTable();
+  renderDel();
+});
+
+// ALL Programs
+db.collection('programs').get().then((snapshot) => {
+  snapshot.forEach((doc) => {
+    programs.push({id: doc.id, data: doc.data()});
+  })
+}).then(() => {
+  renderPrograms();
+});
+
+// logout script
+document.getElementById("logoutBtn").addEventListener("click", function() {
+  var x = confirm("Are you sure?");
+  if(x === true){
+    firebase.auth().signOut().then(function() {
+      alert("Logout successful!");
+      window.location.href = "index.html";
+    }).catch(function() {
+      alert("Failed to log out!");
+    })
+  }
+});
+
+function securityReports() {
+  let password = prompt('security password');
+  if(password == '123') {
+    window.location.href = "reports.html";
+  }
+}
+
+function securityLogtrail() {
+  let password = prompt('security password');
+  if(password == '123') {
+    window.location.href = "logtrail.html";
+  } 
+}
+
+// VALIDATION
+
+checkIfValid = (e) => {
+  let empty = document.getElementById(`${e.id}-empty`);
+  if(e.id != 'address') {
+    let invalid = document.getElementById(`${e.id}-invalid`);
+
+    if(e.value == '') {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+    }
+
+    if(parseInt(e.value) || e.value.match(/\d+/) != null) {
+      invalid.style.display = 'block';
+    } else {
+      invalid.style.display = 'none';
+    }
+  } else {
+    if(e.value == '') {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+    }
+  }
+}
+
+checkNumber = (e) => {
+  let empty = document.getElementById(`${e.id}-empty`);
+  let invalid = document.getElementById(`${e.id}-invalid`);
+  let length = document.getElementById(`${e.id}-length`);
+  if(e.value == '') {
+    empty.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    empty.style.display = 'none';
+  }
+
+  if(e.value.match(/[a-zA-Z]/) != null) {
+    invalid.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    invalid.style.display = 'none';
+    if(empty.style.display == 'block' || invalid.style.display == 'block') {
+      length.style.display = 'none';
+    } else if(e.value.length != 11) {
+      length.style.display = 'block';
+      valid = false;
+    } else {
+      length.style.display = 'none';
+    }
+  }
+}
+
+validateEmail = (email) => {
+  let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
+checkEmail = (e) => {
+  let empty = document.getElementById(`${e.id}-empty`);
+  let invalid = document.getElementById(`${e.id}-invalid`);
+
+  if(e.value == '') {
+    empty.style.display = 'block';
+    invalid.style.display = 'none';
+  } else {
+    empty.style.display = 'none';
+
+    if(!validateEmail(e.value)) {
+      invalid.style.display = 'block';
+    } else {
+      invalid.style.display = 'none';
+    }
+  }
+}
+
+checkDate = (e) => {
+  let invalid = document.getElementById(`${e.id}-invalid`);
+  let underage = document.getElementById(`${e.id}-underage`)
+  if(e.value == '') {
+    invalid.style.display = 'block';
+    underage.style.display = 'none';
+  } else {
+    let date = new Date(e.value);
+    if(date.getFullYear() >= new Date().getFullYear()) {
+      invalid.style.display = 'block';
+      underage.style.display = 'none';
+    } else {
+      if(date.getFullYear() > new Date().getFullYear() - 12) {
+        invalid.style.display = 'none';
+        underage.style.display = 'block';
+      } else if(date.getFullYear() < new Date('1920-01-01').getFullYear()) {
+        invalid.style.display = 'block';
+        underage.style.display = 'none';
+      } else {
+        invalid.style.display = 'none';
+        underage.style.display = 'none';
+      }
+    }
+  }
+}
+
+checkValidityAll = () => {
+  // fname
+  let fname = document.getElementById('fName');
+  let fnameValid;
+  if(fname.value == '') {
+    document.getElementById(`fName-empty`).style.display = 'block';
+    fnameValid = false;
+  } else {
+    document.getElementById(`fName-empty`).style.display = 'none';
+    if(parseInt(fname.value) || fname.value.match(/\d+/) != null) {
+      document.getElementById(`fName-invalid`).style.display = 'block';
+      fnameValid = false;
+    } else {
+      document.getElementById(`fName-invalid`).style.display = 'none';
+      fnameValid = true;
+    }
+  }
+
+  // lname
+  let lname = document.getElementById('lName');
+  let lnameValid;
+  if(lname.value == '') {
+    document.getElementById(`lName-empty`).style.display = 'block';
+    lnameValid = false;
+  } else {
+    document.getElementById(`lName-empty`).style.display = 'none';
+    if(parseInt(lname.value) || lname.value.match(/\d+/) != null) {
+      document.getElementById(`lName-invalid`).style.display = 'block';
+      lnameValid = false;
+    } else {
+      document.getElementById(`lName-invalid`).style.display = 'none';
+      lnameValid = true;
+    }
+  }
+
+  // birthdate
+  let birthdate = document.getElementById('birthdate');
+  let invalid = document.getElementById(`birthdate-invalid`);
+  let underage = document.getElementById(`birthdate-underage`);
+  let birthdateValid;
+  if(birthdate.value == '') {
+    invalid.style.display = 'block';
+    underage.style.display = 'none';
+    birthdateValid = false;
+  } else {
+    let date = new Date(birthdate.value);
+    if(date.getFullYear() >= new Date().getFullYear()) {
+      invalid.style.display = 'block';
+      underage.style.display = 'none';
+      birthdateValid = false;
+    } else {
+      if(date.getFullYear() > new Date().getFullYear() - 12) {
+        invalid.style.display = 'none';
+        underage.style.display = 'block';
+        birthdateValid = false;
+      } else if(date.getFullYear() < new Date('1920-01-01').getFullYear()) {
+        invalid.style.display = 'block';
+        underage.style.display = 'none';
+        birthdateValid = false;
+      } else {
+        invalid.style.display = 'none';
+        underage.style.display = 'none';
+        birthdateValid = true;
+      }
+    }
+  }
+
+  // email
+  let email = document.getElementById('email');
+  let emptyEmail = document.getElementById(`email-empty`);
+  let invalidEmail = document.getElementById(`email-invalid`);
+  let emailValid;
+  if(email.value == '') {
+    emptyEmail.style.display = 'block';
+    invalidEmail.style.display = 'none';
+    emailValid = false;
+  } else {
+    emptyEmail.style.display = 'none';
+
+    if(!validateEmail(email.value)) {
+      invalidEmail.style.display = 'block';
+      emailValid = false;
+    } else {
+      invalidEmail.style.display = 'none';
+      emailValid = true;
+    }
+  }
+
+  // address
+  let address = document.getElementById('address');
+  let addressEmpty = document.getElementById('address-empty');
+  let addressValid;
+  if(address.value == '') {
+    addressEmpty.style.display = 'block';
+    addressValid = false;
+  } else {
+    addressEmpty.style.display = 'none';
+    addressValid = true;
+  }
+
+  // phone
+  let phone = document.getElementById('phone');
+  let phoneEmpty = document.getElementById(`phone-empty`);
+  let phoneInvalid = document.getElementById(`phone-invalid`);
+  let length = document.getElementById(`phone-length`);
+  let phoneValid;
+  if(phone.value == '') {
+    phoneEmpty.style.display = 'block';
+    length.style.display = 'none';
+    phoneValid = false;
+  } else {
+    phoneEmpty.style.display = 'none';
+    if(phone.value.match(/[a-zA-Z]/) != null) {
+      phoneInvalid.style.display = 'block';
+      length.style.display = 'none';
+      phoneValid = false;
+    } else {
+      phoneInvalid.style.display = 'none';
+      if(phoneEmpty.style.display == 'block' || phoneInvalid.style.display == 'block') {
+        length.style.display = 'none';
+      } else if(phone.value.length != 11) {
+        length.style.display = 'block';
+        phoneValid = false;
+      } else {
+        length.style.display = 'none';
+        phoneValid = true;
+      }
+    }
+  }
+
+  if(fnameValid == true 
+    && lnameValid == true
+    && birthdateValid == true
+    && emailValid == true
+    && addressValid == true
+    && phoneValid == true) {
+    return true;
+  }
 }
