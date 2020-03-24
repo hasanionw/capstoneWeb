@@ -95,7 +95,14 @@
         width: 100%;
         position: absolute;
       }
-      
+ 
+
+    .validation {
+      display: none;
+      margin-left: 0 !important;
+    }
+
+   
 </style>
 </head>
 
@@ -156,15 +163,17 @@
   <!--Main layout-->
   <main class="pt-5 mx-lg-5" >
     <div class="container-fluid mt-5">
-
+      <button class="btn btn-sm btn-outline-orange mb-3"  data-toggle="modal" data-target="#deleteModal">
+        <i class="fas fa-eye mr-2"></i>
+        View Deleted Trainers
+      </button>
       <br>
       <div class='card'>
-        <div class='card-content'>
-            <div class='card-header flexHeader'>
+        <div class='card-content'>         
+            <div class='card-header flexHeader'>          
             <h3 class='card-title'>
               <span class="add-trainer" data-toggle="tooltip" data-placement="top" title="Add new trainer">
-                <i style="color:#DF3A01;"  data-toggle="modal" data-target="#add" class="fas fa-plus mr-2"></i></span>
-                
+                <i style="color:#DF3A01;"  data-toggle="modal" data-target="#add" class="fas fa-plus mr-2"></i></span>     
                 Trainers
             </h3>
             <div class="btn-group" role="group" aria-label="Basic example">
@@ -173,8 +182,8 @@
               <button type="button" id="sort-inactive" class="btn btn-sm btn-outline-orange">INACTIVE</button>
             </div>  
 
-            <a href="#"  style="font-size:30px; color:#DF3A01;"><span id="showCalc"><i   data-toggle="tooltip" data-placement="top" title="List of Deleted Trainer" class="far fa-trash-alt "></i></span></a>
-
+          
+            
             <div>
               <div class="d-flex justify-content-center">
                 <input type="text" id="search-trainers" placeholder="Search Trainer here..." aria-label="Search" class="form-control" id="#">
@@ -212,60 +221,46 @@
 
       
 
-      <div class="container-fluid mt-4 mb-3" id="calculator" style="display: none">
-        <div class="row">
-          <div class="col-sm-7">
-            <div class='card'>
-              <div class='card-content'>
-                <div class='card-header flexHeader'>
-                  <h3 class='card-title'>
-                   Deleted Trainers
-                  </h3>
-                  <div>
-                    <div class="d-flex justify-content-center">
-                      <input type="text" placeholder="Search Trainer here..." id="search-delete" class="form-control mx-3">
-                      <i id="remove" data-toggle="tooltip" data-placement="top" title="Close" style="cursor:pointer; color:#DF3A01;font-size:30px;" class="far fa-times-circle my-2"></i>
-                    </div>
-                  </div>
-                </div>
-                <div class='card-body table-responsive p-0 card-bodyzz'>
-                  <table class='table table-hover'>
-                    <thead>
-                      <tr>
-                        <th>First name</th>
-                        <th>Last name</th> 
-                        <th>Date deleted</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody id='tbody-walk-in'>
+      <div id="deleteModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" >
       
-                    </tbody>
-                  </table>
-                    <div id="no-data-div-walkin" class="no-data-div my-3 text-muted">
-                      No data!
-                    </div>
-                  <div class="table-parent my-5" id="table-loader-walkin">
-                    <div class="table-loader">
-                      <div class="loader-spinner"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer flex-this">
-                  <small id="walk-page"></small>
-                  <nav aria-label="Page navigation example">
-                    <ul class="pagination" id="walk-pagination">
-      
-                    </ul>
-                  </nav>
-                </div>
-              </div>
+          <!-- Modal content-->
+          <div class="modal-content" style="width: 500px;">
+    
+            <div class="modal-header" style="background-color: #DF3A01; color: white;">
+              <h4 class="modal-title" >Deleted Trainers</h4>
+              <form class="d-flex justify-content-center">
+                <input type="text" placeholder="Search deleted name" id="searchInv" class="form-control">
+              </form>
+            </div>  
+            
+            <div class="modal-body">
+    
+              <div id='card-body' class='card-body table-responsive p-0 card-bodyzz'>  
+                <table class='table table-hover'>
+                  <thead>
+                    <tr style="text-align:center;">
+                     
+                      <th>fullname</th>
+                      <th>Date Added</th>
+                      <th>date deleted</th>
+                      <th>action</th>
+                    </tr>
+                  </thead>
+                  <tbody id='deletetbody'>
+    
+                  </tbody>
+                </table> 
+            </div>
+    
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-sm btn-orange" data-dismiss="modal">Close</button>
             </div>
           </div>
-        
+      
         </div>
       </div>
-
       
 
       
@@ -318,7 +313,9 @@
            
           <div class="col-sm-6" style="position: relative; left: 35px;">
             <label>E-mail</label>
-            <input type="text" id="email" class="form-control" required="" placeholder="E-mail">
+            <input type="text" id="email" onblur="checkEmail(this)" class="form-control" required="" placeholder="E-mail">
+            <small class="validation text-danger" id="email-empty">Please fill out this field!</small>
+            <small class="validation text-danger" id="email-invalid">Invalid email!</small>
           </div>
           <div class="col-sm-6" style="position: relative; right: 40px; top: 10px;">
           <progress  value="0" max="100" id="uploader">0%</progress>
@@ -328,42 +325,50 @@
           <div class="form-row">
             <div class="col-sm-6">
               <label>First name</label>
-              <input type="text" id="fname" class="form-control" required="" placeholder="Firstname">
+              <input type="text" id="fname" onblur="checkIfValid(this)" class="form-control" required="" placeholder="Firstname">
+              <small class="validation text-danger" id="fname-empty">Please fill out this field!</small>
+              <small class="validation text-danger" id="fname-invalid">Invalid input!</small>
             </div>
             <div class="col-sm-6">
               <label>Last name</label>
-              <input type="text" id="lname" class="form-control" required="" placeholder="Lastname">
+              <input type="text"  id="lname" onblur="checkIfValid(this)" class="form-control" required="" placeholder="Lastname">
+              <small class="validation text-danger" id="lname-empty">Please fill out this field!</small>
+              <small class="validation text-danger" id="lname-invalid">Invalid input!</small>
             </div>  
           
             <div class="col-sm-6">
               <label>Contact</label>
-              <input type="text" id="phone" class="form-control" required="" placeholder="Contact Number" >
-          </div>
+              <input type="text" id="phone" onblur="checkNumber(this)" class="form-control" required="" placeholder="Contact Number" >
+              <small class="validation text-danger" id="phone-empty">Please fill out this field!</small>
+              <small class="validation text-danger" id="phone-invalid">Invalid input!</small>
+              <small class="validation text-danger" id="phone-length">Phone number must contain 11 digits!</small>
+            </div>
           <div class="col-sm-6">
               <label>Birthdate</label>
-              <input type="date" class="form-control" id="birthdate" >
+              <input type="date" onblur="checkDate(this)" class="form-control" id="birthdate" >
+              <small class="validation text-danger" id="birthdate-invalid">Invalid birthdate!</small>
+              <small class="validation text-danger" id="birthdate-underage">Person must be at least 18 years old to join the gym!</small>
           </div>
           <div class="col-sm-6">
             <label>Address</label>
-            <input type="text" class="form-control" id="address" required="" placeholder="Address">
-        </div>
+            <input type="text" class="form-control" id="address" oninput="checkIfValid(this)" onblur="checkIfValid(this)" required="" placeholder="Address">
+            <small class="validation text-danger" id="address-empty">Please fill out this field!</small>
+          </div>
           <div class="col-sm-6 train">
               <label>Gender</label><br>
-              <select id="sex" class="form-control" name="sex"  required="">
-                  <option value="M"selected>M</option>
+              <select id="sex" onblur="checkGender(this)" class="form-control" name="sex"  required="">
+                  <option value=""selected>Select Gender</option>
+                  <option value="M">M</option>
                   <option value="F">F</option>
                </select>
+               <small class="validation text-danger" id="sex-invalid">Invalid input!</small>
           </div>
-
-              
-          
           </div>
         </div>
+        <small style="color:grey;"><i>NOTE: All fields are <b>required</b>!</b></i></small>
       </div>
-
-      <div class="modal-footer bot">
-          <button id="addtrainer" type="submit"  class="btn" >ADD TRAINER</button>
-
+      <div class="modal-footer">
+        <button id="addtrainer" type="submit"  class="btn btn-orange" >Submit</button>
       </div>
     </div>
   </div>
@@ -378,7 +383,7 @@
       <div class="modal-header"style="background-color:#DF3A01;">
         <h3 class="modal-title" style="color:white;">Information of <span id="viewfname-span"></span></h3>
        
-        <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
+        <button type='button' class='close'  data-dismiss='modal'>&times;</button>
       </div>
       <div class="modal-body">
 
@@ -469,7 +474,7 @@
               <input type="text" class="form-control" id="updateLname" disabled>
             </div>
             
-            <div class="col-sm-6 train">
+            <div class="col-sm-6 my-2 train">
               <label>Status</label>
               <select id="updateStatus" class="form-control">
                 <option value="active" selected>active</option>
@@ -477,14 +482,28 @@
               </select>
 
             </div>
-            <div class="col-sm-6 train">
+            <div class="col-sm-6 my-2 train">
               <label>Position</label>
               <select id="updatePosition" class="form-control">
                 <option value="junior" selected>junior</option>
                 <option value="senior">senior</option>
               </select>
-              
           </div>
+
+          <div class="col-sm-6 my-2">
+            <label>Contact Number</label>
+            <input type="text"  onblur="checkUpdateNumber(this)" class="form-control" id="updatePhone" >
+            <small class="validation text-danger" id="updatePhone-empty">Please fill out this field!</small>
+            <small class="validation text-danger" id="updatePhone-invalid">Invalid input!</small>
+            <small class="validation text-danger" id="updatePhone-length">Phone number must contain 11 digits!</small>
+          </div>
+
+          <div class="col-sm-6 my-2">
+            <label>Address</label>
+            <input id="updateAddress" oninput="checkIfUpdateValid(this)" onblur="checkIfUpdateValid(this)"  type="text" class="form-control" >
+            <small class="validation text-danger" id="updateAddress-empty">Please fill out this field!</small>
+          </div>
+
           </div>
         </div>
       

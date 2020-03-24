@@ -85,6 +85,8 @@ sortInactive.onclick = () => {
     var button = document.getElementById('addtrainer');
 
     button.addEventListener('click', function() {
+      valid = checkValidityAll();
+      if(valid == true) {
       var fname = document.getElementById('fname').value;
       var lname = document.getElementById('lname').value;
       var email = document.getElementById('email').value;
@@ -101,21 +103,7 @@ sortInactive.onclick = () => {
       var trainers = db.collection('trainers');
       var trainer = trainers.where('fname', '==', fname).where('lname', '==', lname).where('email', '==', email);
 
-      if(fname === '') {
-        alert('ERROR: First name is required!');
-      } else if(lname === '') {
-        alert('ERROR: Last name is required!');
-      } else if(email === '') {
-        alert('ERROR: Email is required!');
-      } else if(cellphoneNo === '') {
-        alert('ERROR: cellphone number is required!');
-      } else if(birthdate === '') {
-        alert('ERROR: birthdate is required!');
-      }else if(sex === '') {
-        alert('ERROR: sex  is required!');
-      } else if(address === '') {
-        alert('ERROR: Address is required!');
-      } else {
+     
 
       trainer.get().then(function(snapshot) {
         if(snapshot.docs.length > 0) {
@@ -133,9 +121,6 @@ sortInactive.onclick = () => {
             address: address,
             status: 'active',
             dateAdded: new Date()
-          }).then(function() {
-            alert('Successfully added new Trainer!');
-            // window.location.reload();
           })
           .then(() => {
             if(fileButton.files.length == 0) {
@@ -170,9 +155,9 @@ sortInactive.onclick = () => {
         }
       })
       
-      }
+  }  
     });
-
+  
    
   filtering = (value) => {
       let results;
@@ -181,13 +166,12 @@ sortInactive.onclick = () => {
 
 
 
-
+  
 
 
   // Searching Trainers
   let searchTra = document.getElementById('search-trainers');
   
-
   searchTra.onkeyup = () => {
       if(searchTra.value != '') {
         let docs = filtering(searchTra.value);
@@ -197,12 +181,16 @@ sortInactive.onclick = () => {
        
       }
     }
+
     searchTra.value.onchange = () => {
       if(searchTra.value == '') {
         renderData();
       
       }
     }
+  
+ 
+
 
 
     
@@ -237,7 +225,7 @@ renderData = () => {
      data-toggle='modal' data-target='#displayallrecords'>
      <i data-toggle="tooltip" data-placement="top" title="view ${tra.doc.fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
  
-     <i id="deletebtn" onclick='deleteTable1(this.parentNode.parentNode)'
+     <i id="deletebtn" onclick='deleteTra(this.parentNode.parentNode)'
          data-toggle="tooltip" data-placement="top" title="Delete ${tra.doc.fname}"
          class="far fa-trash-alt mx-4" style="cursor:pointer; font-size: 20px; color: #DF3A01" ></i>
 
@@ -256,31 +244,33 @@ document.getElementById('no-data-div').style.display = 'flex';
 }
 
 
-
 renderDelete = () => {
-  document.getElementById('no-data-div-walkin').style.display = 'none';
-  let tbody = document.getElementById('tbody-walk-in');
-  let chat = tra.filter(tra => tra.doc.chat == 'disable');
+    
+  let tbody = document.getElementById('deletetbody');
+  let status = tra.filter(i => i.doc.chat == 'disable');
   tbody.innerHTML = ``;
 
-  if(chat.length > 0) {
-    chat.forEach((tra) => {
+  if(status.length > 0) {
+    status.forEach((tra) => {
       let tr = document.createElement('tr');
+      let add = new Date(tra.doc.dateAdded.toDate());
+      let del = new Date(tra.doc.dateDeleted.toDate());
       tr.setAttribute('data-id', tra.id);
       tr.innerHTML = 
-        `<td><b>${tra.doc.fname}</b></td>
-        <td><b>${tra.doc.lname}<b></td>
-        <td>Error</td>
-        <td>
-       
-        <a class='btn-link' onclick='viewTrainers(this.parentNode.parentNode)'
-         data-toggle='modal' data-target='#displayallrecords'>
-         <i data-toggle="tooltip" data-placement="top" title="view ${tra.doc.fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
-     
-         <i id="deleteBtn" onclick='deleteTable2(this.parentNode.parentNode)'
-             data-toggle="tooltip" data-placement="top" title="Recover ${tra.doc.fname}"
-             class="fas fa-undo-alt mx-4" style="cursor:pointer; font-size: 20px; color: #32CD32" ></i>
-            
+      `
+      <td><b>${tra.fullName}</b></td>
+      <td><b>${months[add.getMonth()]} ${add.getDate()}, ${add.getFullYear()}<b></td>
+      <td><b>${months[del.getMonth()]} ${del.getDate()}, ${del.getFullYear()}<b></td>
+
+      <td>
+
+      <a class='btn-link' onclick='viewTrainers(this.parentNode.parentNode)'
+      data-toggle='modal' data-target='#displayallrecords'>
+      <i data-toggle="tooltip" data-placement="top" title="view ${tra.doc.fname}" class="fas fa-eye" style="font-size: 20px;"></i></a> 
+
+      <i id="deleteBtn" onclick='recoverTra(this.parentNode.parentNode)'
+      data-toggle="tooltip" data-placement="top" title="Recover ${tra.doc.lname}"
+      class="fas fa-undo-alt mx-4" style="cursor:pointer; font-size: 20px; color: #32CD32" ></i>
        </td>`;
 
       tbody.appendChild(tr);
@@ -292,48 +282,17 @@ renderDelete = () => {
   });
 
     });
-  } else {
-    document.getElementById('no-data-div-walkin').style.display = 'flex';
-  }
+  } 
 }
 
-// Show Deleted Table
-document.getElementById('showCalc').addEventListener('click', () => {
-  let calc = document.getElementById('calculator');
-  if(calc.style.display == 'none') {
-    calc.style.display = 'block';
-    document.getElementById('showCalc').innerHTML = '<span data-toggle="tooltip" data-placement="top" title="List of Deleted Trainer"><i class="far fa-trash-alt "></i><span>';
-  } 
-
-  let tt = $('[data-toggle="tooltip"]').tooltip();
-  tt.click(function() {
-    tt.tooltip("hide");
-  });
-
-});
 
 
-// Hide Deleted Table
-document.getElementById('remove').addEventListener('click', () => {
-  let calc = document.getElementById('calculator');
-  if(calc.style.display == 'none') {
-    calc.style.display = 'block';
-    document.getElementById('showCalc').innerHTML ;
-  } else {
-    calc.style.display = 'none';
-    document.getElementById('showCalc').innerHTML ;
-  }
 
-  let tt = $('[data-toggle="tooltip"]').tooltip();
-  tt.click(function() {
-    tt.tooltip("hide");
-  });
 
-});
 
 
 //deleted Trainers nga table 
-function deleteTable2(tr) {
+function recoverTra(tr) {
   let dataId = tr.getAttribute('data-id');
   let agree = confirm("are you sure you want to recover trainer?");
   
@@ -341,6 +300,7 @@ function deleteTable2(tr) {
       if(agree === true){
       db.collection('trainers').doc(dataId).update({
         chat: 'able'
+     
      
       }).then(() => {
        
@@ -358,13 +318,14 @@ function deleteTable2(tr) {
 
 
   //deleted Trainers nga table 
-function deleteTable1(tr) {
+function deleteTra(tr) {
 
   let dataId = tr.getAttribute('data-id');
   let agree = confirm("are you sure you want to delete trainer?");
  
     if(agree === true){
       db.collection('trainers').doc(dataId).update({
+        dateDeleted: new Date(),
         chat: 'disable'
      
       }).then(() => {
@@ -402,10 +363,10 @@ function deleteTable1(tr) {
             
             <a class='btn-link' onclick='viewTrainers(this.parentNode.parentNode)'>
             <i data-toggle="tooltip" data-placement="top" title="view ${doc.doc.fname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
-         
-            <i id="delete" onclick='deletetrainers(this.parentNode.parentNode)'
+            
+            <i id="deletebtn" onclick='deleteTra(this.parentNode.parentNode)'
             data-toggle="tooltip" data-placement="top" title="Delete ${doc.doc.fname}"
-            class="far fa-trash-alt mx-4" style="font-size: 20px; color: #DF3A01" ></i>
+            class="far fa-trash-alt mx-4" style="cursor:pointer; font-size: 20px; color: #DF3A01" ></i>
          
             </td>`;
 
@@ -494,21 +455,24 @@ function deleteTable1(tr) {
       let span = document.getElementById(`${id}-span`);
       let small = document.getElementById(`${id}-small`);
 
-      if(span.classList.contains('hidden')) {
-        small.innerHTML = ' <i class="far fa-trash-alt "></i>';
-        span.textContent = id;
-        span.classList.remove('hidden');
-      } else {
-        small.innerHTML = ' <i  class="far fa-trash-alt ></i>';
-        span.classList.add('hidden');
-        span.textContent = '';
-      } 
-    }
+  if(span.classList.contains('hidden')) {
+    small.innerHTML = ' <i class="fas fa-eye-slash"></i>';
+    span.textContent = id;
+    span.classList.remove('hidden');
+  } else {
+    small.innerHTML = ' <i  class="fas fa-eye"></i>';
+    span.classList.add('hidden');
+    span.textContent = '';
+  } 
+}
 
 // update function
     function updatestat(tr) {
+      
       let updateFname = document.getElementById('updateFname');
       let updateLname = document.getElementById('updateLname');
+      let updatePhone = document.getElementById('updatePhone');
+      let updateAddress = document.getElementById('updateAddress');
       let span = document.getElementById('fname-span');
       let dataId = tr.getAttribute('data-id');
     
@@ -517,23 +481,39 @@ function deleteTable1(tr) {
         span.textContent = doc.data().fname; // firstname na mo display sa update modal
         updateFname.value = doc.data().fname;
         updateLname.value = doc.data().lname;
+        updatePhone.value = doc.data().cellphoneNo;
+        updateAddress.value = doc.data().address;
        
+        
 
       document.getElementById('updateBtn').addEventListener('click', () => {
+        
+        updatevalid = checkUPDATEValidityAll();
+        if(updatevalid == true) {
+
           let status = document.getElementById('updateStatus').value;
           let position = document.getElementById('updatePosition').value;
-          let usc = document.getElementById(`usc`);
+          let cellphoneNo = document.getElementById('updatePhone').value;
+          let address = document.getElementById('updateAddress').value;
+         
         
             db.collection('trainers').doc(doc.id).update({
             status: status,
-            position: position 
+            position: position,
+            cellphoneNo,
+            address
+
           }).then(() => {
             alert('Successfully updated Trainer!');
             window.location.reload();
           })
+            
             .catch((error) => {
             alert(`Error: ${error.message}`);
           });
+          
+        }
+        
         });
       });
     }
@@ -584,3 +564,394 @@ function deleteTable1(tr) {
       window.location.href = "logtrail.html";
     } 
   }
+
+
+
+
+
+
+
+ //Validation
+ validateEmail = (email) => {
+  let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
+checkEmail = (e) => {
+  let empty = document.getElementById(`${e.id}-empty`);
+  let invalid = document.getElementById(`${e.id}-invalid`);
+
+  if(e.value == '') {
+    empty.style.display = 'block';
+    invalid.style.display = 'none';
+  } else {
+    empty.style.display = 'none';
+
+    if(!validateEmail(e.value)) {
+      invalid.style.display = 'block';
+    } else {
+      invalid.style.display = 'none';
+    }
+  }
+}
+
+checkIfValid = (e) => {
+  let empty = document.getElementById(`${e.id}-empty`);
+  if(e.id != 'address') {
+    let invalid = document.getElementById(`${e.id}-invalid`);
+
+    if(e.value == '') {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+    }
+
+    if(parseInt(e.value) || e.value.match(/\d+/) != null) {
+      invalid.style.display = 'block';
+    } else {
+      invalid.style.display = 'none';
+    }
+  } else {
+    if(e.value == '') {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+    }
+  }
+}
+
+
+checkGender = (e) => {
+  let empty = document.getElementById(`${e.id}-invalid`);
+  
+  if(e.value == '') {
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+  }
+
+}
+
+checkNumber = (e) => {
+  let empty = document.getElementById(`${e.id}-empty`);
+  let invalid = document.getElementById(`${e.id}-invalid`);
+  let length = document.getElementById(`${e.id}-length`);
+  if(e.value == '') {
+    empty.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    empty.style.display = 'none';
+  }
+
+  if(e.value.match(/[a-zA-Z]/) != null) {
+    invalid.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    invalid.style.display = 'none';
+    if(empty.style.display == 'block' || invalid.style.display == 'block') {
+      length.style.display = 'none';
+    } else if(e.value.length != 11) {
+      length.style.display = 'block';
+      valid = false;
+    } else {
+      length.style.display = 'none';
+    }
+  }
+}
+
+checkDate = (e) => {
+  let invalid = document.getElementById(`${e.id}-invalid`);
+  let underage = document.getElementById(`${e.id}-underage`)
+  if(e.value == '') {
+    invalid.style.display = 'block';
+    underage.style.display = 'none';
+  } else {
+    let date = new Date(e.value);
+    if(date.getFullYear() >= new Date().getFullYear()) {
+      invalid.style.display = 'block';
+      underage.style.display = 'none';
+    } else {
+      if(date.getFullYear() > new Date().getFullYear() - 18) {
+        invalid.style.display = 'none';
+        underage.style.display = 'block';
+      } else if(date.getFullYear() < new Date('1920-01-01').getFullYear()) {
+        invalid.style.display = 'block';
+        underage.style.display = 'none';
+      } else {
+        invalid.style.display = 'none';
+        underage.style.display = 'none';
+      }
+    }
+  }
+}
+
+checkValidityAll = () => {
+
+  // email
+  let email = document.getElementById('email');
+  let emptyEmail = document.getElementById(`email-empty`);
+  let invalidEmail = document.getElementById(`email-invalid`);
+  let emailValid;
+  if(email.value == '') {
+    emptyEmail.style.display = 'block';
+    invalidEmail.style.display = 'none';
+    emailValid = false;
+  } else {
+    emptyEmail.style.display = 'none';
+
+    if(!validateEmail(email.value)) {
+      invalidEmail.style.display = 'block';
+      emailValid = false;
+    } else {
+      invalidEmail.style.display = 'none';
+      emailValid = true;
+    }
+  }
+
+   // fname
+   let fname = document.getElementById('fname');
+   let fnameValid;
+   if(fname.value == '') {
+     document.getElementById(`fname-empty`).style.display = 'block';
+     fnameValid = false;
+   } else {
+     document.getElementById(`fname-empty`).style.display = 'none';
+     if(parseInt(fname.value) || fname.value.match(/\d+/) != null) {
+       document.getElementById(`fname-invalid`).style.display = 'block';
+       fnameValid = false;
+     } else {
+       document.getElementById(`fname-invalid`).style.display = 'none';
+       fnameValid = true;
+     }
+   }
+
+   // gender
+   let sex = document.getElementById('sex');
+   let sexValid;
+   if(sex.value == '') {
+     document.getElementById(`sex-invalid`).style.display = 'block';
+     sexValid = false;
+   } else {
+     document.getElementById(`sex-invalid`).style.display = 'none';
+     
+   }
+  
+    // lname
+  let lname = document.getElementById('lname');
+  let lnameValid;
+  if(lname.value == '') {
+    document.getElementById(`lname-empty`).style.display = 'block';
+    lnameValid = false;
+  } else {
+    document.getElementById(`lname-empty`).style.display = 'none';
+    if(parseInt(lname.value) || lname.value.match(/\d+/) != null) {
+      document.getElementById(`lname-invalid`).style.display = 'block';
+      lnameValid = false;
+    } else {
+      document.getElementById(`lname-invalid`).style.display = 'none';
+      lnameValid = true;
+    }
+  }
+
+
+  // phone
+  let phone = document.getElementById('phone');
+  let phoneEmpty = document.getElementById(`phone-empty`);
+  let phoneInvalid = document.getElementById(`phone-invalid`);
+  let length = document.getElementById(`phone-length`);
+  let phoneValid;
+  if(phone.value == '') {
+    phoneEmpty.style.display = 'block';
+    length.style.display = 'none';
+    phoneValid = false;
+  } else {
+    phoneEmpty.style.display = 'none';
+    if(phone.value.match(/[a-zA-Z]/) != null) {
+      phoneInvalid.style.display = 'block';
+      length.style.display = 'none';
+      phoneValid = false;
+    } else {
+      phoneInvalid.style.display = 'none';
+      if(phoneEmpty.style.display == 'block' || phoneInvalid.style.display == 'block') {
+        length.style.display = 'none';
+      } else if(phone.value.length != 11) {
+        length.style.display = 'block';
+        phoneValid = false;
+      } else {
+        length.style.display = 'none';
+        phoneValid = true;
+      }
+    }
+  }
+
+
+    // birthdate
+    let birthdate = document.getElementById('birthdate');
+    let invalid = document.getElementById(`birthdate-invalid`);
+    let underage = document.getElementById(`birthdate-underage`);
+    let birthdateValid;
+    if(birthdate.value == '') {
+      invalid.style.display = 'block';
+      underage.style.display = 'none';
+      birthdateValid = false;
+    } else {
+      let date = new Date(birthdate.value);
+      if(date.getFullYear() >= new Date().getFullYear()) {
+        invalid.style.display = 'block';
+        underage.style.display = 'none';
+        birthdateValid = false;
+      } else {
+        if(date.getFullYear() > new Date().getFullYear() - 12) {
+          invalid.style.display = 'none';
+          underage.style.display = 'block';
+          birthdateValid = false;
+        } else if(date.getFullYear() < new Date('1920-01-01').getFullYear()) {
+          invalid.style.display = 'block';
+          underage.style.display = 'none';
+          birthdateValid = false;
+        } else {
+          invalid.style.display = 'none';
+          underage.style.display = 'none';
+          birthdateValid = true;
+        }
+      }
+    }
+  
+    // address
+  let address = document.getElementById('address');
+  let addressEmpty = document.getElementById('address-empty');
+  let addressValid;
+  if(address.value == '') {
+    addressEmpty.style.display = 'block';
+    addressValid = false;
+  } else {
+    addressEmpty.style.display = 'none';
+    addressValid = true;
+  }
+
+
+  if(fnameValid == true 
+    && lnameValid == true
+    && birthdateValid == true
+    && emailValid == true
+    && addressValid == true
+    && phoneValid == true) {
+    return true;
+  }
+
+}
+
+//UPDATE VALIDATION
+
+
+  checkUpdateNumber = (e) => {
+
+  let empty = document.getElementById(`${e.id}-empty`);
+  let invalid = document.getElementById(`${e.id}-invalid`);
+  let length = document.getElementById(`${e.id}-length`);
+  if(e.value == '') {
+    empty.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    empty.style.display = 'none';
+  }
+
+  if(e.value.match(/[a-zA-Z]/) != null) {
+    invalid.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    invalid.style.display = 'none';
+    if(empty.style.display == 'block' || invalid.style.display == 'block') {
+      length.style.display = 'none';
+    } else if(e.value.length != 11) {
+      length.style.display = 'block';
+      valid = false;
+    } else {
+      length.style.display = 'none';
+    }
+  }
+
+}
+
+checkUPDATEValidityAll = () => {
+
+   // phone
+   let phone = document.getElementById('updatePhone');
+   let phoneEmpty = document.getElementById(`updatePhone-empty`);
+   let phoneInvalid = document.getElementById(`updatePhone-invalid`);
+   let length = document.getElementById(`updatePhone-length`);
+   let phoneValid;
+   if(phone.value == '') {
+     phoneEmpty.style.display = 'block';
+     length.style.display = 'none';
+     phoneValid = false;
+   } else {
+     phoneEmpty.style.display = 'none';
+     if(phone.value.match(/[a-zA-Z]/) != null) {
+       phoneInvalid.style.display = 'block';
+       length.style.display = 'none';
+       phoneValid = false;
+     } else {
+       phoneInvalid.style.display = 'none';
+       if(phoneEmpty.style.display == 'block' || phoneInvalid.style.display == 'block') {
+         length.style.display = 'none';
+       } else if(phone.value.length != 11) {
+         length.style.display = 'block';
+         phoneValid = false;
+       } else {
+         length.style.display = 'none';
+         phoneValid = true;
+       }
+     }
+   }
+
+
+
+     // address
+  let address = document.getElementById('updateAddress');
+  let addressEmpty = document.getElementById('updateAddress-empty');
+  let addressValid;
+  if(address.value == '') {
+    addressEmpty.style.display = 'block';
+    addressValid = false;
+  } else {
+    addressEmpty.style.display = 'none';
+    addressValid = true;
+  }
+
+
+  if(addressValid == true 
+    && phoneValid == true
+    ) {
+    return true;
+  }
+
+}
+
+
+checkIfUpdateValid = (e) => {
+  let empty = document.getElementById(`${e.id}-empty`);
+  if(e.id != 'updateAddress') {
+    let invalid = document.getElementById(`${e.id}-invalid`);
+
+    if(e.value == '') {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+    }
+
+    if(parseInt(e.value) || e.value.match(/\d+/) != null) {
+      invalid.style.display = 'block';
+    } else {
+      invalid.style.display = 'none';
+    }
+  } else {
+    if(e.value == '') {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+    }
+  }
+}
+
+

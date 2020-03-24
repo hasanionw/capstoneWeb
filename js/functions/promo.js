@@ -80,16 +80,15 @@ renderDelete = () => {
     if(account.length > 0) {
         account.forEach((pro) => {
         let tr = document.createElement('tr');
+        let add = new Date(pro.data.dateAdded.toDate());
+        let del = new Date(pro.data.dateDeleted.toDate());
         tr.setAttribute('data-id', pro.id);
         tr.innerHTML = 
           `<td><b>${pro.data.promoname}</b></td>
-          <td>Error</td>
+          <td><b>${months[add.getMonth()]} ${add.getDate()}, ${add.getFullYear()}</b></td>
+          <td><b>${months[del.getMonth()]} ${del.getDate()}, ${del.getFullYear()}</b></td>
           <td>
-         
-          <a class='btn-link' onclick='viewPromos(this.parentNode.parentNode)'
-           data-toggle='modal' data-target='#'>
-           <i data-toggle="tooltip" data-placement="top" title="view ${pro.data.promoname}" class="fas fa-eye" style="font-size: 20px;"></i></a>
-       
+        
            <i id="deleteBtn" onclick='recoverPro(this.parentNode.parentNode)'
                data-toggle="tooltip" data-placement="top" title="Recover ${pro.data.promoname}"
                class="fas fa-undo-alt mx-4" style="cursor:pointer; font-size: 20px; color: #32CD32" ></i>
@@ -127,6 +126,8 @@ docs.forEach((doc) => {
 
     <div class="card-footer">
       <button class="btn btn-sm btn-orange">View details</button>
+
+
       <i onclick='deletepromos(this.parentNode.parentNode)'
        data-toggle="tooltip" data-placement="top" title="Delete Card"
        class="far fa-trash-alt my-2" style="font-size: 25px; float: right; color: #DF3A01" ></i>
@@ -215,7 +216,9 @@ function deletepromos(tr) {
 
         if(agree === true){
         db.collection('promos').doc(dataId).update({
-          account: 'delete'
+          account: 'delete',
+          dateDeleted: new Date()
+          
         }).then(() => {
           alert('Successfully delete card!');
           window.location.reload();
@@ -246,6 +249,8 @@ function recoverPro(tr) {
 
 
 button.addEventListener('click', function() {
+  valid = checkValidityAll();
+  if(valid == true) {
   let promoname = document.getElementById('promoname').value;
   let amount = document.getElementById('amount').value;
   let stat = document.getElementById('stat').value;
@@ -259,19 +264,7 @@ button.addEventListener('click', function() {
   let promos = db.collection('promos');
   let discount = promos.where('start', '<', startDate).where('start', '>', endDate);
 
-  if(promoname === '') {
-    alert('ERROR: Promo name is required!');
-  } else if(amount === '') {
-    alert('ERROR: Amount is required!');
-  } else if(stat === '') {
-    alert('ERROR: Status is required!');
-  } else if(start === '') {
-    alert('ERROR: Starting date is required!');
-  } else if(end === '') {
-    alert('ERROR: Expiry date is required!');
-  } else if(description === '') {
-    alert('ERROR: Description is required!');
-  } else {
+ 
     discount.get().then(function(snapshot) {
       if(snapshot.docs.length > 0) {
         alert('Error: Promo date already exists!');
@@ -358,6 +351,7 @@ let updatestat = document.getElementById('updatestat');
 let updatedescription = document.getElementById('updatedescription');
 let span = document.getElementById('promoname-span'); 
 
+updatename.value = data.promoname;
 updateamount.value = data.amount;
 updatestart.valueAsDate = new Date(data.start.toDate());
 updateend.valueAsDate = new Date(data.end.toDate());
@@ -367,6 +361,10 @@ updatedescription.value = data.description;
 
 let updateBtn = document.getElementById('updateBtn');
 updateBtn.onclick = () => {
+
+  updatevalid = checkUPDATEValidityAll();
+  if(updatevalid == true) {
+  
 db.collection('promos').doc(id).update({
 amount: updateamount.value,
 start: new Date(updatestart.value),
@@ -378,6 +376,7 @@ description: updatedescription.value
 alert('Successfully updated promos!');
 window.location.reload();
 });
+  }
 }
 }
 
@@ -421,4 +420,239 @@ if(password == '123')
 {
 window.location.href = "logtrail.html";
 } 
+}
+
+//validation//validation//validation//validation//validation//validation//validation//validation//validation
+
+checkValidityAll = () => {
+   // promoname
+   let fname = document.getElementById('promoname');
+   let fnameValid;
+   if(fname.value == '') {
+     document.getElementById(`promoname-empty`).style.display = 'block';
+     fnameValid = false;
+   } else {
+     document.getElementById(`promoname-empty`).style.display = 'none';
+     if(parseInt(fname.value) || fname.value.match(/\d+/) != null) {
+       document.getElementById(`promoname-invalid`).style.display = 'block';
+       fnameValid = false;
+     } else {
+       document.getElementById(`promoname-invalid`).style.display = 'none';
+       fnameValid = true;
+     }
+   }
+
+   
+  // status
+  let stat = document.getElementById('stat');
+  let statValid;
+  if(stat.value == '') {
+    document.getElementById(`stat-invalid`).style.display = 'block';
+    statValid = false;
+  } else {
+    document.getElementById(`stat-invalid`).style.display = 'none';
+    
+  }
+
+  // AMOUNT
+  let phone = document.getElementById('amount');
+  let phoneEmpty = document.getElementById(`amount-empty`);
+  let phoneInvalid = document.getElementById(`amount-invalid`);
+  let length = document.getElementById(`amount-length`);
+  let phoneValid;
+  if(phone.value == '') {
+    phoneEmpty.style.display = 'block';
+    length.style.display = 'none';
+    phoneValid = false;
+  } else {
+    phoneEmpty.style.display = 'none';
+    if(phone.value.match(/[a-zA-Z]/) != null) {
+      phoneInvalid.style.display = 'block';
+      length.style.display = 'none';
+      phoneValid = false;
+    } else {
+      phoneInvalid.style.display = 'none';
+      if(phoneEmpty.style.display == 'block' || phoneInvalid.style.display == 'block') {
+        length.style.display = 'none';
+      } else if(phone.value.length > 4) {
+        length.style.display = 'block';
+        phoneValid = false;
+      } else {
+        length.style.display = 'none';
+        phoneValid = true;
+      }
+    }
+  }
+ // description
+ let description = document.getElementById('description');
+ let descriptionValid;
+ if(description.value == '') {
+   document.getElementById(`description-invalid`).style.display = 'block';
+   descriptionValid = false;
+ } else {
+   document.getElementById(`description-invalid`).style.display = 'none';
+   
+ }
+   if(fnameValid == true 
+   && phoneValid == true) {
+     return true;
+   }
+ 
+}
+checkDescription = (e) => {
+  let empty = document.getElementById(`${e.id}-invalid`);
+  
+  if(e.value == '') {
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+  }
+
+}
+
+checkIfValid = (e) => {
+  let empty = document.getElementById(`${e.id}-empty`);
+ 
+    if(e.value == '') {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+    }
+  
+}
+
+checkStat = (e) => {
+  let empty = document.getElementById(`${e.id}-invalid`);
+  
+  if(e.value == '') {
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+  }
+
+}
+
+checkNumber = (e) => {
+  let empty = document.getElementById(`${e.id}-empty`);
+  let invalid = document.getElementById(`${e.id}-invalid`);
+  let length = document.getElementById(`${e.id}-length`);
+  if(e.value == '') {
+    empty.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    empty.style.display = 'none';
+  }
+
+  if(e.value.match(/[a-zA-Z]/) != null) {
+    invalid.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    invalid.style.display = 'none';
+    if(empty.style.display == 'block' || invalid.style.display == 'block') {
+      length.style.display = 'none';
+    } else if(e.value.length > 4) {
+      length.style.display = 'block';
+      valid = false;
+    } else {
+      length.style.display = 'none';
+    }
+  }
+}
+
+
+//updatevalidation//updatevalidation//updatevalidation//updatevalidation//updatevalidation//updatevalidation
+
+checkUPDATEValidityAll = () => {
+ // amount
+ let phone = document.getElementById('updateamount');
+ let phoneEmpty = document.getElementById(`updateamount-empty`);
+ let phoneInvalid = document.getElementById(`updateamount-invalid`);
+ let length = document.getElementById(`updateamount-length`);
+ let phoneValid;
+ if(phone.value == '') {
+   phoneEmpty.style.display = 'block';
+   length.style.display = 'none';
+   phoneValid = false;
+ } else {
+   phoneEmpty.style.display = 'none';
+   if(phone.value.match(/[a-zA-Z]/) != null) {
+     phoneInvalid.style.display = 'block';
+     length.style.display = 'none';
+     phoneValid = false;
+   } else {
+     phoneInvalid.style.display = 'none';
+     if(phoneEmpty.style.display == 'block' || phoneInvalid.style.display == 'block') {
+       length.style.display = 'none';
+     } else if(phone.value.length > 4) {
+       length.style.display = 'block';
+       phoneValid = false;
+     } else {
+       length.style.display = 'none';
+       phoneValid = true;
+     }
+   }
+ }
+
+
+ // description
+ let description = document.getElementById('updatedescription');
+ let descriptionValid;
+ if(description.value == '') {
+   document.getElementById(`updatedescription-invalid`).style.display = 'block';
+   descriptionValid = false;
+ } else {
+   document.getElementById(`updatedescription-invalid`).style.display = 'none';
+   
+ }
+
+ 
+
+ if(
+  phoneValid == true) {
+   return true;
+ }
+
+}
+
+
+
+checkUpdateDescription = (e) => {
+  let empty = document.getElementById(`${e.id}-invalid`);
+  
+  if(e.value == '') {
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+  }
+
+}
+
+
+checkUpdateNumber = (e) => {
+
+  let empty = document.getElementById(`${e.id}-empty`);
+  let invalid = document.getElementById(`${e.id}-invalid`);
+  let length = document.getElementById(`${e.id}-length`);
+  if(e.value == '') {
+    empty.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    empty.style.display = 'none';
+  }
+
+  if(e.value.match(/[a-zA-Z]/) != null) {
+    invalid.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    invalid.style.display = 'none';
+    if(empty.style.display == 'block' || invalid.style.display == 'block') {
+      length.style.display = 'none';
+    } else if(e.value.length > 4) {
+      length.style.display = 'block';
+      valid = false;
+    } else {
+      length.style.display = 'none';
+    }
+  }
+
 }

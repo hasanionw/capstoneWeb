@@ -9,6 +9,9 @@ const date = firebase.firestore.Timestamp;
     var button = document.getElementById('addBtn');
 
     button.addEventListener('click', function() {
+      valid = checkValidityAll();
+      if(valid == true) {
+
       var name = document.getElementById('name').value;
       var category = document.getElementById('category').value;
       var quantity = document.getElementById('quantity').value;
@@ -19,16 +22,6 @@ const date = firebase.firestore.Timestamp;
       var inventory = db.collection('inventory');
       var storage = inventory.where('name', '==', name);
 
-      if(name === '') {
-        alert('ERROR: Item name is required!');
-      } else if(category === '') {
-        alert('ERROR: Category is required!');
-      } else if(quantity === '') {
-        alert('ERROR: quantity is required!');
-      
-      }else if(description === '') {
-        alert('ERROR: description  is required!');
-      } else {
 
       storage.get().then(function(snapshot) {
         if(snapshot.docs.length > 0) {
@@ -66,8 +59,6 @@ renderCard = () => {
 
   let status = inv.filter(i => i.data.status == 'active');
 
-  InventoryCont.innerHTML = '';
-
   if(status.length > 0) {
     status.forEach((inv) => {
       let card = document.createElement('div');
@@ -83,7 +74,7 @@ renderCard = () => {
         <div class="card-footer">
           <button   onclick='viewInventory(this.parentNode.parentNode)' data-toggle='modal' data-target='#displayallrecords' class="btn btn-sm btn-orange ">details</button>  
           <button  onclick='updatefunction(this.parentNode.parentNode)' data-toggle='modal' data-target='#update'  class="btn btn-sm btn-orange">UPDATE</button>
-          <i onclick='deleteInv(this.parentNode.parentNode)' data-toggle="tooltip" data-placement="top" title="Delete Card" class="far fa-trash-alt my-2" style="font-size: 25px; float: right; color: #DF3A01" ></i>
+          <i id="deletebtn" onclick='deleteInv(this.parentNode.parentNode)' data-toggle="tooltip" data-placement="top" title="Delete Card" class="far fa-trash-alt my-2" style="font-size: 25px; float: right; color: #DF3A01" ></i>
         </div>`;
       inventoryCont.appendChild(card);
     });
@@ -106,16 +97,19 @@ renderCard = () => {
     if(status.length > 0) {
         status.forEach((inv) => {
         let tr = document.createElement('tr');
+        let add = new Date(inv.data.dateAdded.toDate());
+        let del = new Date(inv.data.dateDeleted.toDate());
         tr.setAttribute('data-id', inv.id);
         tr.innerHTML = 
           `<td><b>${inv.data.name}</b></td>
-          <td >Error</td>
+          <td><b>${months[add.getMonth()]} ${add.getDate()}, ${add.getFullYear()}</b></td>
+          <td><b>${months[del.getMonth()]} ${del.getDate()}, ${del.getFullYear()}</b></td>
           <td>
-         
-          <a class='btn-link' onclick='viewInventory(this.parentNode.parentNode)'
-           data-toggle='modal' data-target='#displayallrecords'>
-           <i data-toggle="tooltip" data-placement="top" title="view ${inv.data.name}" class="fas fa-eye" style="font-size: 20px;"></i></a>
-       
+        
+          <i  onclick='viewInventory(this.parentNode.parentNode)'
+         data-toggle='modal' data-target='#displayallrecords' 
+         style="font-size:20px; cursor:pointer;" class="fas fa-eye"></i>  
+
            <i id="deleteBtn" onclick='recoverInv(this.parentNode.parentNode)'
                data-toggle="tooltip" data-placement="top" title="Recover ${inv.data.name}"
                class="fas fa-undo-alt mx-4" style="cursor:pointer; font-size: 20px; color: #32CD32" ></i>
@@ -143,6 +137,7 @@ renderCard = () => {
     
         if(agree === true){
         db.collection('inventory').doc(dataId).update({
+          dateDeleted: new Date(),
           status: 'delete'
        
         }).then(() => {
@@ -175,8 +170,7 @@ renderCard = () => {
               alert(`Error: ${error.message}`);
             });
             }
-         
-        
+
         }
 
   filtering = (value) => {
@@ -186,14 +180,17 @@ renderCard = () => {
 
   // Searching Inventory
   let searchInv = document.getElementById('search-inventory');
+
   searchInv.onkeyup = () => {
-      if(searchInv.value != '') {
+   
+      if(searchInv.value != '' ) {
         let docs = filtering(searchInv.value);
         sortingInv(docs);
       } else {
         renderCard();
       }
     }
+  
     searchInv.value.onchange = () => {
       if(searchInv.value == '') {
         renderCard();
@@ -230,7 +227,7 @@ renderCard = () => {
       sortWeights.classList.add('btn-orange');
       sortWeights.classList.remove('btn-outline-orange');
 
-      let docs = inv.filter(i => i.data.category == 'Cardio Machines' && i.data.status == 'active');
+      let docs = inv.filter(i => i.data.category == 'Cardio Equipment' && i.data.status == 'active');
       sortingInv(docs);
 
     }
@@ -250,10 +247,13 @@ renderCard = () => {
 
     }
 
+   
+    
+
 
   sortingInv = (docs) => {
       let InventoryCont = document.getElementById('inventory-cont');
-
+  
       if(docs.length > 0){
       InventoryCont.innerHTML = '';
       docs.forEach((doc) => {
@@ -273,12 +273,13 @@ renderCard = () => {
          <button  onclick='updatefunction(this.parentNode.parentNode)'
          data-toggle='modal' data-target='#update'  class="btn btn-sm btn-orange">UPDATE</button>
          
-         <i onclick='deleteInv(this.parentNode.parentNode)'
+         <i id="deletebtn" onclick='deleteInv(this.parentNode.parentNode)'
          data-toggle="tooltip" data-placement="top" title="Delete Card"
          class="far fa-trash-alt my-2" style="font-size: 25px; float: right; color: #DF3A01" ></i>
         </div>
-          
-          
+       
+        
+     
           `;
           InventoryCont.appendChild(card);
         });
@@ -334,6 +335,7 @@ renderCard = () => {
       let updatename = document.getElementById('updatename');
       let updatequantity = document.getElementById('updatequantity');
       let updateworking = document.getElementById('updateworking');
+      let displaycategory = document.getElementById('displaycategory');
       let updatedamage = document.getElementById('updatedamage');
       let updatedescription = document.getElementById('updatedescription');
       let span = document.getElementById('fname-span');
@@ -342,12 +344,14 @@ renderCard = () => {
 
       let qwe = inv.filter(inv => inv.id == id);
       let er = qwe[0];
-      let data = er.data;
+      let data = er.doc;
 
       db.collection('inventory').doc(id).get().then(function(doc) {
+
         span.textContent = doc.data().name; // firstname na mo display sa update modal
         updatename.value = doc.data().name;
         updatequantity.value = doc.data().quantity;
+        displaycategory.value = doc.data().category;
         updateworking.value = doc.data().working;
         updatedamage.value = doc.data().damage;
         updatedescription.value = doc.data().description;
@@ -356,6 +360,10 @@ renderCard = () => {
        
 
       document.getElementById('updateBtn').addEventListener('click', () => {
+        
+        updatevalid = checkUPDATEValidityAll();
+        if(updatevalid == true) {
+
           let quantity = document.getElementById('updatequantity').value;
           let category = document.getElementById('updatecategory').value;
           let working = document.getElementById('updateworking').value;
@@ -376,7 +384,9 @@ renderCard = () => {
           }).catch((error) => {
             alert(`Error: ${error.message}`);
           });
+        }
         });
+     
       });
     }
     
@@ -477,4 +487,251 @@ renderCard = () => {
       window.location.href = "logtrail.html";
     } 
   }
-        
+
+
+
+  
+//validation//validation//validation//validation//validation//validation//validation//validation//validation
+
+  checkValidityAll = () => {
+      // name
+   let fname = document.getElementById('name');
+   let fnameValid;
+   if(fname.value == '') {
+     document.getElementById(`name-empty`).style.display = 'block';
+     fnameValid = false;
+   } else {
+     document.getElementById(`name-empty`).style.display = 'none';
+     if(parseInt(fname.value) || fname.value.match(/\d+/) != null) {
+       document.getElementById(`name-invalid`).style.display = 'block';
+       fnameValid = false;
+     } else {
+       document.getElementById(`name-invalid`).style.display = 'none';
+       fnameValid = true;
+     }
+   }
+
+
+    // quantity
+  let phone = document.getElementById('quantity');
+  let phoneEmpty = document.getElementById(`quantity-empty`);
+  let phoneInvalid = document.getElementById(`quantity-invalid`);
+  let length = document.getElementById(`quantity-length`);
+  let phoneValid;
+  if(phone.value == '') {
+    phoneEmpty.style.display = 'block';
+    length.style.display = 'none';
+    phoneValid = false;
+  } else {
+    phoneEmpty.style.display = 'none';
+    if(phone.value.match(/[a-zA-Z]/) != null) {
+      phoneInvalid.style.display = 'block';
+      length.style.display = 'none';
+      phoneValid = false;
+    } else {
+      phoneInvalid.style.display = 'none';
+      if(phoneEmpty.style.display == 'block' || phoneInvalid.style.display == 'block') {
+        length.style.display = 'none';
+      } else if(phone.value.length > 3) {
+        length.style.display = 'block';
+        phoneValid = false;
+      } else {
+        length.style.display = 'none';
+        phoneValid = true;
+      }
+    }
+  }
+
+  // Category
+  let category = document.getElementById('category');
+  let categoryValid;
+  if(category.value == '') {
+    document.getElementById(`category-invalid`).style.display = 'block';
+    categoryValid = false;
+  } else {
+    document.getElementById(`category-invalid`).style.display = 'none';
+    
+  }
+
+  
+  // description
+  let description = document.getElementById('description');
+  let descriptionValid;
+  if(description.value == '') {
+    document.getElementById(`description-invalid`).style.display = 'block';
+    descriptionValid = false;
+  } else {
+    document.getElementById(`description-invalid`).style.display = 'none';
+    
+  }
+
+
+
+   if(fnameValid == true 
+   && phoneValid == true) {
+    return true;
+  }
+
+  }
+
+  checkCategory = (e) => {
+    let empty = document.getElementById(`${e.id}-invalid`);
+    
+    if(e.value == '') {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+    }
+  
+  }
+
+  checkDescription = (e) => {
+    let empty = document.getElementById(`${e.id}-invalid`);
+    
+    if(e.value == '') {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+    }
+  
+  }
+
+
+  checkIfValid = (e) => {
+  let empty = document.getElementById(`${e.id}-empty`);
+ 
+    if(e.value == '') {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+    }
+  
+}
+
+checkNumber = (e) => {
+  let empty = document.getElementById(`${e.id}-empty`);
+  let invalid = document.getElementById(`${e.id}-invalid`);
+  let length = document.getElementById(`${e.id}-length`);
+  if(e.value == '') {
+    empty.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    empty.style.display = 'none';
+  }
+
+  if(e.value.match(/[a-zA-Z]/) != null) {
+    invalid.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    invalid.style.display = 'none';
+    if(empty.style.display == 'block' || invalid.style.display == 'block') {
+      length.style.display = 'none';
+    } else if(e.value.length > 3) {
+      length.style.display = 'block';
+      valid = false;
+    } else {
+      length.style.display = 'none';
+    }
+  }
+}
+
+//updatevalidation//updatevalidation//updatevalidation//updatevalidation//updatevalidation//updatevalidation
+
+checkUPDATEValidityAll = () => {
+
+   // quantity
+   let phone = document.getElementById('updatequantity');
+   let phoneEmpty = document.getElementById(`updatequantity-empty`);
+   let phoneInvalid = document.getElementById(`updatequantity-invalid`);
+   let length = document.getElementById(`updatequantity-length`);
+   let phoneValid;
+   if(phone.value == '') {
+     phoneEmpty.style.display = 'block';
+     length.style.display = 'none';
+     phoneValid = false;
+   } else {
+     phoneEmpty.style.display = 'none';
+     if(phone.value.match(/[a-zA-Z]/) != null) {
+       phoneInvalid.style.display = 'block';
+       length.style.display = 'none';
+       phoneValid = false;
+     } else {
+       phoneInvalid.style.display = 'none';
+       if(phoneEmpty.style.display == 'block' || phoneInvalid.style.display == 'block') {
+         length.style.display = 'none';
+       } else if(phone.value.length > 3) {
+         length.style.display = 'block';
+         phoneValid = false;
+       } else {
+         length.style.display = 'none';
+         phoneValid = true;
+       }
+     }
+   }
+
+     // description
+  let description = document.getElementById('updatedescription');
+  let descriptionValid;
+  if(description.value == '') {
+    document.getElementById(`updatedescription-invalid`).style.display = 'block';
+    descriptionValid = false;
+  } else {
+    document.getElementById(`updatedescription-invalid`).style.display = 'none';
+    
+  }
+
+  
+
+
+   if(
+    phoneValid == true) {
+     return true;
+   }
+
+}
+
+
+
+checkUpdateNumber = (e) => {
+
+  let empty = document.getElementById(`${e.id}-empty`);
+  let invalid = document.getElementById(`${e.id}-invalid`);
+  let length = document.getElementById(`${e.id}-length`);
+  if(e.value == '') {
+    empty.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    empty.style.display = 'none';
+  }
+
+  if(e.value.match(/[a-zA-Z]/) != null) {
+    invalid.style.display = 'block';
+    length.style.display = 'none';
+  } else {
+    invalid.style.display = 'none';
+    if(empty.style.display == 'block' || invalid.style.display == 'block') {
+      length.style.display = 'none';
+    } else if(e.value.length > 3) {
+      length.style.display = 'block';
+      valid = false;
+    } else {
+      length.style.display = 'none';
+    }
+  }
+
+}
+
+checkUpdateDescription = (e) => {
+  let empty = document.getElementById(`${e.id}-invalid`);
+  
+  if(e.value == '') {
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+  }
+
+}
+
+
+
+

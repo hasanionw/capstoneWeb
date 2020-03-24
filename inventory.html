@@ -33,7 +33,7 @@
   
 }
 
-.bot button{
+.bat button{
   background-color:#DF3A01;
   color:white;
 } 
@@ -90,6 +90,14 @@
         td{
           text-align:center;
         }
+
+        
+    .validation {
+      display: none;
+      margin-left: 0 !important;
+    }
+
+
 </style>
 </head>
 
@@ -154,6 +162,10 @@
    <!--Main layout-->
    <main class="pt-5 mx-lg-5" >
     <div class="container-fluid mt-5" id="main-div">
+      <button style="width:197px;" class="btn btn-sm btn-outline-orange mb-3"  data-toggle="modal" data-target="#deleteModal">
+        <i class="fas fa-eye mr-2"></i>
+        View Deleted Trainers
+      </button>
       <!-- Heading -->
       <div class="card mb-4 wow fadeIn">
         <!--Card content-->
@@ -168,8 +180,6 @@
             <button type="button" id="sort-both" class="btn btn-sm btn-orange">Both</button>
             <button type="button" id="sort-machines" class="btn btn-sm btn-outline-orange">Weight Room Equipment</button>
           </div>
-          <a href="#"  style="font-size:30px; color:#DF3A01;"><span data-toggle="modal" data-target="#deleteModal" ><i   data-toggle="tooltip" data-placement="top" title="List of Deleted Card" class="far fa-trash-alt "></i></span></a>
-
           <form class="d-flex justify-content-center">
             <input type="text" placeholder="Search inventory name" id="search-inventory" class="form-control">
           </form>
@@ -210,6 +220,7 @@
               <thead>
                 <tr style="text-align:center;">
                   <th>name</th>
+                  <th>Date added</th>
                   <th>date deleted</th>
                   <th>action</th>
                 </tr>
@@ -221,8 +232,8 @@
         </div>
 
         </div>
-        <div class="modal-footer" style="height: 70px;">
-          <button  type="button" style="background-color: #DF3A01; color:white" class="btn btn" data-dismiss="modal">Close</button>
+        <div class="modal-footer">
+          <button class="btn btn-sm btn-orange" data-dismiss="modal">Close</button>
         </div>
       </div>
   
@@ -260,6 +271,7 @@
                   <div class="col-sm-6">
                     <label>No. of Working item</label>
                     <input type="text" class="form-control" id="view-working" disabled>
+                    
                   </div>
                   <div class="col-sm-6">
                     <label>No. of Damage item</label>
@@ -282,7 +294,7 @@
           </div>
         </div>
 
-<div class="modal fade" id="update">
+<div class="modal fade" id="update" >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header"style="background-color:#DF3A01;">
@@ -290,7 +302,7 @@
   
         <button type='button' class='close' id='close-updateModal' data-dismiss='modal'>&times;</button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="height: 470px;">
         <div class="form-group">
           <div class="form-row">
             <div class="col-sm-6">
@@ -299,42 +311,46 @@
             </div>
             <div class="col-sm-6">
               <label>Update Quantity</label>
-              <input type="text" class="form-control" id="updatequantity" >
+              <input type="text" onblur="checkUpdateNumber(this)" class="form-control" id="updatequantity" >
+              <small class="validation text-danger" id="updatequantity-empty">Please fill out this field!</small>
+              <small class="validation text-danger" id="updatequantity-invalid">Invalid input!</small>
+              <small class="validation text-danger" id="updatequantity-length">number must contain 4 digits!</small>
             </div>
-        
-            
+
+            <div class="col-sm-6 my-2" >
+              <label>Category Display</label>
+              <input style="height: 40px;" type="text" class="form-control" id="displaycategory"  disabled>
+            </div>
+           
             <div class="col-sm-6 my-2">
               <label>Update Category</label>
-              <select id="updatecategory" class="form-control">
-                <option value="Free Weights" selected>Free Weights</option>
-                <option value="Cardio Machines">Cardio Machines</option>
+              <select id="updatecategory"  class="form-control">
+                <option value="Cardio Equipment" selected>Cardio Equipment</option>
+                <option value="Weight Room Equipment">Weight Room Equipment</option>
               </select>
+              <small class="validation text-danger" id="updatecategory-invalid">Invalid input!</small>
             </div>
-
-          
-
-            <div class="col-sm-6 my-2">
-              <label>Update Number of item</label>
-  
+            
            
+            <center><div class="col-sm-6 my-2" >
+                    
               <div class="form-row">
-                <div class="col-sm-3">
+                <div class="col-sm-5">
                   <label>Damage</label>
                   <input type="text" placeholder="number" class="form-control" id="updatedamage">
                 </div>
-                <div class="col-sm-3 mx-2">
+                <div class="col-sm-5 mx-2">
                   <label>Working</label>
                   <input type="text" class="form-control" id="updateworking" disabled>
+                  <button class="btn btn-success btn-sm" style="left:100px; top:-45px;" id="enterCalc">Enter</button>
                 </div>
-                <div class="col-sm-3 my-2">
-                  <label></label>
-                  <button class="btn btn-success btn-sm  " id="enterCalc">Enter</button>
-                </div>
+                
               </div>
-            </div>
-              <div class="col-sm-3">
-                <label>Description</label>
-                <textarea id="updatedescription" style="height: 150px; width: 440px;resize: none;" class="form-control"></textarea>
+            </div></center>
+              <div class="col-sm-3" style="top:-60px;">
+                <label> Description</label>
+                <textarea  id="updatedescription" onblur="checkUpdateDescription(this)" style="height: 150px; width: 440px;resize: none;" class="form-control"></textarea>
+                <small class="validation text-danger" id="updatedescription-invalid">Invalid input!</small>
               </div>
              
             </div>
@@ -373,7 +389,9 @@
            
           <div class="col-sm-6" style="position: relative; left: 35px;">
             <label>Item name</label>
-            <input type="text" id="name"  class="form-control" required="" placeholder="Item name">
+            <input type="text" id="name" onblur="checkIfValid(this)"  class="form-control" required="" placeholder="Item name">
+            <small class="validation text-danger" id="name-empty">Please fill out this field!</small>
+            <small class="validation text-danger" id="name-invalid">Invalid input!</small>
           </div>
           <div class="col-sm-6" style="position: relative; right: 40px; top: 10px;">
           <progress  value="0" max="100" id="uploader">0%</progress>
@@ -383,31 +401,35 @@
           <div class="form-row">
             <div class="col-sm-6">
               <label>Quantity</label>
-                <input type="text" id="quantity"  class="form-control" required="" placeholder="Quantity">
-            </div>
+                <input type="text" id="quantity"  onblur="checkNumber(this)"   class="form-control" required="" placeholder="Quantity">
+            <small class="validation text-danger" id="quantity-empty">Please fill out this field!</small>
+            <small class="validation text-danger" id="quantity-invalid">Invalid input!</small>
+            <small class="validation text-danger" id="quantity-length">number must contain 3 digits!</small>
+          </div>
             
           <div class="col-sm-6 train">
             <label>Category</label><br>
-            <select id="category"  class="form-control" name="category"  required="" style="left:60px;">
-              <option value="Cardio Equipment" selected>Cardio Equipment</option>
+            <select id="category"  class="form-control" name="category"  onblur="checkCategory(this)" required="" style="left:60px;">
+              <option value="" selected>Select category</option>
+              <option value="Cardio Equipment">Cardio Equipment</option>
               <option value="Weight Room Equipment">Weight Room Equipment</option>
            </select>
+           <small class="validation text-danger" id="category-invalid">Invalid input!</small>
           </div>
           <div class="col-sm-6 ">
             <label>Description</label><br>
-             
-
-              <textarea rows="5" class="form-control" 
+              <textarea  onblur="checkDescription(this)"   rows="5" class="form-control" 
               cols="100" class="form-control" id="description"
                required data-validation-required-message="Please enter description" 
                placeholder="Enter description" maxlength="999" style="resize: none; height: 100px; width: 465px;"
                ></textarea>
+               <small class="validation text-danger" id="description-invalid">Invalid input!</small>
         </div>
           </div>
         </div>
       </div>
 
-      <div class="modal-footer bot">
+      <div class="modal-footer bat">
         <button type="submit"  id="addBtn"  class="btn" >ADD ITEM</button>
      
 

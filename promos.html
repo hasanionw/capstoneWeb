@@ -72,6 +72,11 @@
         td{
           text-align: center;
         }
+
+        .validation {
+      display: none;
+      margin-left: 0 !important;
+    }
     </style>
   </head>
 
@@ -127,7 +132,13 @@
 
     <!--Main layout-->
     <main class="pt-5 mx-lg-5" >
+      
+      
       <div class="container-fluid mt-5" id="main-div">
+        <button style="width:197px;" class="btn btn-sm btn-outline-orange mb-3"  data-toggle="modal" data-target="#deleteModal">
+          <i class="fas fa-eye mr-2"></i>
+          View Deleted Trainers
+        </button>
         <!-- Heading -->
         <div class="card mb-4 wow fadeIn">
           <!--Card content-->
@@ -142,8 +153,7 @@
               <button type="button" id="sort-both" class="btn btn-sm btn-orange">BOTH</button>
               <button type="button" id="sort-temporary" class="btn btn-sm btn-outline-orange">TEMPORARY</button>
             </div>
-            <a href="#"  style="font-size:30px; color:#DF3A01;"><span data-toggle="modal" data-target="#deleteModal" ><i   data-toggle="tooltip" data-placement="top" title="List of Deleted Card" class="far fa-trash-alt "></i></span></a>
-            <form class="d-flex justify-content-center">
+           <form class="d-flex justify-content-center">
               <input type="text" placeholder="Search promo name" id="search-promos" aria-label="Search" class="form-control">
             </form>
           </div>
@@ -173,7 +183,8 @@
               <table class='table table-hover'>
                 <thead>
                   <tr style="text-align:center;">
-                    <th>promoname</th>
+                    <th>name</th>
+                    <th>date Added</th>
                     <th>date deleted</th>
                     <th>action</th>
                   </tr>
@@ -185,8 +196,8 @@
           </div>
   
           </div>
-          <div class="modal-footer" style="height: 70px;">
-            <button  type="button" style="background-color: #DF3A01; color:white" class="btn btn" data-dismiss="modal">Close</button>
+          <div class="modal-footer">
+            <button class="btn btn-sm btn-orange" data-dismiss="modal">Close</button>
           </div>
         </div>
     
@@ -215,7 +226,9 @@
              
               <div class="col-sm-6" style="position: relative; left: 35px;">
                 <label>Promo Name</label>
-                <input type="text" id="promoname" class="form-control" required placeholder="Promo Name">
+                <input type="text" id="promoname" onblur="checkIfValid(this)" class="form-control" required placeholder="Promo Name">
+                <small class="validation text-danger" id="promoname-empty">Please fill out this field!</small>
+                <small class="validation text-danger" id="promoname-invalid">Invalid input!</small>
               </div>
 
               <div class="col-sm-6" style="position: relative; right: 40px; top: 10px;">
@@ -228,15 +241,20 @@
                 
                 <div class="col-sm-6">
                   <label>Status</label>
-                  <select id="stat" required class="form-control">
-                    <option value="Permanent" selected>Permanent</option>
+                  <select id="stat" onblur="checkStat(this)" required class="form-control">
+                    <option value="" selected>Select</option>
+                    <option value="Permanent" >Permanent</option>
                     <option value="Temporary">Temporary</option>
                   </select>
+                  <small class="validation text-danger" id="stat-invalid">Invalid input!</small>
                 </div> 
                 <div class="col-sm-6">
                   <label>Amount</label>
-                  <input type="text" class="form-control" required id="amount" placeholder="Amount"  >
-                </div> 
+                  <input type="text"  onblur="checkNumber(this)" class="form-control" required id="amount" placeholder="Amount"  >
+                  <small class="validation text-danger" id="amount-empty">Please fill out this field!</small>
+                  <small class="validation text-danger" id="amount-invalid">Invalid input!</small>
+                  <small class="validation text-danger" id="amount-length">number must contain 4 digits!</small>
+              </div> 
               </div>
             </div>
             <div class="form-group">
@@ -256,10 +274,11 @@
               <div class="form-row">
                 <div class="col-sm-12">
                   <label>Description</label><br>
-                  <textarea rows="5" class="form-control" 
+                  <textarea  onblur="checkDescription(this)" rows="5" class="form-control" 
                   cols="100" style="resize: none;" class="form-control" required id="description"
                     required data-validation-required-message="Please enter description" 
                     placeholder="Enter description" maxlength="999"></textarea>
+                    <small class="validation text-danger" id="description-invalid">Invalid input!</small>
                 </div>
               </div>
             </div>
@@ -331,13 +350,15 @@
               <div class="form-row">
                 <div class="col-sm-6">
                   <label>Promo Name</label>
-                  <input type="text" required class="form-control" disabled id="updatename" placeholder="Promo Name"  >
+                  <input type="text"  required class="form-control" disabled id="updatename" placeholder="Promo Name"  >
                 </div>
                 <div class="col-sm-6 ">
                   <label>Update Amount</label>
-                  <input  type="text" class="form-control" id="updateamount" >
+                  <input  type="text" onblur="checkUpdateNumber(this)" class="form-control" id="updateamount" >
+                <small class="validation text-danger" id="updateamount-empty">Please fill out this field!</small>
+                <small class="validation text-danger" id="updateamount-invalid">Invalid input!</small>
+                <small class="validation text-danger" id="updateamount-length">number must contain 4 digits!</small>
                 </div>
-                
                 <div class="col-sm-6 my-2">
                   <label>Update Starting Date</label>
                   
@@ -363,8 +384,9 @@
                 </div>
                 <div class="col-sm-3"></div>
                 <div class="col-sm-3">
-                  <label>Description</label>
-                  <textarea id="updatedescription" style="height: 150px; width: 440px;resize: none;" class="form-control"></textarea>
+                  <label>Update Description</label>
+                  <textarea  onblur="checkUpdateDescription(this)" id="updatedescription" style="height: 150px; width: 440px;resize: none;" class="form-control"></textarea>
+                  <small class="validation text-danger" id="updatedescription-invalid">Invalid input!</small>
                 </div>
             </div>
           </div>
